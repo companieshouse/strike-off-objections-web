@@ -1,0 +1,9 @@
+{
+  "watch": ["./src"],
+  "ext": "ts",
+  "legacyWatch": true,
+  "ignore": [
+    "**/*.spec.ts"
+  ],
+  "exec": "ts-node ./src/bin/www.ts"
+}
