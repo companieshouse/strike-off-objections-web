@@ -1,0 +1,6 @@
+app_name: strike-off-objections-web
+group: web
+
+weight: 1000
+routes:
+  1: ^/strike-off-objections/*
