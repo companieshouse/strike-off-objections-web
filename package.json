@@ -1,0 +1,38 @@
+{
+  "name": "strike-off-objections-web",
+  "version": "0.0.1",
+  "description": "Web frontend for submitting objections to a company being struck off the register.",
+  "main": "app.ts",
+  "scripts": {
+    "start": "node dist/bin/www.js",
+    "build": "tsc && cp -r views dist/",
+    "devstart": "nodemon",
+    "sass": "node-sass src/public/stylesheets/scss -o src/public/stylesheets/css -i false",
+    "test": "jest",
+    "lint": "tslint '{src,test}/**/*'",
+    "sonarqube": "sonar-scanner",
+    "coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "express": "~4.16.1",
+    "govuk-frontend": "^3.7.0",
+    "nunjucks": "^3.2.1",
+    "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "@types/nunjucks": "^3.1.1",
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.3",
+    "sonarqube-scanner": "^2.6.0",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.20.1",
+    "typescript": "^3.3.1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/companieshouse/strike-off-objections-web.git"
+  },
+  "homepage": "https://github.com/companieshouse/strike-off-objections-web#readme"
+}
