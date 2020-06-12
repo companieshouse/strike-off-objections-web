@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+  What is the company number
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+  href: "/objecting-entity-contact-details",
+  text: "Back"
+}) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="/company-number" method="post">
+        {% if errorNum == true %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList
+          }) }}
+          {{ govukInput({
+            label: {
+              text: "What is the company number?",
+              isPageHeading: true,
+              classes: "govuk-label--xl"
+            },
+            hint: {
+              text: "This is the 8 character reference issued by Companies House when the company was set up."
+            },
+            classes: "govuk-input--company-number",
+            id: "company-number",
+            name: "company-number",
+            errorMessage: {
+              text: "Enter the company number"
+            }
+          }) }}
+        {% else %}
+          {{ govukInput({
+            label: {
+              text: "What is the company number?",
+              isPageHeading: true,
+              classes: "govuk-label--xl"
+            },
+            hint: {
+              text: "This is the 8 character reference issued by Companies House when the company was set up."
+            },
+            classes: "govuk-input--company-number",
+            id: "company-number",
+            name: "company-number"
+          }) }}
+        {% endif %}
+        {{ govukDetails({
+          summaryText: "Help with company number",
+          html: '<p>Use the <a target="blank" href="https://beta.companieshouse.gov.uk/">Companies House service (opens in a new tab)</a> to find it.</p>'
+         }) }}
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
