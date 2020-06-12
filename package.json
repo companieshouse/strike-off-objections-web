@@ -17,7 +17,7 @@
     "bufferutil": "^4.0.1",
     "canvas": "^2.6.1",
     "express": "~4.16.1",
-    "govuk-frontend": "^3.7.0",
+    "govuk-frontend": "^3.5.0",
     "nunjucks": "^3.2.1",
     "utf-8-validate": "^5.0.2",
     "yargs": "^15.3.1"
