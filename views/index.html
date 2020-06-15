@@ -1,12 +1,5 @@
-{% extends "layout.html" %}
-
 {% block pageTitle %}
-{{ serviceName }}
-{% endblock %}
-
-{% block header %}
-<!-- Blank header with no service name for the start page -->
-{{ govukHeader() }}
+Object to a company being struck off
 {% endblock %}
 
 {% block content %}
@@ -14,13 +7,11 @@
     <div class="govuk-grid-column-two-thirds">
 
         <h1 class="govuk-heading-xl">
-            {% if serviceName %}
-            {{ serviceName }}
-            {% endif %}
+            Object to a company being struck off
         </h1>
 
-        <p>Use this service to tell us why a limited company should not be removed from the companies register.</p>
-        <p>You can only do this after the notice has been posted in The Gazette.</p>
+        <p>Use this service to tell us why a limited company should not be removed from the companies register.
+           You can only do this after the notice has been posted in The Gazette.</p>
         <p>Companies House must receive the objection at least 2 weeks before the notice expiry date.</p>
 
         <p>This service takes around 15 minutes.</p>
