@@ -1,7 +1,11 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 
 const router: Router = Router();
 
-router.get("/", (req, response) => response.send("This is the Strike Off Objections app"));
+const renderTemplate = (template: string) => (req: Request, res: Response, next: NextFunction) => {
+    return res.render(template, { templateName: template });
+};
+
+router.get("/", renderTemplate("index"));
 
 export default router;
