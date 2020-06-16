@@ -31,7 +31,7 @@
 
 {% block head %}
   <!--[if !IE 8]><!-->
-  <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.5.0/govuk-frontend-3.5.0.min.css" rel="stylesheet" />
+  <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.6.0/govuk-frontend-3.6.0.min.css" rel="stylesheet" />
 
   <!-- TODO BI-3878 This CSS must still be added to CDN -->
   <link href="{{CDN_URL}}/stylesheets/services/strike-off-objections/application.css" rel="stylesheet" />
@@ -40,7 +40,7 @@
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
   {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
   <!--[if IE 8]>
-  <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.5.0/govuk-frontend-ie8-3.5.0.min.css" rel="stylesheet" />
+  <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.6.0/govuk-frontend-ie8-3.6.0.min.css" rel="stylesheet" />
 
   <!-- TODO BI-3878 This CSS must still be added to CDN -->
   <link href="{{CDN_URL}}/stylesheets/services/strike-off-objections/application.css" rel="stylesheet" />
@@ -103,7 +103,7 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="{{CDN_URL}}/javascripts/govuk-frontend/v3.5.0/govuk-frontend-3.5.0.min.js"></script>
+  <script src="{{CDN_URL}}/javascripts/govuk-frontend/v3.6.0/govuk-frontend-3.6.0.min.js"></script>
 
   <!-- TODO Amend and include this PIWIK config when needed
 
