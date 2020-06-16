@@ -13,7 +13,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response, next:
   return res.render(template, { templateName: template });
 };
 
-router.get("/", (req, response) => response.send("This is the Strike Off Objections app"));
+router.get("/", renderTemplate("index"));
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 
