@@ -1,38 +1,46 @@
+{% extends "layout.html" %}
+
 {% block pageTitle %}
-Object to a company being struck off
+  Object to a company being struck off
+{% endblock %}
+
+{% block header %}
+  <!-- Blank header with no service name for the start page -->
+  {{ govukHeader() }}
 {% endblock %}
 
 {% block content %}
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <h1 class="govuk-heading-xl">
-            Object to a company being struck off
-        </h1>
+      <h1 class="govuk-heading-xl">
+        Object to a company being struck off
+      </h1>
 
-        <p>Use this service to tell us why a limited company should not be removed from the companies register.
-           You can only do this after the notice has been posted in The Gazette.</p>
-        <p>Companies House must receive the objection at least 2 weeks before the notice expiry date.</p>
+      <p class="govuk-body-l" >Use this service to tell us why a limited company should not be removed from the companies register.
+        You can only do this after the notice has been posted in The Gazette.</p>
 
-        <p>This service takes around 15 minutes.</p>
+      <p>Companies House must receive the objection at least 2 weeks before the notice expiry date.</p>
 
-        <a id="start-now" href="/strike-off-objections/company-number" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
-            Start now
-            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
-                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
-            </svg>
-        </a>
+      <p>This service takes around 15 minutes.</p>
 
-        <h2 class="govuk-heading-m">Before you start</h2>
+      <a id="start-now" href="/strike-off-objections/company-number" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+        Start now
+        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
+          <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+        </svg>
+      </a>
 
-        <p>You'll need:</p>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>An email address</li>
-            <li>The company details</li>
-            <li>evidence to support the objection</li>
-        </ul>
+      <h2 class="govuk-heading-m">Before you start</h2>
+
+      <p>You'll need:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>An email address</li>
+        <li>The company details</li>
+        <li>evidence to support the objection</li>
+      </ul>
     </div>
 
     <div class="govuk-grid-column-one-third"></div>
-</div>
+  </div>
 {% endblock %}
