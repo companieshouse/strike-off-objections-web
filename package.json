@@ -16,11 +16,15 @@
   "dependencies": {
     "bufferutil": "^4.0.1",
     "canvas": "^2.6.1",
+    "ch-node-session-handler": "git+ssh://git@github.com/companieshouse/node-session-handler.git#3.0.1",
+    "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
     "govuk-frontend": "^3.7.0",
+    "ioredis": "^4.17.3",
     "nunjucks": "^3.2.1",
     "utf-8-validate": "^5.0.2",
-    "yargs": "^15.3.1"
+    "yargs": "^15.3.1",
+    "web-security-node": "git+ssh://git@github.com/companieshouse/web-security-node.git#0.1.1"
   },
   "devDependencies": {
     "@types/express": "^4.16.1",
