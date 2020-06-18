@@ -14,7 +14,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response, next:
   return res.render(template, { templateName: template });
 };
 
-router.get("/", renderTemplate("index"));
+router.get("/", renderTemplate(Templates.INDEX));
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 
