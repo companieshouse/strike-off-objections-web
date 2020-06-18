@@ -34,6 +34,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // apply our default router to /
 app.use("/strike-off-objections", router);
 
-logger.info("************** strike-off-objections-web has started **************");
+logger.info(`************** ${APP_NAME} has started **************`);
 
 export default app;
