@@ -3,7 +3,7 @@ import activeFeature from "../../feature.flag";
 import { Templates } from "../../model/template.paths";
 
 /**
- * Shows service unavailable page if config flag SHOW_SERVICE_OFFLINE_PAGE=on
+ * Shows service offline page if config flag SHOW_SERVICE_OFFLINE_PAGE=true
  */
 export const checkServiceAvailability = (req: Request, res: Response, next: NextFunction) => {
   if (activeFeature(process.env.SHOW_SERVICE_OFFLINE_PAGE)) {
