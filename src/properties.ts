@@ -15,3 +15,5 @@ const getEnvironmentValue = (key: string, defaultValue?: any): string => {
 };
 
 export const COOKIE_NAME = getEnvironmentValue("COOKIE_NAME");
+
+export const LOG_LEVEL = getEnvironmentValue("LOG_LEVEL");
