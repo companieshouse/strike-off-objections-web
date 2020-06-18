@@ -1,6 +1,7 @@
 import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
+import { checkServiceAvailability } from "./availability/middleware/service.availability";
 import logger from "./logger";
 import router from "./routes/routes";
 
@@ -22,6 +23,7 @@ env.addGlobal("CDN_URL", process.env.CDN_HOST);
 app.enable("trust proxy");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(checkServiceAvailability);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
