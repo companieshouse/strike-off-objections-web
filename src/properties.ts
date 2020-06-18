@@ -4,7 +4,7 @@
  * thrown.
  */
 
-const getEnv = (key: string, defaultValue?: any): string => {
+const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   const isMandatory: boolean = !defaultValue;
   const value: string = process.env[key] || "";
 
@@ -15,10 +15,10 @@ const getEnv = (key: string, defaultValue?: any): string => {
   return value || defaultValue as string;
 };
 
-export const COOKIE_NAME = getEnv("COOKIE_NAME");
+export const COOKIE_NAME = getEnvironmentVariable("COOKIE_NAME");
 
-export const COOKIE_DOMAIN = getEnv("COOKIE_DOMAIN");
+export const COOKIE_DOMAIN = getEnvironmentVariable("COOKIE_DOMAIN");
 
-export const COOKIE_SECRET = getEnv("COOKIE_SECRET");
+export const COOKIE_SECRET = getEnvironmentVariable("COOKIE_SECRET");
 
-export const CACHE_SERVER = getEnv("CACHE_SERVER");
+export const CACHE_SERVER = getEnvironmentVariable("CACHE_SERVER");
