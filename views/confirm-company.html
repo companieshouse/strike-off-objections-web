@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Confirm the company
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    text: "Back",
+    href: ""
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Confirm this is the correct company</h1>
+      <h2 class="govuk-heading-l">{{company.companyName}}</h2>
+
+      {% set inactiveHTML %}
+        {% if company.companyStatus === "Inactive" %}
+          <span class="govuk-!-font-weight-bold">Dissolved</span>
+        {% else %}
+          {{company.companyStatus}}
+        {% endif %}
+      {% endset %}
+
+      {% set address %}
+        {{company.address.line_1}}
+        <br/>
+        {{company.address.line_2}}
+        <br/>
+        {{company.address.postCode}}
+      {% endset %}
+
+      {{ govukTable({
+
+        firstCellIsHeader: true,
+        classes: "align-top",
+        rows: [
+            [
+            {
+                text: "Company number"
+            },
+            {
+                text: company.companyNumber
+            }
+            ],
+            [
+            {
+                text: "Status"
+            },
+            {
+                text: inactiveHTML
+            }
+            ],
+            [
+            {
+                text: "Incorporation date"
+            },
+            {
+                text: company.incorporationDate
+            }
+            ],
+            [
+            {
+                text: "Company type"
+            },
+            {
+                text: company.companyType
+            }
+            ],
+            [
+            {
+                text: "Registered office address"
+            },
+            {
+                html: address
+            }
+            ]
+        ]
+      }) }}
+
+      <form action="" method="post">
+        {{ govukButton({
+            text: "Confirm and continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
