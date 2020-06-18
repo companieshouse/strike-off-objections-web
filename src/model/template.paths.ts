@@ -1,4 +1,5 @@
 export enum Templates {
-  COMPANY_NUMBER = "company-number",
   INDEX = "index",
+  SERVICE_OFFLINE = "service-offline",
+  COMPANY_NUMBER = "company-number",
 }
