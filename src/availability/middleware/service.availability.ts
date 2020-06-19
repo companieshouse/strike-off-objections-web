@@ -9,6 +9,6 @@ export const checkServiceAvailability = (req: Request, res: Response, next: Next
   if (isActiveFeature(process.env.SHOW_SERVICE_OFFLINE_PAGE)) {
     return res.render(Templates.SERVICE_OFFLINE);
   }
-  // feature flag SHOW_SERVICE_OFFINE_PAGE is false - carry on as normal
+  // feature flag SHOW_SERVICE_OFFLINE_PAGE is false - carry on as normal
   next();
 };

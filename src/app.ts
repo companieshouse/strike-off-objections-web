@@ -1,8 +1,11 @@
-import * as express from "express";
+import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { checkServiceAvailability } from "./availability/middleware/service.availability";
+import logger from "./logger";
 import router from "./routes/routes";
+
+export const APP_NAME = "strike-off-objections-web";
 
 const app = express();
 
@@ -30,5 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // apply our default router to /
 app.use("/strike-off-objections", router);
+
+logger.info(`************** ${APP_NAME} has started **************`);
 
 export default app;
