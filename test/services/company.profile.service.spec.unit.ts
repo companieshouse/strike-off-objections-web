@@ -6,9 +6,6 @@ import { getCompanyProfile } from "../../src/services/company.profile.service";
 
 jest.mock("ch-sdk-node/dist/services/company-profile/service");
 
-// Dates used when testing the setting of the accounts and confirmation statement 'overdue' flag
-const DATE_TODAY: string = "2020-01-31";
-
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 
 describe("company profile service unit tests", () => {
@@ -16,12 +13,6 @@ describe("company profile service unit tests", () => {
 
   beforeEach(() => {
     mockGetCompanyProfile.mockReset();
-
-    // 'Controlling' today's date when running the tests means that tests will continue to behave as expected
-    // in the future
-    const mockPresent: Date = new Date(DATE_TODAY);
-    mockPresent.setHours(0, 0, 0);
-    jest.spyOn(Date, "now").mockReturnValue(mockPresent.getTime());
   });
 
   it("converts company number to uppercase", async () => {
