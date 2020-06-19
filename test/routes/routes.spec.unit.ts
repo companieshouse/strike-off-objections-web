@@ -28,4 +28,13 @@ describe("Basic URL Tests", () => {
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/What is the company number/);
   });
+
+  it("should find the confirm company page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/confirm-company");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Confirm this is the correct company/);
+  });
+
 });
