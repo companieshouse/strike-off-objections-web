@@ -17,6 +17,7 @@
     "bufferutil": "^4.0.1",
     "canvas": "^2.6.1",
     "ch-sdk-node": "git+ssh://git@github.com/companieshouse/ch-sdk-node.git#0.2.10",
+    "ch-logging": "git+ssh://git@github.com/companieshouse/ch-structured-logging-node.git#a3e0dcc57f91f63803e02ceef2cc5e4038de9a19",
     "express": "~4.16.1",
     "govuk-frontend": "^3.6.0",
     "moment": "^2.24.0",

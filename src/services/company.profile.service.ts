@@ -1,6 +1,7 @@
 import { createApiClient } from "ch-sdk-node";
 import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
 import Resource from "ch-sdk-node/dist/services/resource";
+import logger from "../logger";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { formatDateForDisplay } from "../utils/date.formatter";
@@ -13,10 +14,10 @@ import { formatDateForDisplay } from "../utils/date.formatter";
  * @param token the bearer security token to use to call the api
  */
 export const getCompanyProfile = async (companyNumber: string, token: string): Promise<ObjectionCompanyProfile> => {
- // logger.debug("Creating CH SDK ApiClient");
+  logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 
-  // logger.info(`Looking for company profile with company number ${companyNumber}`);
+  logger.debug(`Looking for company profile with company number ${companyNumber}`);
   const sdkResponse: Resource<CompanyProfile> =
     await api.companyProfile.getCompanyProfile(companyNumber.toUpperCase());
 
@@ -26,7 +27,7 @@ export const getCompanyProfile = async (companyNumber: string, token: string): P
     };
   }
 
-  // logger.debug("Data from company profile SDK call " + JSON.stringify(sdkResponse, null, 2));
+  logger.debug("Data from company profile SDK call " + JSON.stringify(sdkResponse, null, 2));
 
   const companyProfile = sdkResponse.resource as CompanyProfile;
 
