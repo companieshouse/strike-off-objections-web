@@ -5,6 +5,7 @@ import * as Redis from "ioredis";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { authMiddleware } from "web-security-node";
+import * as pageURLs from "./model/page.urls";
 import {
   CACHE_SERVER,
   COOKIE_DOMAIN,
@@ -52,13 +53,13 @@ app.use(sessionMiddleware);
 
 const authMiddlewareConfig = {
   accountWebUrl: "",
-  returnUrl: "/strike-off-objections/test",
+  returnUrl: `${pageURLs.STRIKE_OFF_OBJECTIONS}${pageURLs.COMPANY_NUMBER}`,
 };
 
 const signInMiddleware = authMiddleware(authMiddlewareConfig);
 
-app.use("/strike-off-objections/*", signInMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, signInMiddleware);
 
 // apply our default router to /
-app.use("/strike-off-objections", router);
+app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 export default app;
