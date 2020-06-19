@@ -4,6 +4,7 @@ import { LOG_LEVEL } from "./properties";
 
 const logger = createLogger(APP_NAME);
 
-logger.info(`env.LOG_LEVEL set to ${LOG_LEVEL}`);
+// tslint:disable-next-line:no-console
+console.log(`env.LOG_LEVEL set to ${LOG_LEVEL}`);
 
 export default logger;
