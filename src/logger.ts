@@ -1,5 +1,5 @@
 import { createLogger } from "ch-logging";
-import { APP_NAME } from "./app";
+import { APP_NAME } from "./constants";
 import { LOG_LEVEL } from "./properties";
 
 const logger = createLogger(APP_NAME);

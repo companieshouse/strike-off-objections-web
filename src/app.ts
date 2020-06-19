@@ -2,10 +2,9 @@ import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { checkServiceAvailability } from "./availability/middleware/service.availability";
+import { APP_NAME } from "./constants";
 import logger from "./logger";
 import router from "./routes/routes";
-
-export const APP_NAME = "strike-off-objections-web";
 
 const app = express();
 
