@@ -6,6 +6,6 @@ const authMiddlewareConfig = {
   returnUrl: `${pageURLs.STRIKE_OFF_OBJECTIONS}${pageURLs.COMPANY_NUMBER}`,
 };
 
-const signInMiddleware = authMiddleware(authMiddlewareConfig);
+const authenticationMiddleware = authMiddleware(authMiddlewareConfig);
 
-export default signInMiddleware;
+export default authenticationMiddleware;

@@ -5,7 +5,7 @@ import * as path from "path";
 import { checkServiceAvailability } from "./availability/middleware/service.availability";
 import { APP_NAME } from "./constants";
 import logger from "./logger";
-import signInMiddleware from "./middleware/authentication.middleware";
+import authenticationMiddleware from "./middleware/authentication.middleware";
 import sessionMiddleware from "./middleware/session.middleware";
 import * as pageURLs from "./model/page.urls";
 import router from "./routes/routes";
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(checkServiceAvailability);
 app.use(cookieParser());
 app.use(sessionMiddleware);
-app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, signInMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 

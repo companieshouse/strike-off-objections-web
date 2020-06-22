@@ -5,12 +5,13 @@ jest.mock("../../src/middleware/session.middleware");
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import signInMiddleware from "../../src/middleware/authentication.middleware";
+import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import { COOKIE_NAME } from "../../src/properties";
 
-const mockSignInMiddleware = signInMiddleware as jest.Mock;
-mockSignInMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
+mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
