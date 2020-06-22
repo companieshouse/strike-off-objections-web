@@ -3,19 +3,26 @@
  * provided, then it is assumed it is a mandatory requirement and an error will be
  * thrown.
  */
-const getEnvironmentValue = (key: string, defaultValue?: any): string => {
-    const isMandatory: boolean = !defaultValue;
-    const value: string = process.env[key] || "";
 
-    if (!value && isMandatory) {
-        throw new Error(`Please set the environment variable "${key}"`);
-    }
+const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
+  const isMandatory: boolean = !defaultValue;
+  const value: string = process.env[key] || "";
 
-    return value || defaultValue as string;
+  if (!value && isMandatory) {
+    throw new Error(`Please set the environment variable "${key}"`);
+  }
+
+  return value || defaultValue as string;
 };
 
-export const COOKIE_NAME = getEnvironmentValue("COOKIE_NAME");
+export const COOKIE_NAME = getEnvironmentVariable("COOKIE_NAME");
 
-export const SHOW_SERVICE_OFFLINE_PAGE = getEnvironmentValue("SHOW_SERVICE_OFFLINE_PAGE");
+export const COOKIE_DOMAIN = getEnvironmentVariable("COOKIE_DOMAIN");
 
-export const LOG_LEVEL = getEnvironmentValue("LOG_LEVEL", "info");
+export const COOKIE_SECRET = getEnvironmentVariable("COOKIE_SECRET");
+
+export const CACHE_SERVER = getEnvironmentVariable("CACHE_SERVER");
+
+export const SHOW_SERVICE_OFFLINE_PAGE = getEnvironmentVariable("SHOW_SERVICE_OFFLINE_PAGE");
+
+export const LOG_LEVEL = getEnvironmentVariable("LOG_LEVEL", "info");
