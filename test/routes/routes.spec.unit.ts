@@ -10,7 +10,7 @@ describe("Basic URL Tests", () => {
         .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the companies register./);
+    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
   });
 
   it("should find start page without cookie", async () => {
@@ -18,7 +18,7 @@ describe("Basic URL Tests", () => {
         .get("/strike-off-objections");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the companies register./);
+    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
   });
 
   it("should find the company number page", async () => {
