@@ -1,3 +1,18 @@
 #!/usr/bin/env sh
 npm run lint
-
+exec < /dev/tty
+    while read -p "Have all the required feature flags been added to these changes? (y/n) " yn; do
+        case $yn in
+            [Yy] ) break;;
+            [Nn] ) echo "Please add any necessary feature flags!"; exit 1;;
+            * ) echo "Please answer y (yes) or n (no):" && continue;
+        esac
+    done
+    while read -p "Is the version file up to date? (y/n) " yn; do
+        case $yn in
+            [Yy] ) break;;
+            [Nn] ) echo "If required please update the version file!"; exit 1;;
+            * ) echo "Please answer y (yes) or n (no):" && continue;
+        esac
+    done
+exec

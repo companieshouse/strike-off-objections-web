@@ -1,5 +1,5 @@
+import request from "supertest";
 import app from "../../src/app";
-import * as request from "supertest";
 
 describe("Sign in middleware tests", () => {
 
