@@ -1,3 +1,4 @@
+jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 
@@ -9,9 +10,9 @@ import sessionMiddleware from "../../src/middleware/session.middleware";
 import { COOKIE_NAME } from "../../src/properties";
 
 const mockSignInMiddleware = signInMiddleware as jest.Mock;
-mockSignInMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => { next(); });
+mockSignInMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => { next(); });
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 describe("Basic URL Tests", () => {
 

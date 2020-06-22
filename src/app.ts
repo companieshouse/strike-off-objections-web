@@ -34,8 +34,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(checkServiceAvailability);
 app.use(cookieParser());
-app.use(sessionMiddleware);
-app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, signInMiddleware);
+// app.use(sessionMiddleware);
+// app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, signInMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 
