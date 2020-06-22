@@ -10,8 +10,6 @@
 {% block head %}
   <!--[if !IE 8]><!-->
   <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.6.0/govuk-frontend-3.6.0.min.css" rel="stylesheet" />
-
-  <!-- TODO BI-3878 This CSS must still be added to CDN -->
   <link href="{{CDN_URL}}/stylesheets/services/strike-off-objections/application.css" rel="stylesheet" />
   <!--<![endif]-->
 
@@ -19,8 +17,6 @@
   {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
   <!--[if IE 8]>
   <link href="{{CDN_URL}}/stylesheets/govuk-frontend/v3.6.0/govuk-frontend-ie8-3.6.0.min.css" rel="stylesheet" />
-
-  <!-- TODO BI-3878 This CSS must still be added to CDN -->
   <link href="{{CDN_URL}}/stylesheets/services/strike-off-objections/application.css" rel="stylesheet" />
   <![endif]-->
 
@@ -40,9 +36,9 @@
 
 {% block header %}
   {{ govukHeader({
-    homepageUrl: "/",
+    homepageUrl: "/strike-off-objections",
     serviceName: "Object to a company being struck off",
-    serviceUrl: "/",
+    serviceUrl: "/strike-off-objections",
     containerClasses: "govuk-width-container"})
   }}
 {% endblock %}
@@ -58,7 +54,32 @@
   {% endblock %}
 {% endblock %}
 
-{% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing") %}
+{% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing govuk-body") %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "http://resources.companieshouse.gov.uk/legal/termsAndConditions.shtml",
+          text: "Policies"
+        },
+        {
+          href: "/help/cookies",
+          text: "Cookies"
+        },
+        {
+          href: "/help/contact-us",
+          text: "Contact us"
+        },
+        {
+          href: "https://developer.companieshouse.gov.uk/",
+          text: "Developers"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
