@@ -8,6 +8,5 @@ export interface ObjectionCompanyProfile {
     line_2: string;
     postCode: string;
   };
-  jurisdiction: string;
   incorporationDate: string;
 }

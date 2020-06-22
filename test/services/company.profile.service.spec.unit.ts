@@ -94,5 +94,4 @@ const expectedProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
-  jurisdiction: "england-wales",
 };

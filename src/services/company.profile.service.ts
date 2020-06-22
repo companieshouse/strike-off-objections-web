@@ -42,6 +42,5 @@ export const getCompanyProfile = async (companyNumber: string, token: string): P
     companyStatus: lookupCompanyStatus(companyProfile.companyStatus),
     companyType: lookupCompanyType(companyProfile.type),
     incorporationDate: formatDateForDisplay(companyProfile.dateOfCreation),
-    jurisdiction: companyProfile.jurisdiction,
   };
 };
