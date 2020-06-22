@@ -7,5 +7,3 @@ node_modules/
 *.code-workspace
 .DS_Store
 coverage
-/api-enumerations/
-/dist/
