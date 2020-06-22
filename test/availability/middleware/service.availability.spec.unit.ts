@@ -1,3 +1,5 @@
+jest.mock("ioredis");
+
 import request from "supertest";
 import app from "../../../src/app";
 import { COOKIE_NAME } from "../../../src/properties";
