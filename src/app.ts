@@ -6,6 +6,7 @@ import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { authMiddleware } from "web-security-node";
 import { checkServiceAvailability } from "./availability/middleware/service.availability";
+import { APP_NAME } from "./constants";
 import logger from "./logger";
 import * as pageURLs from "./model/page.urls";
 import {
@@ -15,8 +16,6 @@ import {
   COOKIE_SECRET,
 } from "./properties";
 import router from "./routes/routes";
-
-export const APP_NAME = "strike-off-objections-web";
 
 const app = express();
 
