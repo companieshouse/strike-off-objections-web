@@ -4,7 +4,7 @@ import Resource from "ch-sdk-node/dist/services/resource";
 import logger from "../logger";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
-import { formatDateForDisplay } from "../utils/date.formatter";
+import { formatCHSDateForDisplay } from "../utils/date.formatter";
 
 /**
  * Get the company profile from the api. If the company does not exist or there has been an error, an exception
@@ -41,6 +41,6 @@ export const getCompanyProfile = async (companyNumber: string, token: string): P
     companyNumber: companyProfile.companyNumber,
     companyStatus: lookupCompanyStatus(companyProfile.companyStatus),
     companyType: lookupCompanyType(companyProfile.type),
-    incorporationDate: formatDateForDisplay(companyProfile.dateOfCreation),
+    incorporationDate: formatCHSDateForDisplay(companyProfile.dateOfCreation),
   };
 };
