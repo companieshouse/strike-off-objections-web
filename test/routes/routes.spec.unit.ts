@@ -1,6 +1,19 @@
+jest.mock("ioredis");
+jest.mock("../../src/middleware/authentication.middleware");
+jest.mock("../../src/middleware/session.middleware");
+
+import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { COOKIE_NAME } from "../../src/properties";
+import authenticationMiddleware from "../../src/middleware/authentication.middleware";
+import sessionMiddleware from "../../src/middleware/session.middleware";
+import { COOKIE_NAME } from "../../src/utils/properties";
+
+const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
+mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+
+const mockSessionMiddleware = sessionMiddleware as jest.Mock;
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 describe("Basic URL Tests", () => {
 
@@ -10,7 +23,7 @@ describe("Basic URL Tests", () => {
         .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the companies register./);
+    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
   });
 
   it("should find start page without cookie", async () => {
@@ -18,7 +31,7 @@ describe("Basic URL Tests", () => {
         .get("/strike-off-objections");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the companies register./);
+    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
   });
 
   it("should find the company number page", async () => {

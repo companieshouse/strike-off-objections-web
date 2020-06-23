@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator/check";
-import logger from "../logger";
 import { COMPANY_NOT_FOUND, COMPANY_NUMBER_TOO_LONG,
     INVALID_COMPANY_NUMBER, NO_COMPANY_NUMBER_SUPPLIED } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
@@ -9,6 +8,7 @@ import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { ValidationError } from "../model/validation.error";
 import { getCompanyProfile } from "../services/company.profile.service";
+import logger from "../utils/logger";
 
 // validator middleware that checks for an empty or too long input
 const preValidators = [

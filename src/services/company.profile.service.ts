@@ -1,10 +1,10 @@
 import { createApiClient } from "ch-sdk-node";
 import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
 import Resource from "ch-sdk-node/dist/services/resource";
-import logger from "../logger";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
+import logger from "../utils/logger";
 
 /**
  * Get the company profile from the api. If the company does not exist or there has been an error, an exception

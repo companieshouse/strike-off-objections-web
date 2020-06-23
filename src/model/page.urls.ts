@@ -7,6 +7,7 @@ import { Templates } from "./template.paths";
 const SEPARATOR: string = "/";
 export const OBJECTIONS: string = SEPARATOR + "strike-off-objections";
 
+export const STRIKE_OFF_OBJECTIONS: string = SEPARATOR + "strike-off-objections";
 export const COMPANY_NUMBER: string = SEPARATOR + Templates.COMPANY_NUMBER;
 export const CONFIRM_COMPANY: string = SEPARATOR + Templates.CONFIRM_COMPANY;
 
