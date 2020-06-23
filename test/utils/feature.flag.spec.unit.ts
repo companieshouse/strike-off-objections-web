@@ -22,6 +22,11 @@ describe("feature flag tests", () => {
     expect(active).toBeFalsy();
   });
 
+  it("should return true if variable is random", () => {
+    const active = isActiveFeature("kdjhskjf");
+    expect(active).toBeTruthy();
+  });
+
   it("should return false if variable is 'off'", () => {
     const active = isActiveFeature("off");
     expect(active).toBeFalsy();
