@@ -14,9 +14,7 @@ import logger from "../utils/logger";
  * @param token the bearer security token to use to call the api
  */
 export const getCompanyProfile = async (companyNumber: string, token: string): Promise<ObjectionCompanyProfile> => {
-  if (token.length === 0) {
-    return fakeProfile;
-  }
+
   logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 
@@ -46,17 +44,4 @@ export const getCompanyProfile = async (companyNumber: string, token: string): P
     companyType: lookupCompanyType(companyProfile.type),
     incorporationDate: formatCHSDateForDisplay(companyProfile.dateOfCreation),
   };
-};
-
-const fakeProfile: ObjectionCompanyProfile = {
-  address: {
-    line_1: "1 No Road",
-    line_2: "Nowhere",
-    postCode: "AA0 0AA",
-  },
-  companyName: "Girl's school trust",
-  companyNumber: "00006400",
-  companyStatus: "Active",
-  companyType: "limited",
-  incorporationDate: "26 June 1872",
 };

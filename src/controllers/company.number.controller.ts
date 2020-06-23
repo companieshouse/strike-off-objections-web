@@ -1,5 +1,7 @@
+import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator/check";
+import { OBJECTIONS_SESSION } from "../constants";
 import { COMPANY_NOT_FOUND, COMPANY_NUMBER_TOO_LONG,
     INVALID_COMPANY_NUMBER, NO_COMPANY_NUMBER_SUPPLIED } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
@@ -80,11 +82,22 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
     }
 
     const companyNumber: string = req.body.companyNumber;
+    const session: Session = req.session as Session;
 
     try {
         logger.info(`Retrieving company profile for company number ${companyNumber}`);
-        const token: string = "";
+        const token: string = getValidToken(session, req) as string;
+        if (!token) {
+            throw new Error("Authorization error");
+        }
+
         const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
+
+        if (session ) {
+            session.data[OBJECTIONS_SESSION] = {
+                company_data: company,
+            };
+        }
         return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
     } catch (e) {
         logger.error(`Error fetching company profile for company number ${companyNumber}`);
@@ -94,6 +107,16 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
             return next(e);
         }
     }
+};
+
+const getValidToken = (session: Session, req: Request): string | undefined => {
+    const signIn = session.data.signin_info;
+    if (signIn && signIn.access_token) {
+        return signIn.access_token.access_token as string;
+    } else {
+        logger.error("Access token is missing");
+    }
+    return undefined;
 };
 
 export default [...preValidators, padCompanyNumber, ...postValidators, route];

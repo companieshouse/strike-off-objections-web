@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { ObjectionCompanyProfile } from "../model/objection.company.profile";
+import { OBJECTIONS_SESSION } from "../constants";
 import { Templates } from "../model/template.paths";
-import { getCompanyProfile } from "../services/company.profile.service";
+import logger from "../utils/logger";
 
 /**
  * GET controller for check company details screen
@@ -9,15 +9,17 @@ import { getCompanyProfile } from "../services/company.profile.service";
  * @param res
  * @param next
  */
-export const route = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const companyNumber: string = req.body.companyNumber;
-    const token: string = "";
-    const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-    return res.render(Templates.CONFIRM_COMPANY , {
-        company,
-        templateName: Templates.CONFIRM_COMPANY ,
-    });
+export const route = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (req.session && req.session.data) {
+        const company: string = req.session.data[OBJECTIONS_SESSION].company_data;
+        return res.render(Templates.CONFIRM_COMPANY, {
+            company,
+            templateName: Templates.CONFIRM_COMPANY,
+        });
+    } else {
+        logger.error("Error displaying company data");
+    }
 };
 
 export default [route];
