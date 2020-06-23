@@ -1,8 +1,8 @@
 jest.mock("ioredis");
 
 import request from "supertest";
-import app from "../../../src/app";
-import { COOKIE_NAME } from "../../../src/properties";
+import app from "../../src/app";
+import { COOKIE_NAME } from "../../src/utils/properties";
 
 afterAll(() => {
     process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";

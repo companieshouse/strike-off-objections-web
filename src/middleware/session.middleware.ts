@@ -1,6 +1,6 @@
 import { SessionMiddleware, SessionStore } from "ch-node-session-handler";
 import Redis from "ioredis";
-import { CACHE_SERVER, COOKIE_DOMAIN, COOKIE_NAME, COOKIE_SECRET } from "../properties";
+import { CACHE_SERVER, COOKIE_DOMAIN, COOKIE_NAME, COOKIE_SECRET } from "../utils/properties";
 
 const redis = new Redis(CACHE_SERVER);
 const sessionStore = new SessionStore(redis);

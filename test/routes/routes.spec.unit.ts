@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import { COOKIE_NAME } from "../../src/properties";
+import { COOKIE_NAME } from "../../src/utils/properties";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
