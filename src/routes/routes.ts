@@ -1,4 +1,6 @@
 import { Request, Response, Router } from "express";
+import companyNumberRoute from "../controllers/company.number.controller";
+import confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
@@ -16,6 +18,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 router.get("/", renderTemplate(Templates.INDEX));
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
-router.get(pageURLs.CONFIRM_COMPANY, renderTemplate(Templates.CONFIRM_COMPANY));
+router.post(pageURLs.COMPANY_NUMBER, ...companyNumberRoute);
+router.get(pageURLs.CONFIRM_COMPANY, ...confirmCompanyRoute);
 
 export default router;

@@ -5,6 +5,10 @@ import { Templates } from "./template.paths";
  */
 
 const SEPARATOR: string = "/";
+export const OBJECTIONS: string = SEPARATOR + "strike-off-objections";
 
 export const COMPANY_NUMBER: string = SEPARATOR + Templates.COMPANY_NUMBER;
 export const CONFIRM_COMPANY: string = SEPARATOR + Templates.CONFIRM_COMPANY;
+
+export const OBJECTIONS_COMPANY_NUMBER: string = OBJECTIONS + COMPANY_NUMBER;
+export const OBJECTIONS_CONFIRM_COMPANY: string = OBJECTIONS + CONFIRM_COMPANY;
