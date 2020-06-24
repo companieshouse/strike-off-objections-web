@@ -1,13 +1,15 @@
+jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objections.session.service");
 
+import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import { ObjectionCompanyProfile } from "../../src/model/objection.company.profile";
+import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import { getValueFromObjectionsSession } from "../../src/services/objections.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -18,14 +20,19 @@ const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    req.session = {
+        data: {},
+    } as Session;
+    return next();
+});
 
 describe("check company tests", () => {
 
     it("should render the page with company data from the session", async () => {
 
         mockGetObjectionSessionValue.mockReset();
-        mockGetObjectionSessionValue.mockImplementation(() => getDummyCompanyProfile);
+        mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
         const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
             .set("Referer", "/")
@@ -34,7 +41,9 @@ describe("check company tests", () => {
         expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
         expect(response.status).toEqual(200);
 
-        expect(response.text).toContain("THE GIRLS DAY SCHOOL TRUST");
+        // TODO "girl's" caused the html version of apostrophe to be returned
+        // something like eg &1233; - just check that apostrophe is rendered ok in browser
+        expect(response.text).toContain("Girls school trust");
         expect(response.text).toContain("00006400");
         expect(response.text).toContain("Active");
         expect(response.text).toContain("26 June 1872");
@@ -45,17 +54,15 @@ describe("check company tests", () => {
     });
 });
 
-export const getDummyCompanyProfile = (): ObjectionCompanyProfile => {
-    return {
-        address: {
-            line_1: "line1",
-            line_2: "line2",
-            postCode: "post code",
-        },
-        companyName: "Girl's school trust",
-        companyNumber: "00006400",
-        companyStatus: "Active",
-        companyType: "limited",
-        incorporationDate: "26 June 1872",
-    };
+const dummyCompanyProfile: ObjectionCompanyProfile = {
+    address: {
+        line_1: "line1",
+        line_2: "line2",
+        postCode: "post code",
+    },
+    companyName: "Girls school trust",
+    companyNumber: "00006400",
+    companyStatus: "Active",
+    companyType: "limited",
+    incorporationDate: "26 June 1872",
 };
