@@ -7,11 +7,6 @@ import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import {
-    COMPANY_NOT_FOUND,
-    COMPANY_NUMBER_TOO_LONG,
-    INVALID_COMPANY_NUMBER,
-    NO_COMPANY_NUMBER_SUPPLIED } from "../../src/model/error.messages";
 import { ObjectionCompanyProfile } from "../../src/model/objection.company.profile";
 import { COMPANY_NUMBER, OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -50,10 +45,6 @@ describe("company number lookup tests", () => {
 
         expect(response.status).toEqual(500);
         expect(response).not.toBeUndefined();
-        expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-        expect(response.text).not.toContain(COMPANY_NOT_FOUND);
     });
 
     it("should redirect to the check company details screen when company is found", async () => {
