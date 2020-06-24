@@ -25,117 +25,12 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
-describe("company number validation tests", () => {
+describe("company number lookup tests", () => {
 
     const mockCompanyProfile = getCompanyProfile as jest.Mock;
 
     beforeEach(() => {
         mockCompanyProfile.mockReset();
-    });
-
-    it("should not throw invalid error for company with two letter prefix", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "AB012345"});
-
-        expect(response.status).toEqual(302);
-        expect(response).not.toBeUndefined();
-        expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should not throw invalid error for company with one letter prefix", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "A0123456"});
-
-        expect(response.status).toEqual(302);
-        expect(response).not.toBeUndefined();
-        expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should create an error message when empty company number is supplied", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: ""});
-
-        expect(response.status).toEqual(200);
-        expect(response).not.toBeUndefined();
-        expect(response.text).toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should create an error message when blank company number is supplied", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "    "});
-
-        expect(response.status).toEqual(200);
-        expect(response).not.toBeUndefined();
-        expect(response.text).toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should create an error message when undefined company number is supplied", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: undefined});
-
-        expect(response.status).toEqual(200);
-        expect(response).not.toBeUndefined();
-        expect(response.text).toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should create an error message when company number is invalid (characters)", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "asdfg!!@"});
-
-        expect(response.status).toEqual(200);
-        expect(response).not.toBeUndefined();
-        expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
-    });
-
-    it("should create an error message when company number is too long", async () => {
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "000064000"});
-
-        expect(response.status).toEqual(200);
-        expect(response).not.toBeUndefined();
-        expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
-        expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
-        expect(response.text).toContain(COMPANY_NUMBER_TOO_LONG);
     });
 
     it("should create an error message when company is not found", async () => {
@@ -197,51 +92,6 @@ describe("company number validation tests", () => {
         expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
         expect(response.status).toEqual(302);
         expect(mockCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER, ACCESS_TOKEN);
-    });
-
-    it("should pad company details for a valid abbreviated company number", async () => {
-        mockCompanyProfile.mockResolvedValueOnce(getDummyCompanyProfile);
-
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "6400"});
-
-        expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
-        expect(response.status).toEqual(302);
-        expect(mockCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER, ACCESS_TOKEN);
-    });
-
-    it("should pad company details for a valid abbreviated company number - single letter prefix", async () => {
-        mockCompanyProfile.mockResolvedValueOnce(getDummyCompanyProfile);
-
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "A123"});
-
-        expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
-        expect(response.status).toEqual(302);
-        expect(mockCompanyProfile).toHaveBeenCalledWith("A0000123", ACCESS_TOKEN);
-    });
-
-    it("should pad company details for a valid abbreviated company number - double letter prefix", async () => {
-        mockCompanyProfile.mockResolvedValueOnce(getDummyCompanyProfile);
-
-        const response = await request(app)
-            .post(OBJECTIONS_COMPANY_NUMBER)
-            .set("Accept", "application/json")
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: "AA123"});
-
-        expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
-        expect(response.status).toEqual(302);
-        expect(mockCompanyProfile).toHaveBeenCalledWith("AA000123", ACCESS_TOKEN);
     });
 });
 
