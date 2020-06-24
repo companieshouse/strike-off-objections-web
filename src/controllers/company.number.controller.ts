@@ -35,29 +35,16 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
 
     const companyNumber: string = req.body.companyNumber;
     const session: Session = req.session as Session;
+    logger.info(`Retrieving company profile for company number ${companyNumber}`);
+    const token: string = getValidToken(session, req) as string;
 
-    try {
-        logger.info(`Retrieving company profile for company number ${companyNumber}`);
-        const token: string = getValidToken(session, req) as string;
-        if (!token) {
-            throw new Error("Authorization error");
-        }
+    const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-        const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
-
-        if (session) {
-            createObjectionsSession(session);
-            addToObjectionsSession(session, "company_data", company);
-        }
-        return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
-    } catch (e) {
-        logger.error(`Error fetching company profile for company number ${companyNumber}`);
-        if (e.status === 404) {
-            buildError(res, COMPANY_NOT_FOUND);
-        } else {
-            return next(e);
-        }
+    if (session) {
+        createObjectionsSession(session);
+        addToObjectionsSession(session, "company_data", company);
     }
+    return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
 };
 
 const getValidToken = (session: Session, req: Request): string | undefined => {
