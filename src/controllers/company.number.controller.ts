@@ -1,12 +1,9 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { check, validationResult } from "express-validator/check";
-import { COMPANY_NOT_FOUND } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { ValidationError } from "../model/validation.error";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { addToObjectionsSession, createObjectionsSession } from "../services/objections.session.service";
 import logger from "../utils/logger";
