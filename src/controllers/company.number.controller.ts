@@ -1,25 +1,10 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
-import { Templates } from "../model/template.paths";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { addToObjectionsSession, createObjectionsSession } from "../services/objections.session.service";
 import logger from "../utils/logger";
-
-const buildError = (res: Response, errorMessage: string): void => {
-    const companyNumberErrorData: GovUkErrorData = createGovUkErrorData(
-        errorMessage,
-        "#company-number",
-        true,
-        "");
-    return res.render(Templates.COMPANY_NUMBER, {
-        companyNumberErr: companyNumberErrorData,
-        errorList: [companyNumberErrorData],
-        templateName: Templates.COMPANY_NUMBER,
-    });
-};
 
 /**
  * POST controller for company number screen
