@@ -4,7 +4,7 @@ import { OBJECTIONS_COMPANY_PROFILE } from "../constants";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { addToObjectionsSession, createObjectionsSession, getValidToken } from "../services/objections.session.service";
+import { addToObjectionsSession, createObjectionsSession, getValidAccessToken } from "../services/objections.session.service";
 import logger from "../utils/logger";
 
 /**
@@ -19,7 +19,7 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
     const companyNumber: string = req.body.companyNumber;
     const session: Session = req.session as Session;
     logger.infoRequest(req, `Retrieving company profile for company number ${companyNumber}`);
-    const token: string = getValidToken(session) as string;
+    const token: string = getValidAccessToken(session) as string;
 
     const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 

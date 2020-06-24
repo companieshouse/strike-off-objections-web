@@ -15,7 +15,7 @@ export const getValueFromObjectionsSession = (session: Session, key: string) => 
     return session.data[OBJECTIONS_SESSION][key];
 };
 
-export const getValidToken = (session: Session): string | undefined => {
+export const getValidAccessToken = (session: Session): string | undefined => {
     const signIn = session.data.signin_info;
     if (signIn && signIn.access_token) {
         return signIn.access_token.access_token as string;

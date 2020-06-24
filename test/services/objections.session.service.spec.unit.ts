@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION } from "../../src/constants";
 import * as objectionsSessionService from "../../src/services/objections.session.service";
-import { getValidToken } from "../../src/services/objections.session.service";
+import { getValidAccessToken } from "../../src/services/objections.session.service";
 
 const testKey: string = "testKey";
 const testValue: string = "00006400";
@@ -57,14 +57,14 @@ describe ("objections session service tests", () => {
                 },
             },
         };
-        const token: string = getValidToken(session) as string;
+        const token: string = getValidAccessToken(session) as string;
         expect(token).not.toBeUndefined();
         expect(token).toEqual(accessTokenValue);
     });
 
     it("should receive undefined when token is absent", async () => {
         const session: Session = new Session();
-        const token: string = getValidToken(session) as string;
+        const token: string = getValidAccessToken(session) as string;
         expect(token).toBeUndefined();
     });
 
@@ -75,7 +75,7 @@ describe ("objections session service tests", () => {
                 access_token: {},
             },
         };
-        const token: string = getValidToken(session) as string;
+        const token: string = getValidAccessToken(session) as string;
         expect(token).toBeUndefined();
     });
 });
