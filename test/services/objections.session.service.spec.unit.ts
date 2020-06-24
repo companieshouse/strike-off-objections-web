@@ -1,9 +1,11 @@
 import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION } from "../../src/constants";
 import * as objectionsSessionService from "../../src/services/objections.session.service";
+import { getValidToken } from "../../src/services/objections.session.service";
 
 const testKey: string = "testKey";
 const testValue: string = "00006400";
+const accessTokenValue = "tokenABC123";
 
 describe ("objections session service tests", () => {
     it("should create a new empty objections session", async () => {
@@ -44,5 +46,36 @@ describe ("objections session service tests", () => {
         await objectionsSessionService.addToObjectionsSession(session, testKey, testValue);
         const gotFromSessionValue: string = objectionsSessionService.getValueFromObjectionsSession(session, testKey);
         expect(gotFromSessionValue).toEqual(testValue);
+    });
+
+    it("should retieve access token when present in the session", async () => {
+        const session: Session = new Session();
+        session.data = {
+            signin_info: {
+                access_token: {
+                    access_token: accessTokenValue,
+                },
+            },
+        };
+        const token: string = getValidToken(session) as string;
+        expect(token).not.toBeUndefined();
+        expect(token).toEqual(accessTokenValue);
+    });
+
+    it("should receive undefined when token is absent", async () => {
+        const session: Session = new Session();
+        const token: string = getValidToken(session) as string;
+        expect(token).toBeUndefined();
+    });
+
+    it("should receive undefined when token is empty", async () => {
+        const session: Session = new Session();
+        session.data = {
+            signin_info: {
+                access_token: {},
+            },
+        };
+        const token: string = getValidToken(session) as string;
+        expect(token).toBeUndefined();
     });
 });

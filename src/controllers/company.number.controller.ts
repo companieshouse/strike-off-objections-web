@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { addToObjectionsSession, createObjectionsSession } from "../services/objections.session.service";
+import { addToObjectionsSession, createObjectionsSession, getValidToken } from "../services/objections.session.service";
 import logger from "../utils/logger";
 
 /**
@@ -13,12 +13,12 @@ import logger from "../utils/logger";
  * @param next
  */
 const route = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    logger.debug("Attempt to retrieve and show the company details");
+    logger.debugRequest(req, "Attempt to retrieve and show the company details");
 
     const companyNumber: string = req.body.companyNumber;
     const session: Session = req.session as Session;
-    logger.info(`Retrieving company profile for company number ${companyNumber}`);
-    const token: string = getValidToken(session, req) as string;
+    logger.infoRequest(req, `Retrieving company profile for company number ${companyNumber}`);
+    const token: string = getValidToken(session) as string;
 
     const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
@@ -27,16 +27,6 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
         addToObjectionsSession(session, "company_data", company);
     }
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
-};
-
-const getValidToken = (session: Session, req: Request): string | undefined => {
-    const signIn = session.data.signin_info;
-    if (signIn && signIn.access_token) {
-        return signIn.access_token.access_token as string;
-    } else {
-        logger.error("Access token is missing");
-    }
-    return undefined;
 };
 
 export default [route];
