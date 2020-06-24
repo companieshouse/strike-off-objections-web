@@ -27,7 +27,7 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
 
 describe("company number validation tests", () => {
 
-    const mockCompanyProfile = (getCompanyProfile as jest.Mock);
+    const mockCompanyProfile = getCompanyProfile as jest.Mock;
 
     beforeEach(() => {
         mockCompanyProfile.mockReset();

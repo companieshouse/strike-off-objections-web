@@ -11,6 +11,7 @@ import { Templates } from "../model/template.paths";
 import { ValidationError } from "../model/validation.error";
 import { getCompanyProfile } from "../services/company.profile.service";
 import logger from "../utils/logger";
+import {addToObjectionsSession, createObjectionsSession} from "../services/objections.session.service";
 
 // validator middleware that checks for an empty or too long input
 const preValidators = [
@@ -93,10 +94,9 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
 
         const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-        if (session ) {
-            session.data[OBJECTIONS_SESSION] = {
-                company_data: company,
-            };
+        if (session) {
+            createObjectionsSession(session);
+            addToObjectionsSession(session, "company_data", company);
         }
         return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
     } catch (e) {
