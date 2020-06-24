@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { OBJECTIONS_COMPANY_PROFILE } from "../constants";
-import { ObjectionCompanyProfile } from "../model/objection.company.profile";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { addToObjectionsSession, createObjectionsSession, getValidAccessToken } from "../services/objections.session.service";

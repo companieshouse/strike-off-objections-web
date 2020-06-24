@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import { ObjectionCompanyProfile } from "../../src/model/objection.company.profile";
+import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { COMPANY_NUMBER, OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
