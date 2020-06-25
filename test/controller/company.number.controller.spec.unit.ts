@@ -86,17 +86,15 @@ describe("company number lookup tests", () => {
     });
 });
 
-const dummyCompanyProfile = (): ObjectionCompanyProfile => {
-    return {
-        address: {
-            line_1: "line1",
-            line_2: "line2",
-            postCode: "post code",
-        },
-        companyName: "Girl's school trust",
-        companyNumber: "00006400",
-        companyStatus: "Active",
-        companyType: "limited",
-        incorporationDate: "26 June 1872",
-    };
+const dummyCompanyProfile = {
+    address: {
+        line_1: "line1",
+        line_2: "line2",
+        postCode: "post code",
+    },
+    companyName: "Girls school trust",
+    companyNumber: "00006400",
+    companyStatus: "Active",
+    companyType: "limited",
+    incorporationDate: "26 June 1872",
 };
