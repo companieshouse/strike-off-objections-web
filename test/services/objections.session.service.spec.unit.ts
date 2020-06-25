@@ -1,5 +1,5 @@
 import { Session } from "ch-node-session-handler";
-import { SESSION } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import * as objectionsSessionService from "../../src/services/objections.session.service";
 import { getValidAccessToken } from "../../src/services/objections.session.service";
 
@@ -10,38 +10,38 @@ const accessTokenValue = "tokenABC123";
 describe ("objections session service tests", () => {
     it("should create a new empty objections session", async () => {
         const session: Session = new Session();
-        expect(session.data[SESSION]).toBeFalsy();
+        expect(session.data[OBJECTIONS_SESSION_NAME]).toBeFalsy();
         await objectionsSessionService.createObjectionsSession(session);
-        expect(session.data[SESSION]).toBeTruthy();
+        expect(session.data[OBJECTIONS_SESSION_NAME]).toBeTruthy();
     });
 
     it("should replace an existing objections session if one exists", async () => {
         const session: Session = new Session();
         await objectionsSessionService.createObjectionsSession(session);
-        expect(session.data[SESSION]).toBeTruthy();
-        session.data[SESSION][testKey] = testValue;
+        expect(session.data[OBJECTIONS_SESSION_NAME]).toBeTruthy();
+        session.data[OBJECTIONS_SESSION_NAME][testKey] = testValue;
 
         await objectionsSessionService.createObjectionsSession(session);
-        expect(session.data[SESSION][testKey]).toBeFalsy();
+        expect(session.data[OBJECTIONS_SESSION_NAME][testKey]).toBeFalsy();
     });
 
     it("should update the objections session successfully", async () => {
         const session: Session = new Session();
         await objectionsSessionService.createObjectionsSession(session);
-        expect(session.data[SESSION]).toBeTruthy();
+        expect(session.data[OBJECTIONS_SESSION_NAME]).toBeTruthy();
 
         await objectionsSessionService.addToObjectionsSession(session, testKey, testValue);
-        expect(session.data[SESSION][testKey]).toEqual(testValue);
+        expect(session.data[OBJECTIONS_SESSION_NAME][testKey]).toEqual(testValue);
 
         const newValue: string = "10";
         await objectionsSessionService.addToObjectionsSession(session, testKey, newValue);
-        expect(session.data[SESSION][testKey]).toEqual(newValue);
+        expect(session.data[OBJECTIONS_SESSION_NAME][testKey]).toEqual(newValue);
     });
 
     it("should retrieve from the objections session successfully", async () => {
         const session: Session = new Session();
         await objectionsSessionService.createObjectionsSession(session);
-        expect(session.data[SESSION]).toBeTruthy();
+        expect(session.data[OBJECTIONS_SESSION_NAME]).toBeTruthy();
 
         await objectionsSessionService.addToObjectionsSession(session, testKey, testValue);
         const gotFromSessionValue: string = objectionsSessionService.getValueFromObjectionsSession(session, testKey);
