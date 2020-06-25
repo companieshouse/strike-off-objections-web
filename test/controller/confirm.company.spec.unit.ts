@@ -10,6 +10,7 @@ import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import { OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import { getValueFromObjectionsSession } from "../../src/services/objections.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -26,44 +27,33 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
     return next();
 });
 
-describe("Basic URL Tests", () => {
+// TODO test scenario when an error is logged - check that this is happening correctly
 
-  it("should find start page with cookie", async () => {
-    const response = await request(app)
-        .get("/strike-off-objections")
-        .set("Cookie", [`${COOKIE_NAME}=123`]);
+describe("check company tests", () => {
 
-    expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
-  });
+    it("should render the page with company data from the session", async () => {
 
-  it("should find start page without cookie", async () => {
-    const response = await request(app)
-        .get("/strike-off-objections");
+        mockGetObjectionSessionValue.mockReset();
+        mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-    expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
-  });
+        const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+            .set("Referer", "/")
+            .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-  it("should find the company number page", async () => {
-    const response = await request(app)
-      .get("/strike-off-objections/company-number");
+        expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+        expect(response.status).toEqual(200);
 
-    expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/What is the company number/);
-  });
-
-  it("should find the confirm company page", async () => {
-    mockGetObjectionSessionValue.mockReset();
-    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
-
-    const response = await request(app)
-      .get("/strike-off-objections/confirm-company");
-
-    expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Confirm this is the correct company/);
-  });
-
+        // TODO "girl's" caused the html version of apostrophe to be returned
+        // something like eg &1233; - just check that apostrophe is rendered ok in browser
+        expect(response.text).toContain("Girls school trust");
+        expect(response.text).toContain("00006400");
+        expect(response.text).toContain("Active");
+        expect(response.text).toContain("26 June 1872");
+        expect(response.text).toContain("limited");
+        expect(response.text).toContain("line1");
+        expect(response.text).toContain("line2");
+        expect(response.text).toContain("post code");
+    });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {

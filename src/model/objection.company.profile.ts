@@ -1,4 +1,4 @@
-export interface ObjectionCompanyProfile {
+export default interface ObjectionCompanyProfile {
   companyName: string;
   companyNumber: string;
   companyStatus: string;
