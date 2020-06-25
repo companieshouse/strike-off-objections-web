@@ -1,6 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { OBJECTIONS_COMPANY_PROFILE } from "../constants";
+import { SESSION_COMPANY_PROFILE } from "../constants";
 import { ObjectionCompanyProfile } from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -25,7 +25,7 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
 
     if (session) {
         createObjectionsSession(session);
-        addToObjectionsSession(session, OBJECTIONS_COMPANY_PROFILE, company);
+        addToObjectionsSession(session, SESSION_COMPANY_PROFILE, company);
     }
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
 };
