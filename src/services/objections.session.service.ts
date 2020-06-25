@@ -1,17 +1,17 @@
 import { Session } from "ch-node-session-handler";
-import { SESSION } from "../constants";
+import { OBJECTIONS_SESSION_NAME } from "../constants";
 import logger from "../utils/logger";
 
 export const createObjectionsSession = (session: Session) => {
-    session.data[SESSION] = {};
+    session.data[OBJECTIONS_SESSION_NAME] = {};
 };
 
 export const addToObjectionsSession = (session: Session, key: string, value: any) => {
-    session.data[SESSION][key] = value;
+    session.data[OBJECTIONS_SESSION_NAME][key] = value;
 };
 
 export const getValueFromObjectionsSession = (session: Session, key: string) => {
-    return session.data[SESSION][key];
+    return session.data[OBJECTIONS_SESSION_NAME][key];
 };
 
 export const getValidAccessToken = (session: Session): string | undefined => {
