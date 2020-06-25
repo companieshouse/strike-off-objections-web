@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_COMPANY_PROFILE } from "../constants";
 import { Templates } from "../model/template.paths";
 import { getValueFromObjectionsSession } from "../services/objections.session.service";
@@ -11,16 +12,19 @@ import logger from "../utils/logger";
  * @param next
  */
 
-export const route = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const route = (req: Request, res: Response, next: NextFunction) => {
     if (req.session && req.session.data) {
-        const company: string = getValueFromObjectionsSession(req.session, SESSION_COMPANY_PROFILE);
+        const company: ObjectionCompanyProfile = getValueFromObjectionsSession(req.session, SESSION_COMPANY_PROFILE);
         return res.render(Templates.CONFIRM_COMPANY, {
             company,
             templateName: Templates.CONFIRM_COMPANY,
         });
     } else {
         logger.errorRequest(req, "Confirm Company - no company data found in session");
+        // TODO - implement generic error page to be called with next(ERROR())
+        // same as PTF eg next(e)
+        return next();
     }
 };
 
-export default [route];
+export default route;

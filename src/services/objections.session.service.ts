@@ -1,5 +1,4 @@
 import { Session } from "ch-node-session-handler";
-import { Request } from "express";
 import { OBJECTIONS_SESSION_NAME } from "../constants";
 import logger from "../utils/logger";
 

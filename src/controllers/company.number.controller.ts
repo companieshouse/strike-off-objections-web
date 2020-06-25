@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { SESSION_COMPANY_PROFILE } from "../constants";
-import { ObjectionCompanyProfile } from "../model/objection.company.profile";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { addToObjectionsSession, createObjectionsSession, getValidAccessToken } from "../services/objections.session.service";
@@ -30,4 +30,4 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
 };
 
-export default [route];
+export default route;
