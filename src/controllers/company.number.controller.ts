@@ -30,4 +30,4 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
 };
 
-export default [route];
+export default route;
