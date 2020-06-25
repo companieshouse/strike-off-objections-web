@@ -27,6 +27,8 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
     return next();
 });
 
+// TODO test scenario when an error is logged - check that this is happening correctly
+
 describe("check company tests", () => {
 
     it("should render the page with company data from the session", async () => {
