@@ -8,26 +8,23 @@
 {% endblock %}
 
 {% block backLink %}
-  {{ govukBackLink(
+  {{ govukBackLink({
     text: "Back",
-    href: "confirm-company"
+    href: "/confirm-company"
   }) }}
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="" method="post">
-        {% if errorList.length > 0 %}
-          {{ govukErrorSummary({
-            titleText: "There is a problem",
-            errorList: errorList
-          }) }}
-        {% endif %}
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorList
+        }) }}
+      {% endif %}
 
-        {% set titleHTML %}
-          <h1 class="govuk-heading-xl">Tell us why you're objecting to the company being struck off</h1>
-        {% endset %}
+      <form method="post">
 
         {% if errInformation.flag %}
           {% set informationError = {
@@ -38,16 +35,18 @@
         {% endif %}
 
         {{ govukTextarea({
+          label: {
+            text: "Tell us why you're objecting to the company being struck off",
+            isPageHeading: true,
+            classes: "govuk-label--xl",
+            value: information
+          },
+
           name: "information",
           id: "information",
           errorMessage: informationError,
-          rows: '8',
-          label: {
-            html: titleHTML,
-            isPageHeading: true,
-            classes: 'govuk-heading-large',
-            value: information
-          }
+          rows: '8'
+
         }) }}
 
         {{ govukButton({
