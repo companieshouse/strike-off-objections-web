@@ -1,7 +1,7 @@
 import logger from "../utils/logger";
 
 /**
- * Different types of ObjectionStatus available to web app
+ * State of Objection
  */
 export enum ObjectionStatus {
   OPEN,
