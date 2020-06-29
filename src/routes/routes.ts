@@ -18,8 +18,11 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 
 router.get("/", renderTemplate(Templates.INDEX));
 
+router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute);
+
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute);
+
 router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute);
 
 export default router;
