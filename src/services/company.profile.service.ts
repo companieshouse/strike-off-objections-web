@@ -1,7 +1,7 @@
 import { createApiClient } from "ch-sdk-node";
 import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
 import Resource from "ch-sdk-node/dist/services/resource";
-import { ObjectionCompanyProfile } from "../model/objection.company.profile";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
 import logger from "../utils/logger";
@@ -14,6 +14,7 @@ import logger from "../utils/logger";
  * @param token the bearer security token to use to call the api
  */
 export const getCompanyProfile = async (companyNumber: string, token: string): Promise<ObjectionCompanyProfile> => {
+
   logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 

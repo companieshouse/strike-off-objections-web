@@ -1,19 +1,30 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
+jest.mock("../../src/services/objections.session.service");
 
+import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
+import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import { getValueFromObjectionsSession } from "../../src/services/objections.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
+
+const mockGetObjectionSessionValue = getValueFromObjectionsSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    req.session = {
+        data: {},
+    } as Session;
+    return next();
+});
 
 describe("Basic URL Tests", () => {
 
@@ -43,6 +54,9 @@ describe("Basic URL Tests", () => {
   });
 
   it("should find the confirm company page", async () => {
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
     const response = await request(app)
       .get("/strike-off-objections/confirm-company");
 
@@ -59,3 +73,16 @@ describe("Basic URL Tests", () => {
   });
 
 });
+
+const dummyCompanyProfile: ObjectionCompanyProfile = {
+    address: {
+        line_1: "line1",
+        line_2: "line2",
+        postCode: "post code",
+    },
+    companyName: "Girls school trust",
+    companyNumber: "00006400",
+    companyStatus: "Active",
+    companyType: "limited",
+    incorporationDate: "26 June 1872",
+};

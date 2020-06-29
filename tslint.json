@@ -6,6 +6,7 @@
   "jsRules": {},
   "rules": {
     "interface-name": false,
+    "no-async-without-await": true,
     "variable-name": [true, "check-format", "allow-leading-underscore"],
     "whitespace": [true,
       "check-branch",
