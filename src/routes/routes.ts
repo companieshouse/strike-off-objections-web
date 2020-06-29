@@ -17,5 +17,5 @@ router.get("/", renderTemplate(Templates.INDEX));
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.get(pageURLs.CONFIRM_COMPANY, renderTemplate(Templates.CONFIRM_COMPANY));
-
+router.get(pageURLs.ENTER_INFORMATION, renderTemplate(Templates.ENTER_INFORMATION));
 export default router;

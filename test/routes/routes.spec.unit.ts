@@ -50,4 +50,12 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/Confirm this is the correct company/);
   });
 
+  it("should find the enter information page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/enter-information");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Tell us why you're objecting to the company being struck off/);
+  });
+
 });
