@@ -10,7 +10,6 @@ import request from "supertest";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { COMPANY_NUMBER, OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -20,7 +19,7 @@ import { getValidAccessToken } from "../../src/services/objections.session.servi
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
-mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -69,7 +68,7 @@ describe("company number lookup tests", () => {
         });
 
         mockValidAccessToken.mockReset();
-        mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
+        mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN);
 
         mockCompanyProfile.mockResolvedValueOnce(dummyCompanyProfile);
 
@@ -78,7 +77,7 @@ describe("company number lookup tests", () => {
             .set("Accept", "application/json")
             .set("Referer", "/")
             .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({companyNumber: COMPANY_NUMBER});
+            .send({ companyNumber: COMPANY_NUMBER });
 
         expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
         expect(response.status).toEqual(302);
