@@ -10,7 +10,7 @@ const HTTP_POST: Method = "post";
  * @interface
  */
 export interface ApiError {
-  data: [];
+  data: any;
   message: string;
   status: number;
 }

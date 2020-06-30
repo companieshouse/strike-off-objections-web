@@ -1,7 +1,7 @@
 jest.mock("axios");
 
-import axios from "axios";
-import { createNewObjection, ObjectionPatch, ObjectionStatus, patchObjection } from "../../src/services/objections.api.service";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { ApiError, createNewObjection, ObjectionPatch, ObjectionStatus, patchObjection } from "../../src/services/objections.api.service";
 
 const mockAxiosRequest = axios.request as jest.Mock;
 
@@ -10,9 +10,13 @@ const COMPANY_NUMBER = "00006400";
 
 describe("objections API service unit tests", () => {
 
+  beforeEach(() => {
+    mockAxiosRequest.mockReset();
+  });
+
   it("returns an id when a new objection is created", async () => {
     const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
-    mockAxiosRequest.mockResolvedValue({
+    mockAxiosRequest.mockResolvedValueOnce({
       data: {
         id: NEW_OBJECTION_ID,
       },
@@ -21,7 +25,36 @@ describe("objections API service unit tests", () => {
 
     expect(objectionId).toBeDefined();
     expect(typeof objectionId).toBe("string");
-    expect(objectionId).toEqual(NEW_OBJECTION_ID);
+    expect(objectionId).toStrictEqual(NEW_OBJECTION_ID);
+  });
+
+  it("throws an ApiError from createNewObjection when an error occurs calling the api", async () => {
+    const axiosError: AxiosError = {
+      message: "Not Found",
+      response: {
+        data: {
+          errors: ["missing company"],
+        },
+        status: 404,
+      } as AxiosResponse,
+    } as AxiosError;
+
+    mockAxiosRequest.mockRejectedValueOnce(axiosError);
+
+    let thrownError: ApiError;
+    try {
+      await createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
+    } catch (e) {
+      thrownError = e;
+    }
+
+    const expectedApiError: ApiError = {
+      data: ["missing company"],
+      message: "Not Found",
+      status: 404,
+    };
+
+    expect(thrownError).toStrictEqual(expectedApiError);
   });
 
   it("returns undefined when patching an objection", () => {
