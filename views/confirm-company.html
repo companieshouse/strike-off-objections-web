@@ -80,7 +80,11 @@
 
       <form action="" method="post">
         {{ govukButton({
-            text: "Confirm and continue"
+          text: "Confirm and continue",
+          attributes: {
+            "data-event-id": "confirm-and-continue-button",
+            id: "submit"
+          }
         }) }}
       </form>
     </div>
