@@ -1,10 +1,14 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import axios from "axios";
-import { INTERNAL_API_URL } from "utils/properties";
 import logger from "../utils/logger";
+import { INTERNAL_API_URL } from "../utils/properties";
 
 const HTTP_POST: Method = "post";
 
+/**
+ * Api Error
+ * @interface
+ */
 export interface ApiError {
   data: [];
   message: string;
@@ -54,7 +58,8 @@ const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResponse> =
 };
 
 /**
- * State of Objection
+ * Status of Objection
+ * @enum
  */
 export enum ObjectionStatus {
   OPEN,
@@ -63,7 +68,8 @@ export enum ObjectionStatus {
 }
 
 /**
- * Data strucrure for patching an Objection
+ * Data structure for patching an Objection
+ * @interface
  */
 export interface ObjectionPatch {
   reason?: string;
