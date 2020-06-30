@@ -50,7 +50,10 @@
         }) }}
 
         {{ govukButton({
-          id: "submit",
+          attributes: {
+            "data-event-id": "continue-button",
+            id: "submit"
+          },
           text: "Continue"
         }) }}
       </form>
