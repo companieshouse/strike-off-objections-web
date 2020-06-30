@@ -17,7 +17,7 @@ import { COOKIE_NAME } from "../../src/utils/properties";
 const mockGetObjectionSessionValue = getValueFromObjectionsSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
-mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
+mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
