@@ -1,6 +1,6 @@
-jest.mock("../../src/sdk/objections");
+jest.mock("../../src/modules/sdk/objections");
 
-import * as objectionsSdk from "../../src/sdk/objections";
+import * as objectionsSdk from "../../src/modules/sdk/objections";
 import * as objectionsApiService from "../../src/services/objections.api.service";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;

@@ -1,7 +1,7 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import axios from "axios";
-import logger from "../../utils/logger";
-import { INTERNAL_API_URL } from "../../utils/properties";
+import logger from "../../../utils/logger";
+import { INTERNAL_API_URL } from "../../../utils/properties";
 import { ApiError, ObjectionPatch } from "./types";
 
 const HTTP_POST: Method = "post";

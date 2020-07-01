@@ -1,5 +1,5 @@
 
-import * as objectionsSdk from "../sdk/objections";
+import * as objectionsSdk from "../modules/sdk/objections";
 import logger from "../utils/logger";
 
 /**

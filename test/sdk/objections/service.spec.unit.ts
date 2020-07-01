@@ -1,7 +1,7 @@
 jest.mock("axios");
 
 import axios, { AxiosError, AxiosResponse } from "axios";
-import * as objectionsSdk from "../../../src/sdk/objections";
+import * as objectionsSdk from "../../../src/modules/sdk/objections";
 
 const mockAxiosRequest = axios.request as jest.Mock;
 
