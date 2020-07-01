@@ -41,20 +41,14 @@ describe("objections SDK service unit tests", () => {
 
     mockAxiosRequest.mockRejectedValueOnce(axiosError);
 
-    let thrownError: objectionsSdk.ApiError = {} as objectionsSdk.ApiError;
-    try {
-      await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
-    } catch (e) {
-      thrownError = e;
-    }
-
     const expectedApiError: objectionsSdk.ApiError = {
       data: ["missing company"],
       message: "Not Found",
       status: 404,
     };
 
-    expect(thrownError).toStrictEqual(expectedApiError);
+    await expect(objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN))
+      .rejects.toStrictEqual(expectedApiError);
   });
 
   it("returns undefined when patching an objection", () => {
