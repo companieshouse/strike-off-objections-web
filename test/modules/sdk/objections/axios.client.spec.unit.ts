@@ -4,7 +4,7 @@ jest.mock("../../../../src/utils/logger");
 
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { ApiError } from "../../../../src/modules/sdk/objections";
-import { getAxiosRequestConfig, HTTP_POST, makeAPICall } from "../../../../src/modules/sdk/objections/axios.client";
+import { getAxiosRequestConfig, HTTP_POST, makeAPICall, STATUS_NO_RESPONSE } from "../../../../src/modules/sdk/objections/axios.client";
 import logger from "../../../../src/utils/logger";
 
 const mockAxiosRequest = axios.request as jest.Mock;
@@ -89,7 +89,7 @@ describe("axios client tests", () => {
     const expectedError: ApiError = {
       data: [],
       message: errorMessage,
-      status: -1,
+      status: STATUS_NO_RESPONSE,
     };
 
     await expect(makeAPICall(config)).rejects.toStrictEqual(expectedError);

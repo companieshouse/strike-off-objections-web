@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "ax
 import logger from "../../../utils/logger";
 import { ApiError } from "./types";
 
+export const STATUS_NO_RESPONSE = -1;
 export const HTTP_POST: Method = "post";
 
 /**
@@ -41,7 +42,7 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
     throw {
       data: response ? response.data.errors : [],
       message,
-      status: response ? response.status : -1,
+      status: response ? response.status : STATUS_NO_RESPONSE,
     } as ApiError;
   }
 };
