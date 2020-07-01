@@ -60,7 +60,7 @@ const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResponse> =
 export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
   logger.info(`Creating a new objection for company number ${companyNumber}`);
 
-  const createNewObjectionUrl = `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections/`;
+  const createNewObjectionUrl = `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
   const axiosConfig: AxiosRequestConfig = getAxiosRequestConfig(HTTP_POST, createNewObjectionUrl, token);
 
   return (await makeAPICall(axiosConfig)).data.id as string;
