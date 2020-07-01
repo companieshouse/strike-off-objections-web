@@ -12,6 +12,7 @@ import logger from "../utils/logger";
  * @throws {ApiError}
  */
 export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
+  logger.info(`Creating objection for company number ${companyNumber}`);
   return await objectionsSdk.createNewObjection(companyNumber, token);
 };
 
