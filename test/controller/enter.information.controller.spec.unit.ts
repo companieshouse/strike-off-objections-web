@@ -8,30 +8,35 @@ import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
+import { SESSION_OBJECTION_ID } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
 import { createNewObjection } from "../../src/services/objections.api.service";
-import { getValueFromObjectionsSession } from "../../src/services/objections.session.service";
+import { addToObjectionsSession, getValueFromObjectionsSession } from "../../src/services/objections.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
+const COMPANY_NUMBER: string = "00006400";
+const OBJECTION_ID: string = "123456";
+
+const SESSION: Session = {
+        data: {},
+    } as Session;
+
 const mockGetObjectionSessionValue = getValueFromObjectionsSession as jest.Mock;
+const mockSetObjectionSessionValue = addToObjectionsSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    req.session = {
-        data: {},
-    } as Session;
+    req.session = SESSION;
     return next();
 });
 
 const mockCreateNewObjection = createNewObjection as jest.Mock;
-
-const COMPANY_NUMBER: string = "00006400";
 
 describe("enter information tests", () => {
 
@@ -40,18 +45,22 @@ describe("enter information tests", () => {
         mockGetObjectionSessionValue.mockReset();
         mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
+        mockSetObjectionSessionValue.mockReset();
+
         mockCreateNewObjection.mockReset();
-        mockCreateNewObjection.mockImplementation(() => "123456");
+        mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
 
         const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
             .set("Referer", "/")
             .set("Cookie", [`${COOKIE_NAME}=123`]);
 
         expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-        expect(response.status).toEqual(200);
+
+        expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
 
         expect(mockCreateNewObjection).toHaveBeenCalledWith(COMPANY_NUMBER, undefined);
 
+        expect(response.status).toEqual(200);
         expect(response.text).toContain("Tell us why");
     });
 });
