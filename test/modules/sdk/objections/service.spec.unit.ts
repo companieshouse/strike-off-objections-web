@@ -1,7 +1,7 @@
 jest.mock("axios");
 
 import axios, { AxiosError, AxiosResponse } from "axios";
-import * as objectionsSdk from "../../../src/modules/sdk/objections";
+import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 
 const mockAxiosRequest = axios.request as jest.Mock;
 
@@ -41,7 +41,7 @@ describe("objections SDK service unit tests", () => {
 
     mockAxiosRequest.mockRejectedValueOnce(axiosError);
 
-    let thrownError: objectionsSdk.ApiError;
+    let thrownError: objectionsSdk.ApiError = {} as objectionsSdk.ApiError;
     try {
       await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
     } catch (e) {
