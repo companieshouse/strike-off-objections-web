@@ -17,7 +17,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
 };
 
 /**
- * Update an objection reason for the given company.
+ * Update an objection reason for the given objection ID.
  *
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
@@ -32,7 +32,7 @@ export const updateObjectionReason = (objectionId: string, token: string, reason
 };
 
 /**
- * Update an objection status for the given company.
+ * Update an objection status for the given objection ID.
  *
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
