@@ -13,7 +13,11 @@ import logger from "../utils/logger";
  */
 export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
   logger.info(`Creating objection for company number ${companyNumber}`);
-  return await objectionsSdk.createNewObjection(companyNumber, token);
+
+  const objectionId: string = await objectionsSdk.createNewObjection(companyNumber, token);
+
+  logger.debug(`Id of newly created objection is ${objectionId}`);
+  return objectionId;
 };
 
 /**
