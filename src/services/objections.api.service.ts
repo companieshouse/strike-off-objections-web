@@ -32,7 +32,7 @@ export const updateObjectionReason = (objectionId: string, token: string, reason
 };
 
 /**
- * Update an objection status for the given objection ID.
+ * Update objection status to submitted for the given objection ID.
  *
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
