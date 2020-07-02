@@ -24,6 +24,10 @@
         }) }}
       {% endif %}
 
+      {% set titleHTML %}
+      <h1 class="govuk-heading-xl">Tell us why you're objecting to the company being struck off</h1>
+      {% endset %}
+
       <form method="post">
 
         {% if errInformation.flag %}
@@ -36,9 +40,8 @@
 
         {{ govukTextarea({
           label: {
-            text: "Tell us why you're objecting to the company being struck off",
+            html: titleHTML,
             isPageHeading: true,
-            classes: "govuk-label--xl",
             value: information
           },
 
