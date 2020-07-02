@@ -41,7 +41,7 @@ export const updateObjectionReason = (objectionId: string, token: string, reason
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
  */
-export const updateObjectionStatusToSubmitted = (objectionId: string, token: string) => {
+export const submitObjection = (objectionId: string, token: string) => {
 
  logger.info(`Updating objection status to submitted for objectionId ${objectionId}`);
 

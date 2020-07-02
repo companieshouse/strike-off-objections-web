@@ -1,7 +1,7 @@
 jest.mock("../../src/modules/sdk/objections");
 
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import * as objectionsApiService from "../../src/services/objections.service";
+import * as objectionsService from "../../src/services/objections.service";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 
@@ -14,7 +14,7 @@ describe("objections API service unit tests", () => {
     const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
-    const objectionId: string = await objectionsApiService.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
+    const objectionId: string = await objectionsService.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
 
     expect(objectionId).toBeDefined();
     expect(typeof objectionId).toBe("string");
@@ -22,12 +22,12 @@ describe("objections API service unit tests", () => {
   });
 
   it("returns undefined when updating an objection reason", () => {
-    const patchResult = objectionsApiService.updateObjectionReason(COMPANY_NUMBER, ACCESS_TOKEN, "reason");
+    const patchResult = objectionsService.updateObjectionReason(COMPANY_NUMBER, ACCESS_TOKEN, "reason");
     expect(patchResult).toBeUndefined();
   });
 
   it("returns undefined when updating an objection status to submitted", () => {
-    const patchResult = objectionsApiService.updateObjectionStatusToSubmitted(COMPANY_NUMBER, ACCESS_TOKEN);
+    const patchResult = objectionsService.submitObjection(COMPANY_NUMBER, ACCESS_TOKEN);
     expect(patchResult).toBeUndefined();
   });
 });

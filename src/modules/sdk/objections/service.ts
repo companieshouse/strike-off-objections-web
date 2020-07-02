@@ -4,6 +4,8 @@ import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getAxiosRequestConfig, HTTP_POST, makeAPICall } from "./axios.client";
 import { ObjectionPatch } from "./types";
 
+const OBJECTIONS_API_URL = (companyNumber: string): string => `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
+
 /**
  * Create a new objection for the given company.
  *
@@ -16,8 +18,7 @@ import { ObjectionPatch } from "./types";
 export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
   logger.info(`Creating a new objection for company number ${companyNumber}`);
 
-  const createNewObjectionUrl = `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
-  const axiosConfig: AxiosRequestConfig = getAxiosRequestConfig(HTTP_POST, createNewObjectionUrl, token);
+  const axiosConfig: AxiosRequestConfig = getAxiosRequestConfig(HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
 
   return (await makeAPICall(axiosConfig)).data.id as string;
 };
