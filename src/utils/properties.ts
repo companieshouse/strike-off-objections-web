@@ -26,3 +26,5 @@ export const CACHE_SERVER = getEnvironmentVariable("CACHE_SERVER");
 export const SHOW_SERVICE_OFFLINE_PAGE = getEnvironmentVariable("SHOW_SERVICE_OFFLINE_PAGE");
 
 export const LOG_LEVEL = getEnvironmentVariable("LOG_LEVEL", "info");
+
+export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");

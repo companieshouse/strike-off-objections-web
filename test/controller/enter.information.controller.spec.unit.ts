@@ -2,7 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objections.session.service");
-jest.mock("../../src/services/objections.api.service");
+jest.mock("../../src/services/objections.service");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -13,7 +13,7 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
-import { createNewObjection } from "../../src/services/objections.api.service";
+import { createNewObjection } from "../../src/services/objections.service";
 import { addToObjectionsSession, getValueFromObjectionsSession } from "../../src/services/objections.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
