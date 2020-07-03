@@ -55,6 +55,6 @@ export const addAttachment = (companyNumber: string,
                               attachment: Buffer,
                               fileName: string) => {
 
-  logger.info(`Adding attachment to objection`);
+  logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
   objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
