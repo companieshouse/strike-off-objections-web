@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Object to a company being struck off
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/confirm-company"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorList
+        }) }}
+      {% endif %}
+
+      {% set titleHTML %}
+      <h1 class="govuk-heading-xl">Tell us why you're objecting to the company being struck off</h1>
+      {% endset %}
+
+      <form method="post">
+
+        {% if errInformation.flag %}
+          {% set informationError = {
+            text: errInformation.text
+          } %}
+        {% else %}
+          {% set informationError = false %}
+        {% endif %}
+
+        {{ govukTextarea({
+          label: {
+            html: titleHTML,
+            isPageHeading: true,
+            value: information
+          },
+
+          name: "information",
+          id: "information",
+          errorMessage: informationError,
+          rows: '8'
+
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+            "data-event-id": "continue-button",
+            id: "submit"
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import companyNumberRoute from "../controllers/company.number.controller";
 import confirmCompanyRoute from "../controllers/confirm.company.controller";
+import enterInformationRoute from "../controllers/enter.information.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
@@ -19,6 +20,9 @@ router.get("/", renderTemplate(Templates.INDEX));
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute);
+
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute);
+
+router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute);
 
 export default router;

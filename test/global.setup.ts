@@ -5,4 +5,5 @@ export default () => {
   process.env.CACHE_SERVER = "cache_server";
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";
   process.env.LOG_LEVEL = "error";
+  process.env.INTERNAL_API_URL = "http://localhost:9333";
 };

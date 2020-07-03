@@ -3,6 +3,7 @@ jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objections.session.service");
 jest.mock("../../src/middleware/objections.session.middleware");
+jest.mock("../../src/modules/sdk/objections");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -77,6 +78,14 @@ describe("Basic URL Tests", () => {
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Confirm this is the correct company/);
+  });
+
+  it("should find the enter information page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/enter-information");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Tell us why you're objecting to the company being struck off/);
   });
 
 });

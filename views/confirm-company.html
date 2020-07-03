@@ -78,11 +78,14 @@
         ]
       }) }}
 
-      <form action="" method="post">
-        {{ govukButton({
-            text: "Confirm and continue"
-        }) }}
-      </form>
+      {{ govukButton({
+        text: "Confirm and continue",
+        href: "/strike-off-objections/enter-information",
+        attributes: {
+          "data-event-id": "continue-button",
+          id: "submit"
+        }
+      }) }}
     </div>
   </div>
 {% endblock %}
