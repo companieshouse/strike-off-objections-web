@@ -48,3 +48,13 @@ export const submitObjection = (objectionId: string, token: string) => {
   // TODO Call the Objections SDK. Covered by JIRA
   //      sub-task BI-4143
 };
+
+export const addAttachment = (companyNumber: string,
+                              token: string,
+                              objectionId: string,
+                              attachment: Buffer,
+                              fileName: string) => {
+
+  logger.info(`Adding attachment to objection`);
+  objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+};
