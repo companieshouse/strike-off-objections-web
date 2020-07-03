@@ -4,6 +4,7 @@ import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { APP_NAME } from "./constants";
 import authenticationMiddleware from "./middleware/authentication.middleware";
+import objectionsSessionMiddleware from "./middleware/objections.session.middleware";
 import serviceAvailabilityMiddleware from "./middleware/service.availability.middleware";
 import sessionMiddleware from "./middleware/session.middleware";
 import * as pageURLs from "./model/page.urls";
@@ -34,8 +35,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
-app.use(sessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, sessionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, objectionsSessionMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 

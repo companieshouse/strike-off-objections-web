@@ -1,25 +1,44 @@
 import { Session } from "ch-node-session-handler";
+import { AccessTokenKeys } from "ch-node-session-handler/lib/session/keys/AccessTokenKeys";
+import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { IAccessToken, ISignInInfo } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
 import { OBJECTIONS_SESSION_NAME } from "../constants";
-import logger from "../utils/logger";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
+import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 
-export const createObjectionsSession = (session: Session) => {
-    session.data[OBJECTIONS_SESSION_NAME] = {};
+export const retrieveAccessTokenFromSession = (session: Session): string => {
+  const signInInfo: ISignInInfo | undefined = session.get(SessionKey.SignInInfo);
+  if (!signInInfo) {
+    throw new Error("No sign in info");
+  }
+  const accessToken: IAccessToken | undefined = signInInfo[SignInInfoKeys.AccessToken];
+  if (!accessToken) {
+    throw new Error("No access token in sign in session");
+  }
+
+  const token: string | undefined = accessToken[AccessTokenKeys.AccessToken];
+  if (!token) {
+    throw new Error("No access token found in access token object");
+  }
+
+  return token as string;
 };
 
-export const addToObjectionsSession = (session: Session, key: string, value: any) => {
-    session.data[OBJECTIONS_SESSION_NAME][key] = value;
+export const retrieveCompanyProfileFromObjectionsSession = (session: Session): ObjectionCompanyProfile => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+  const company: ObjectionCompanyProfile | undefined = objectionsExtraData.companyProfile;
+  if (company) {
+    return company;
+  }
+  throw new Error("Error retrieving company profile from objections session");
 };
 
-export const getValueFromObjectionsSession = (session: Session, key: string) => {
-    return session.data[OBJECTIONS_SESSION_NAME][key];
-};
+export const retrieveObjectionsSessionFromSession = (session: Session): ObjectionSessionExtraData => {
+  const extraData: ObjectionSessionExtraData | undefined = session.getExtraData(OBJECTIONS_SESSION_NAME);
+  if (extraData) {
+    return extraData;
+  }
 
-export const getValidAccessToken = (session: Session): string | undefined => {
-    const signIn = session.data.signin_info;
-    if (signIn && signIn.access_token) {
-        return signIn.access_token.access_token as string;
-    } else {
-        logger.error("Access token is missing");
-    }
-    return undefined;
+  throw new Error("No Objections Session found in Session");
 };
