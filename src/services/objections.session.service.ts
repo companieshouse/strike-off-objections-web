@@ -3,7 +3,7 @@ import { AccessTokenKeys } from "ch-node-session-handler/lib/session/keys/Access
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
 import { IAccessToken, ISignInInfo } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
-import { OBJECTIONS_SESSION_NAME } from "../constants";
+import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 
@@ -32,6 +32,16 @@ export const retrieveCompanyProfileFromObjectionsSession = (session: Session): O
     return company;
   }
   throw new Error("Error retrieving company profile from objections session");
+};
+
+export const addCompanyProfileToObjectionsSession = (session: Session, company: ObjectionCompanyProfile): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+  if (objectionsExtraData) {
+    objectionsExtraData[SESSION_COMPANY_PROFILE] = company;
+    return;
+  }
+
+  throw new Error("No objections session extra data to add company too");
 };
 
 export const retrieveObjectionsSessionFromSession = (session: Session): ObjectionSessionExtraData => {

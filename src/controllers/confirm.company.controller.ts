@@ -24,6 +24,8 @@ export const route = (req: Request, res: Response, next: NextFunction) => {
       return next(e);
     }
   }
+
+  return next(new Error("No Session present"));
 };
 
 export default route;

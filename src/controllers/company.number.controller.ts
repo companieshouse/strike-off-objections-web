@@ -1,12 +1,11 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
-import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
 import {
+  addCompanyProfileToObjectionsSession,
   retrieveAccessTokenFromSession,
-  retrieveObjectionsSessionFromSession,
 } from "../services/objections.session.service";
 import logger from "../utils/logger";
 
@@ -32,13 +31,12 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
 
   const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-  const objectionsSessionExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
-  if (objectionsSessionExtraData) {
-    objectionsSessionExtraData.objections_company_profile = company;
+  try {
+    addCompanyProfileToObjectionsSession(session, company);
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
+  } catch (e) {
+    return next(e);
   }
-
-  return next(new Error("No objections session extra data to add company too"));
 };
 
 export default route;

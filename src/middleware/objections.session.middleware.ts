@@ -6,7 +6,7 @@ import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 const objectionsSessionMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
   if (session) {
-    const objectionsSession: ObjectionSessionExtraData | undefined = session.getExtraData("objections_session");
+    const objectionsSession: ObjectionSessionExtraData | undefined = session.getExtraData(OBJECTIONS_SESSION_NAME);
     if (objectionsSession) {
       return next();
     }
