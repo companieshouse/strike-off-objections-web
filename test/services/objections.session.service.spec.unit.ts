@@ -1,6 +1,6 @@
 import { Session } from "ch-node-session-handler";
-import { retrieveAccessTokenFromSession } from "../../src/services/objections.session.service";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import { retrieveAccessTokenFromSession } from "../../src/services/objections.session.service";
 
 const accessTokenValue = "tokenABC123";
 

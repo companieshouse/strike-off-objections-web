@@ -34,7 +34,7 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
 
   const objectionsSessionExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
   if (objectionsSessionExtraData) {
-    objectionsSessionExtraData.companyProfile = company;
+    objectionsSessionExtraData.objections_company_profile = company;
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
   }
 

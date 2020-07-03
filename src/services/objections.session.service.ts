@@ -27,7 +27,7 @@ export const retrieveAccessTokenFromSession = (session: Session): string => {
 
 export const retrieveCompanyProfileFromObjectionsSession = (session: Session): ObjectionCompanyProfile => {
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
-  const company: ObjectionCompanyProfile | undefined = objectionsExtraData.companyProfile;
+  const company: ObjectionCompanyProfile | undefined = objectionsExtraData.objections_company_profile;
   if (company) {
     return company;
   }
@@ -41,4 +41,14 @@ export const retrieveObjectionsSessionFromSession = (session: Session): Objectio
   }
 
   throw new Error("No Objections Session found in Session");
+};
+
+export const retrieveFromObjectionsSession = (session: Session, key: string): any => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+  return objectionsExtraData[key];
+};
+
+export const addToObjectionsSession = (session: Session, key: string, v: any): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+  objectionsExtraData[key] = v;
 };
