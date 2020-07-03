@@ -37,3 +37,14 @@ export const patchObjection = (companyNumber: string, token: string, patch: Obje
   // TODO Call the actual Objections API when end-point is implemented. Covered by JIRA
   //      sub-task BI-4143
 };
+
+export const addAttachment = (companyNumber: string,
+                              token: string,
+                              objectionId: string,
+                              attachment: Buffer,
+                              fileName: string) => {
+
+  // TODO Call the actual Objections API when end-point is implemented. Covered by JIRA
+  //      sub-tasks OBJ-63 and OBJ-70
+
+};
