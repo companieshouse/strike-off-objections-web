@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import addDocumentsRoute from "../controllers/add.documents.controller";
 import companyNumberRoute from "../controllers/company.number.controller";
 import confirmCompanyRoute from "../controllers/confirm.company.controller";
 import enterInformationRoute from "../controllers/enter.information.controller";
@@ -24,5 +25,6 @@ router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute);
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute);
 
 router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute);
+router.post(pageURLs.ENTER_INFORMATION, addDocumentsRoute);
 
 export default router;

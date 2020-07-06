@@ -4,9 +4,12 @@ import * as objectionsSdk from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objections.service";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
+const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
+const OBJECTION_ID = "444222";
+const REASON = "Owed Money";
 
 describe("objections API service unit tests", () => {
 
@@ -21,9 +24,10 @@ describe("objections API service unit tests", () => {
     expect(objectionId).toStrictEqual(NEW_OBJECTION_ID);
   });
 
-  it("returns undefined when updating an objection reason", () => {
-    const patchResult = objectionsService.updateObjectionReason(COMPANY_NUMBER, ACCESS_TOKEN, "reason");
-    expect(patchResult).toBeUndefined();
+  it("objections SDK is called when updating an objection reason", async () => {
+    await objectionsService.updateObjectionReason(COMPANY_NUMBER, OBJECTION_ID, ACCESS_TOKEN, REASON);
+
+    expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, OBJECTION_ID, ACCESS_TOKEN, { reason: REASON });
   });
 
   it("returns undefined when updating an objection status to submitted", () => {
