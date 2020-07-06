@@ -1,8 +1,7 @@
 import { Request, Response, Router } from "express";
-import addDocumentsRoute from "../controllers/add.documents.controller";
 import companyNumberRoute from "../controllers/company.number.controller";
 import confirmCompanyRoute from "../controllers/confirm.company.controller";
-import enterInformationRoute from "../controllers/enter.information.controller";
+import * as enterInformation from "../controllers/enter.information.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
@@ -24,7 +23,9 @@ router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute);
 
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute);
 
-router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute);
-router.post(pageURLs.ENTER_INFORMATION, addDocumentsRoute);
+router.get(pageURLs.ENTER_INFORMATION, enterInformation.get);
+router.post(pageURLs.ENTER_INFORMATION, enterInformation.post);
+
+router.get(pageURLs.DOCUMENT_UPLOAD, renderTemplate(Templates.DOCUMENT_UPLOAD));
 
 export default router;

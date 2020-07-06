@@ -1,7 +1,7 @@
 jest.mock("../../src/modules/sdk/objections");
 
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import * as objectionsService from "../../src/services/objections.service";
+import * as objectionsService from "../../src/services/objection.service";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;

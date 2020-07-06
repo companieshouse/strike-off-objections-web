@@ -1,25 +1,42 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
-import { SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../constants";
+import { SESSION_OBJECTION_ID } from "../constants";
+import { OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { createNewObjection } from "../services/objections.service";
-import { addToObjectionsSession, getValidAccessToken, getValueFromObjectionsSession } from "../services/objections.session.service";
+import { createNewObjection, updateObjectionReason } from "../services/objection.service";
+import {
+  addToObjectionSession,
+  retrieveAccessTokenFromSession,
+  retrieveCompanyProfileFromObjectionSession,
+  retrieveFromObjectionSession,
+} from "../services/objection.session.service";
 
-const route = async (req: Request, res: Response, next: NextFunction) => {
-
+export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
-  const token: string = getValidAccessToken(session) as string;
+  const token: string = retrieveAccessTokenFromSession(session);
 
-  const company: ObjectionCompanyProfile = getValueFromObjectionsSession(session, SESSION_COMPANY_PROFILE);
+  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
 
   const objectionId: string = await createNewObjection(company.companyNumber, token);
 
-  addToObjectionsSession(session, SESSION_OBJECTION_ID, objectionId);
+  addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
 
   return res.render(Templates.ENTER_INFORMATION, {
     templateName: Templates.ENTER_INFORMATION,
   });
 };
 
-export default route;
+export const post = async (req: Request, res: Response, next: NextFunction) => {
+  const session: Session = req.session as Session;
+  const token: string = retrieveAccessTokenFromSession(session);
+
+  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+
+  const reason: string = req.body.information;
+
+  await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+
+  return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
+};

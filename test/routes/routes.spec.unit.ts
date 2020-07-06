@@ -1,20 +1,25 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
-jest.mock("../../src/services/objections.session.service");
+jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/modules/sdk/objections");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
+import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
+import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { getValueFromObjectionsSession } from "../../src/services/objections.session.service";
+import {
+  retrieveCompanyProfileFromObjectionSession,
+} from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const mockGetObjectionSessionValue = getValueFromObjectionsSession as jest.Mock;
+const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -25,6 +30,16 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
         data: {},
     } as Session;
     return next();
+});
+
+const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
+mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+  if (req.session) {
+    req.session.data[OBJECTIONS_SESSION_NAME] = {};
+    return next();
+  }
+
+  return next(new Error("No session on request"));
 });
 
 describe("Basic URL Tests", () => {
@@ -71,6 +86,14 @@ describe("Basic URL Tests", () => {
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Tell us why you're objecting to the company being struck off/);
+  });
+
+  it("should find the document upload page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/document-upload");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Add documents to support your objection/);
   });
 
 });

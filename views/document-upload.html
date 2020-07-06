@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Object to a company being struck off
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/strike-off-objections/enter-information"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" enctype="multipart/form-data" id="file-upload-form">
+
+        <div id="errorSummaryDiv">
+          {% include "includes/document-upload-error-summary.html" %}
+        </div>
+
+        <h1 class="govuk-heading-xl">
+          Add documents to support your objection
+        </h1>
+        <p class="govuk-body-m">Documents must:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>show the company name in full</li>
+          <li>show how the company is being pursued</li>
+          <li>be no more than 6 months old</li>
+          <li>offer evidence that supports your objection, like invoices or court documents</li>
+        </ul>
+
+        <div id="fileUploadDiv">
+          {% include "includes/document-upload-file-picker.html" %}
+        </div>
+
+        <div class="upload-status-heading">
+          <h2 class="govuk-heading-s">Uploading document</h2>
+        </div>
+        <div class="upload-status" role="alert">
+          <h2 class="govuk-heading-m upload-status__title">document.docx</h2>
+          <p class="govuk-body upload-status__status">
+            <span class='upload-status__value' aria-live="assertive"></span>
+          </p>
+          <a href='#' class="govuk-link upload-status__link">Cancel</a>
+          <div class="progress-bar">
+            <div class="indicator"></div>
+          </div>
+        </div>
+
+        <div id="fileListDiv">
+          {% include "includes/document-upload-file-list.html" %}
+        </div>
+
+      </form>
+
+      <form method="post" id="continue">
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+            "data-event-id": "continue-button",
+            id: "submit"
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}
