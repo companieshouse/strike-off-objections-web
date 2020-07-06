@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { Templates } from "../model/template.paths";
-import { createNewObjection } from "../services/objections.service";
+import { createNewObjection } from "../services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,

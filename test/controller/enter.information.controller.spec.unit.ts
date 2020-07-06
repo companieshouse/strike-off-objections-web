@@ -15,7 +15,7 @@ import objectionSessionMiddleware from "../../src/middleware/objection.session.m
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
-import { createNewObjection } from "../../src/services/objections.service";
+import { createNewObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession, retrieveCompanyProfileFromObjectionSession,
 } from "../../src/services/objection.session.service";
