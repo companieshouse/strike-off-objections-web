@@ -88,6 +88,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/Tell us why you're objecting to the company being struck off/);
   });
 
+  it("should find the document upload page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/document-upload");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Add documents to support your objection/);
+  });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {

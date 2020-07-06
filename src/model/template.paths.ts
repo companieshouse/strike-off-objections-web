@@ -3,5 +3,6 @@ export enum Templates {
   CONFIRM_COMPANY = "confirm-company",
   ENTER_INFORMATION = "enter-information",
   SERVICE_OFFLINE = "service-offline",
+  DOCUMENT_UPLOAD = "document-upload",
   INDEX = "index",
 }

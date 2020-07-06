@@ -14,7 +14,7 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
+import { OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
 import { createNewObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession, retrieveCompanyProfileFromObjectionSession,
@@ -76,6 +76,15 @@ describe("enter information tests", () => {
 
         expect(response.status).toEqual(200);
         expect(response.text).toContain("Tell us why");
+    });
+
+    it("should redirect to the document-upload page on post", async () => {
+        const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+          .set("Referer", "/")
+          .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+        expect(response.status).toEqual(302);
+        expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
     });
 });
 

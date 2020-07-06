@@ -11,7 +11,7 @@ import logger from "../utils/logger";
  * @param next
  */
 
-export const route = (req: Request, res: Response, next: NextFunction) => {
+const route = (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
