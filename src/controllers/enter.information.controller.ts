@@ -2,7 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../constants";
-import * as PageUrls from "../model/page.urls";
+import { OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { createNewObjection } from "../services/objections.service";
 import { addToObjectionsSession, getValidAccessToken, getValueFromObjectionsSession } from "../services/objections.session.service";
@@ -23,5 +23,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, res: Response, next: NextFunction) => {
-  return res.redirect(PageUrls.OBJECTIONS_DOCUMENT_UPLOAD);
+  return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
 };
