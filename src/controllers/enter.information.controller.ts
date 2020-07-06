@@ -5,21 +5,21 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import { Templates } from "../model/template.paths";
 import { createNewObjection } from "../services/objections.service";
 import {
-  addToObjectionsSession,
+  addToObjectionSession,
   retrieveAccessTokenFromSession,
-  retrieveCompanyProfileFromObjectionsSession,
-} from "../services/objections.session.service";
+  retrieveCompanyProfileFromObjectionSession,
+} from "../services/objection.session.service";
 
 const route = async (req: Request, res: Response, next: NextFunction) => {
 
   const session: Session = req.session as Session;
   const token: string = retrieveAccessTokenFromSession(session);
 
-  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionsSession(session);
+  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
 
   const objectionId: string = await createNewObjection(company.companyNumber, token);
 
-  addToObjectionsSession(session, SESSION_OBJECTION_ID, objectionId);
+  addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
 
   return res.render(Templates.ENTER_INFORMATION, {
     templateName: Templates.ENTER_INFORMATION,

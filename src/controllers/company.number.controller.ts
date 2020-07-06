@@ -4,9 +4,9 @@ import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
 import {
-  addCompanyProfileToObjectionsSession,
+  addCompanyProfileToObjectionSession,
   retrieveAccessTokenFromSession,
-} from "../services/objections.session.service";
+} from "../services/objection.session.service";
 import logger from "../utils/logger";
 
 /**
@@ -25,14 +25,10 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
   let token: string;
   try {
     token = retrieveAccessTokenFromSession(session);
-  } catch (e) {
-    return next(e);
-  }
 
-  const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
+    const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-  try {
-    addCompanyProfileToObjectionsSession(session, company);
+    addCompanyProfileToObjectionSession(session, company);
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
   } catch (e) {
     return next(e);

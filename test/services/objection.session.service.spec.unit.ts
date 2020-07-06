@@ -1,5 +1,5 @@
 import { Session } from "ch-node-session-handler";
-import { retrieveAccessTokenFromSession } from "../../src/services/objections.session.service";
+import { retrieveAccessTokenFromSession } from "../../src/services/objection.session.service";
 
 const accessTokenValue = "tokenABC123";
 

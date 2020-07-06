@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { Templates } from "../model/template.paths";
-import { retrieveCompanyProfileFromObjectionsSession } from "../services/objections.session.service";
+import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
 import logger from "../utils/logger";
 
 /**
@@ -14,7 +14,7 @@ import logger from "../utils/logger";
 export const route = (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
-      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionsSession(req.session);
+      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
       return res.render(Templates.CONFIRM_COMPANY, {
         company,
         templateName: Templates.CONFIRM_COMPANY,

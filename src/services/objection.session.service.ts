@@ -25,40 +25,40 @@ export const retrieveAccessTokenFromSession = (session: Session): string => {
   return token as string;
 };
 
-export const retrieveCompanyProfileFromObjectionsSession = (session: Session): ObjectionCompanyProfile => {
-  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+export const retrieveCompanyProfileFromObjectionSession = (session: Session): ObjectionCompanyProfile => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   const company: ObjectionCompanyProfile | undefined = objectionsExtraData.objections_company_profile;
   if (company) {
     return company;
   }
-  throw new Error("Error retrieving company profile from objections session");
+  throw new Error("Error retrieving company profile from objection session");
 };
 
-export const addCompanyProfileToObjectionsSession = (session: Session, company: ObjectionCompanyProfile): void => {
-  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+export const addCompanyProfileToObjectionSession = (session: Session, company: ObjectionCompanyProfile): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   if (objectionsExtraData) {
     objectionsExtraData[SESSION_COMPANY_PROFILE] = company;
     return;
   }
 
-  throw new Error("No objections session extra data to add company too");
+  throw new Error("No Objection session extra data to add company to");
 };
 
-export const retrieveObjectionsSessionFromSession = (session: Session): ObjectionSessionExtraData => {
+export const retrieveObjectionSessionFromSession = (session: Session): ObjectionSessionExtraData => {
   const extraData: ObjectionSessionExtraData | undefined = session.getExtraData(OBJECTIONS_SESSION_NAME);
   if (extraData) {
     return extraData;
   }
 
-  throw new Error("No Objections Session found in Session");
+  throw new Error("No Objection Session found in Session");
 };
 
-export const retrieveFromObjectionsSession = (session: Session, key: string): any => {
-  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+export const retrieveFromObjectionSession = (session: Session, key: string): any => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   return objectionsExtraData[key];
 };
 
-export const addToObjectionsSession = (session: Session, key: string, v: any): void => {
-  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionsSessionFromSession(session);
+export const addToObjectionSession = (session: Session, key: string, v: any): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   objectionsExtraData[key] = v;
 };

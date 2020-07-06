@@ -1,6 +1,7 @@
+import { SESSION_COMPANY_PROFILE } from "../constants";
 import ObjectionCompanyProfile from "./objection.company.profile";
 
 export default interface ObjectionSessionExtraData {
-  objections_company_profile?: ObjectionCompanyProfile;
+  [SESSION_COMPANY_PROFILE]?: ObjectionCompanyProfile;
   objection_id?: string;
 }

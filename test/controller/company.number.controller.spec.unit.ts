@@ -2,8 +2,8 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/company.profile.service");
-jest.mock("../../src/services/objections.session.service");
-jest.mock("../../src/middleware/objections.session.middleware");
+jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/middleware/objection.session.middleware");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -11,7 +11,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionsSessionMiddleware from "../../src/middleware/objections.session.middleware";
+import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import ObjectionSessionExtraData from "../../src/model/objection.session.extra.data";
@@ -19,8 +19,8 @@ import { COMPANY_NUMBER, OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_CONFIRM_COMPANY }
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import {
   retrieveAccessTokenFromSession,
-  retrieveObjectionsSessionFromSession,
-} from "../../src/services/objections.session.service";
+  retrieveObjectionSessionFromSession,
+} from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
@@ -36,7 +36,7 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
   return next();
 });
 
-const mockObjectionSessionMiddleware = objectionsSessionMiddleware as jest.Mock;
+const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     req.session.data[OBJECTIONS_SESSION_NAME] = {};
@@ -79,7 +79,7 @@ describe("company number lookup tests", () => {
   it("should redirect to the check company details screen when company is found", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
-    const mockGetObjectionsSession =  retrieveObjectionsSessionFromSession as jest.Mock;
+    const mockGetObjectionsSession =  retrieveObjectionSessionFromSession as jest.Mock;
 
     beforeEach(() => {
       mockValidAccessToken.mockReset();

@@ -1,8 +1,8 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
-jest.mock("../../src/services/objections.session.service");
-jest.mock("../../src/middleware/objections.session.middleware");
+jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/middleware/objection.session.middleware");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -10,16 +10,16 @@ import request from "supertest";
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionsSessionMiddleware from "../../src/middleware/objections.session.middleware";
+import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
 import {
-  retrieveCompanyProfileFromObjectionsSession,
-} from "../../src/services/objections.session.service";
+  retrieveCompanyProfileFromObjectionSession,
+} from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionsSession as jest.Mock;
+const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -32,7 +32,7 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
     return next();
 });
 
-const mockObjectionSessionMiddleware = objectionsSessionMiddleware as jest.Mock;
+const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     req.session.data[OBJECTIONS_SESSION_NAME] = {};
