@@ -12,7 +12,7 @@ import logger from "../utils/logger";
  * @param next
  */
 
-export const route = (req: Request, res: Response, next: NextFunction) => {
+const route = (req: Request, res: Response, next: NextFunction) => {
     if (req.session && req.session.data) {
         const company: ObjectionCompanyProfile = getValueFromObjectionsSession(req.session, SESSION_COMPANY_PROFILE);
         return res.render(Templates.CONFIRM_COMPANY, {

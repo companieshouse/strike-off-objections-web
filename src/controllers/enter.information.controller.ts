@@ -2,12 +2,12 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../constants";
+import * as PageUrls from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { createNewObjection } from "../services/objections.service";
 import { addToObjectionsSession, getValidAccessToken, getValueFromObjectionsSession } from "../services/objections.session.service";
 
-const route = async (req: Request, res: Response, next: NextFunction) => {
-
+export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
   const token: string = getValidAccessToken(session) as string;
 
@@ -22,4 +22,6 @@ const route = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export default route;
+export const post = (req: Request, res: Response, next: NextFunction) => {
+  return res.redirect(PageUrls.OBJECTIONS_DOCUMENT_UPLOAD);
+};
