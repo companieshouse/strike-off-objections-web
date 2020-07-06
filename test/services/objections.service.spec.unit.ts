@@ -8,13 +8,12 @@ const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
-const OBJECTION_ID = "444222";
+const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
 const REASON = "Owed Money";
 
 describe("objections API service unit tests", () => {
 
   it("returns an id when a new objection is created", async () => {
-    const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
     const objectionId: string = await objectionsService.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
@@ -25,13 +24,23 @@ describe("objections API service unit tests", () => {
   });
 
   it("objections SDK is called when updating an objection reason", async () => {
-    await objectionsService.updateObjectionReason(COMPANY_NUMBER, OBJECTION_ID, ACCESS_TOKEN, REASON);
+    await objectionsService.updateObjectionReason(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, REASON);
 
-    expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, OBJECTION_ID, ACCESS_TOKEN, { reason: REASON });
+    expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, { reason: REASON });
   });
 
   it("returns undefined when updating an objection status to submitted", () => {
     const patchResult = objectionsService.submitObjection(COMPANY_NUMBER, ACCESS_TOKEN);
     expect(patchResult).toBeUndefined();
+  });
+
+  it("returns undefined when adding an attachment", () => {
+    const FILE_NAME = "test_file";
+    const attachmentResult = objectionsService.addAttachment(COMPANY_NUMBER,
+        ACCESS_TOKEN,
+        NEW_OBJECTION_ID,
+        new Buffer(""),
+        FILE_NAME );
+    expect(attachmentResult).toBeUndefined();
   });
 });
