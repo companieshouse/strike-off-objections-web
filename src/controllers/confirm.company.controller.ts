@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
-import { SESSION_COMPANY_PROFILE } from "../constants";
 import { Templates } from "../model/template.paths";
-import { getValueFromObjectionsSession } from "../services/objections.session.service";
+import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
 import logger from "../utils/logger";
 
 /**
@@ -13,18 +12,20 @@ import logger from "../utils/logger";
  */
 
 const route = (req: Request, res: Response, next: NextFunction) => {
-    if (req.session && req.session.data) {
-        const company: ObjectionCompanyProfile = getValueFromObjectionsSession(req.session, SESSION_COMPANY_PROFILE);
-        return res.render(Templates.CONFIRM_COMPANY, {
-            company,
-            templateName: Templates.CONFIRM_COMPANY,
-        });
-    } else {
-        logger.errorRequest(req, "Confirm Company - no company data found in session");
-        // TODO - implement generic error page to be called with next(ERROR())
-        // same as PTF eg next(e)
-        return next();
+  if (req.session) {
+    try {
+      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
+      return res.render(Templates.CONFIRM_COMPANY, {
+        company,
+        templateName: Templates.CONFIRM_COMPANY,
+      });
+    } catch (e) {
+      logger.errorRequest(req, "Error retrieving company profile from session");
+      return next(e);
     }
+  }
+
+  return next(new Error("No Session present"));
 };
 
 export default route;
