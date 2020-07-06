@@ -15,7 +15,7 @@ import logger from "../utils/logger";
  * @param res
  * @param next
  */
-const route = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   logger.debugRequest(req, "Attempt to retrieve and show the company details");
 
   const companyNumber: string = req.body.companyNumber;
@@ -34,5 +34,3 @@ const route = async (req: Request, res: Response, next: NextFunction): Promise<v
     return next(e);
   }
 };
-
-export default route;
