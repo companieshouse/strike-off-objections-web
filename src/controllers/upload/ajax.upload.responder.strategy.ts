@@ -8,6 +8,10 @@ import { getAttachments } from "../../services/objection.service";
 import logger from "../../utils/logger";
 import { IUploadResponderStrategy } from "./upload.responder.strategy.factory";
 
+const FILE_LIST_DIV = "fileListDiv";
+const CHOOSE_FILE_DIV = "fileUploadDiv";
+const ERROR_SUMMARY_DIV = "errorSummaryDiv";
+
 export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
   public handleSuccess = async (req: Request, res: Response) => {
@@ -17,11 +21,11 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
     try {
       await this.renderFragment(res, Templates.UPLOAD_FILE_LIST, { attachments })
-        .then((html: string) => this.addReplacementDiv(replacementDivs, html, "fileListDiv"));
+        .then((html: string) => this.addReplacementDiv(replacementDivs, html, FILE_LIST_DIV));
       logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_LIST);
 
       await this.renderFragment(res, Templates.UPLOAD_FILE_PICKER, { attachments })
-        .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, "fileUploadDiv"));
+        .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
       logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_PICKER);
 
       res.send({divs: replacementDivs});
@@ -42,12 +46,12 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
     try {
       await this.renderFragment(res, Templates.UPLOAD_ERROR_SUMMARY, { errorList: [errorData] })
-        .then( (html: string) => this.addReplacementDiv(replacementDivs, html, "errorSummaryDiv"));
+        .then( (html: string) => this.addReplacementDiv(replacementDivs, html, ERROR_SUMMARY_DIV));
 
       logger.trace("Rendered fragment " + Templates.UPLOAD_ERROR_SUMMARY);
 
       await this.renderFragment(res, Templates.UPLOAD_FILE_PICKER, { attachments, documentUploadErr: errorData })
-        .then((html: string) => this.addReplacementDiv(replacementDivs, html, "fileUploadDiv"));
+        .then((html: string) => this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
 
       logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_PICKER);
 
