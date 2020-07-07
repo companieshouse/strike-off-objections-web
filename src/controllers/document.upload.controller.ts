@@ -27,8 +27,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 const getFileSizeLimitExceededHandler = (req: Request,
                                          res: Response,
                                          uploadResponderStrategy: IUploadResponderStrategy,
-                                         attachments: any[]): (filename: string, maxInMB: number) => void => {
-  return (filename: string, maxInMB: number) => {
+                                         attachments: any[]): (filename: string, maxInBytes: number) => void => {
+  return (filename: string, maxInBytes: number) => {
+    const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
     return buildError(req, res, errorMsg, uploadResponderStrategy, attachments);
@@ -113,4 +114,9 @@ const buildError = async (req: Request,
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
+};
+
+// Gets max file size in MB rounded down to nearest whole number
+const getMaxFileSizeInMB = (maxSizeInBytes: number): number => {
+  return Math.floor(maxSizeInBytes / (1024 * 1024));
 };

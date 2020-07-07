@@ -5,7 +5,7 @@ import logger from "../../utils/logger";
 
 export const uploadFile = (req: Request,
                            maxSizeBytes: number,
-                           fileLimitExceededCallback: (filename: string, maxInMB: number) => void,
+                           fileLimitExceededCallback: (filename: string, maxSizeBytes: number) => void,
                            noFileDataReceivedCallback: (filename: string) => void,
                            uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void) => {
 
@@ -36,8 +36,7 @@ export const uploadFile = (req: Request,
     // File on limit event - fired when file size limit is reached
     fileStream.on("limit", () => {
       fileStream.destroy();
-      const maxInMB: number = getMaxFileSizeInMB(maxSizeBytes);
-      return fileLimitExceededCallback(filename, maxInMB);
+      return fileLimitExceededCallback(filename, maxSizeBytes);
     });
 
     // File on end event - fired when file has finished - could be if file completed fully or ended
@@ -59,9 +58,4 @@ export const uploadFile = (req: Request,
 
   // send the request to busboy
   req.pipe(busboy);
-};
-
-// Gets max file size in MB rounded down to nearest whole number
-const getMaxFileSizeInMB = (maxSizeInBytes: number): number => {
-  return Math.floor(maxSizeInBytes / (1024 * 1024));
 };
