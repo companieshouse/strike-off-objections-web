@@ -4,11 +4,12 @@ import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { createNewObjection } from "../services/objection.service";
+import { createNewObjection, updateObjectionReason } from "../services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
+  retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +27,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export const post = (req: Request, res: Response, next: NextFunction) => {
+export const post = async (req: Request, res: Response, next: NextFunction) => {
+  const session: Session = req.session as Session;
+  const token: string = retrieveAccessTokenFromSession(session);
+
+  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+
+  const reason: string = req.body.information;
+
+  await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+
   return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
 };

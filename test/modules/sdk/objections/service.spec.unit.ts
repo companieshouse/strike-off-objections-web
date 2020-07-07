@@ -7,6 +7,8 @@ const mockAxiosRequest = axios.request as jest.Mock;
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
+const OBJECTION_ID = "444222";
+const REASON = "Owed Money";
 
 describe("objections SDK service unit tests", () => {
 
@@ -51,12 +53,14 @@ describe("objections SDK service unit tests", () => {
       .rejects.toStrictEqual(expectedApiError);
   });
 
-  it("returns undefined when patching an objection", () => {
+  it("objections API is called when patching an objection", () => {
     const patch: objectionsSdk.ObjectionPatch = {
       reason: "some reason or other",
       status: objectionsSdk.ObjectionStatus.SUBMITTED,
     };
-    const patchResult = objectionsSdk.patchObjection(COMPANY_NUMBER, ACCESS_TOKEN, patch);
-    expect(patchResult).toBeUndefined();
+
+    objectionsSdk.patchObjection(COMPANY_NUMBER, OBJECTION_ID, ACCESS_TOKEN, patch);
+
+    expect(mockAxiosRequest).toBeCalled();
   });
 });
