@@ -4,7 +4,7 @@ jest.mock("../../../../src/utils/logger");
 
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { ApiError } from "../../../../src/modules/sdk/objections";
-import { getAxiosRequestConfig, HTTP_POST, makeAPICall, STATUS_NO_RESPONSE } from "../../../../src/modules/sdk/objections/axios.client";
+import { getBaseAxiosRequestConfig, HTTP_POST, makeAPICall, STATUS_NO_RESPONSE } from "../../../../src/modules/sdk/objections/axios.client";
 import logger from "../../../../src/utils/logger";
 
 const mockAxiosRequest = axios.request as jest.Mock;
@@ -32,7 +32,7 @@ describe("axios client tests", () => {
     const token = "abc123";
     const url = "http://localhost:4000/company/1234/strike-off-objections";
 
-    const config: AxiosRequestConfig = getAxiosRequestConfig(method, url, token);
+    const config: AxiosRequestConfig = getBaseAxiosRequestConfig(method, url, token);
 
     expect(config.headers).toEqual({ Accept: "application/json", Authorization: "Bearer abc123" });
     expect(config.url).toEqual(url);
