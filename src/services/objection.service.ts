@@ -1,4 +1,4 @@
-
+import { Session } from "ch-node-session-handler";
 import * as objectionsSdk from "../modules/sdk/objections";
 import logger from "../utils/logger";
 
@@ -57,4 +57,19 @@ export const addAttachment = (companyNumber: string,
 
   logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
   objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+};
+
+export const getAttachments = (session: Session): any[] => {
+
+  // TODO - any[] will be replaced with Attachment[]
+  return [
+    {
+      id: "sghsaghj-3623-khh",
+      name: "document1.jpg",
+    },
+    {
+      id: "dshkj-5456-fdhfddf",
+      name: "document2.jpg",
+    },
+  ];
 };

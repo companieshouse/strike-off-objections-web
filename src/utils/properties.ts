@@ -28,3 +28,5 @@ export const SHOW_SERVICE_OFFLINE_PAGE = getEnvironmentVariable("SHOW_SERVICE_OF
 export const LOG_LEVEL = getEnvironmentVariable("LOG_LEVEL", "info");
 
 export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");
+
+export const MAX_FILE_SIZE_BYTES = getEnvironmentVariable("MAX_FILE_SIZE_BYTES");
