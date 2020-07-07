@@ -31,8 +31,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   logger.debug("Add document http request type is " + (req.xhr ? "" : "NOT ") + "AJAX / XmlHttpRequest");
   const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(req.xhr);
 
-  // TODO get latest attachments from API
-  const attachments = {};
+  const attachments = getAttachments(req.session as Session);
 
   if (req.xhr) { // TODO if is xhr/ajax req instead?
     return upload(req, res, next, uploadResponderStrategy, attachments);
@@ -58,7 +57,7 @@ const upload = (req: Request,
                 res: Response,
                 next: NextFunction,
                 uploadResponderStrategy: IUploadResponderStrategy,
-                attachments: any) => {
+                attachments: any[]) => {
 
   const chunkArray: Buffer[] = [];
 
