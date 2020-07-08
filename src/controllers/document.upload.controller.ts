@@ -96,7 +96,6 @@ const getUploadFinishedCallback = (req: Request,
 
       addAttachment(companyNumber, token, objectionId, fileData, filename);
     } catch (e) {
-      // TODO include user name/id in log?
       logger.error(`User has attempted to upload a ` +
                      `file ${filename}, mime-type: ${mimeType} ` +
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
