@@ -6,7 +6,7 @@ import logger from "../utils/logger";
  * last handler in the chain for it to work.
  */
 const errorHandler = (err, req: Request, res: Response, next: NextFunction) => {
-  logger.error("An error has occurred. Re-routing to the error screen - " + err.stack);
+  logger.errorRequest(req, "An error has occurred. Re-routing to the error screen - " + err.stack);
   res.status(err.status || 500).render("error");
 };
 
