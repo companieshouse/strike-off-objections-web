@@ -10,4 +10,4 @@ const errorHandler = (err, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).render("error");
 };
 
-export default [errorHandler];
+export default errorHandler;

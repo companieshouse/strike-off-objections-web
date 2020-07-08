@@ -41,7 +41,7 @@ app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, objectionSessionMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
-app.use(...errorHandler);
+app.use(errorHandler);
 
 logger.info(`************** ${APP_NAME} has started **************`);
 
