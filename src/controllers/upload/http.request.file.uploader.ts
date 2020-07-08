@@ -3,11 +3,26 @@ import { Request } from "express";
 import { Socket } from "net";
 import logger from "../../utils/logger";
 
+/**
+ * The callback functions needed to upload a file using the uploadFile function
+ */
+export interface UploadFileCallbacks {
+  fileSizeLimitExceededCallback: (filename: string, maxSizeBytes: number) => void;
+  noFileDataReceivedCallback: (filename: string) => void;
+  uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void;
+}
+
+/**
+ * Upload File
+ * Uses Busboy to upload a file from the client.
+ * Looks for the file in a field type "file" in a multipart/form-data form
+ * @param req
+ * @param maxSizeBytes
+ * @param callbacks
+ */
 export const uploadFile = (req: Request,
                            maxSizeBytes: number,
-                           fileLimitExceededCallback: (filename: string, maxSizeBytes: number) => void,
-                           noFileDataReceivedCallback: (filename: string) => void,
-                           uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void) => {
+                           callbacks: UploadFileCallbacks) => {
 
   const chunkArray: Buffer[] = [];
 
@@ -21,10 +36,10 @@ export const uploadFile = (req: Request,
 
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",
-            (fieldName: string,
+            (_fieldName: string,
              fileStream: Socket,
              filename: string,
-             encoding: string,
+             _encoding: string,
              mimeType: string) => {
 
     // File on data event - fired when a new chunk of data arrives into busboy
@@ -36,7 +51,7 @@ export const uploadFile = (req: Request,
     // File on limit event - fired when file size limit is reached
     fileStream.on("limit", () => {
       fileStream.destroy();
-      return fileLimitExceededCallback(filename, maxSizeBytes);
+      return callbacks.fileSizeLimitExceededCallback(filename, maxSizeBytes);
     });
 
     // File on end event - fired when file has finished - could be if file completed fully or ended
@@ -49,10 +64,10 @@ export const uploadFile = (req: Request,
       const fileData: Buffer = Buffer.concat(chunkArray);
       logger.debug("Total bytes received for " + filename + " = " + fileData.length);
       if (fileData.length === 0) {
-        return noFileDataReceivedCallback(filename);
+        return callbacks.noFileDataReceivedCallback(filename);
       }
 
-      return uploadFinishedCallback(filename, fileData, mimeType);
+      return callbacks.uploadFinishedCallback(filename, fileData, mimeType);
     }); // end fileStream.on("end") event
   }); // end busboy.on("file") event
 

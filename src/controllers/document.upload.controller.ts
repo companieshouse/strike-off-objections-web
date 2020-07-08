@@ -11,9 +11,15 @@ import {
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../utils/properties";
-import { uploadFile } from "./upload/http.request.file.uploader";
+import { uploadFile, UploadFileCallbacks } from "./upload/http.request.file.uploader";
 import { createUploadResponderStrategy, IUploadResponderStrategy } from "./upload/upload.responder.strategy.factory";
 
+/**
+ * Handle GET request
+ * @param req {Request} the http request
+ * @param res {Response} the http response
+ * @param next {NextFunction} teh next function in the middleware chain
+ */
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const attachments = getAttachments(req.session as Session);
 
@@ -24,10 +30,39 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getFileSizeLimitExceededHandler = (req: Request,
-                                         res: Response,
-                                         uploadResponderStrategy: IUploadResponderStrategy,
-                                         attachments: any[]): (filename: string, maxInBytes: number) => void => {
+/**
+ * Handle POST request
+ * @param req {Request} the http request
+ * @param res {Response} the http response
+ * @param next {NextFunction} teh next function in the middleware chain
+ */
+export const post = async (req: Request, res: Response, next: NextFunction) => {
+  logger.debug("Add document http request type is " + (req.xhr ? "" : "NOT ") + "AJAX / XmlHttpRequest");
+  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(req.xhr);
+
+  const attachments = getAttachments(req.session as Session);
+
+  if (req.xhr) {
+    const uploadCallbacks: UploadFileCallbacks = {
+      fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
+      noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
+      uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),
+    };
+    const maxSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
+
+    return uploadFile(req, maxSizeBytes, uploadCallbacks);
+  } else {
+    if (attachments && attachments.length === 0) {
+      return buildError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    }
+    res.redirect("TODO - PAGE AFTER UPLOAD");
+  }
+};
+
+const getFileSizeLimitExceededCallback = (req: Request,
+                                          res: Response,
+                                          uploadResponderStrategy: IUploadResponderStrategy,
+                                          attachments: any[]): (filename: string, maxInBytes: number) => void => {
   return (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
@@ -36,19 +71,19 @@ const getFileSizeLimitExceededHandler = (req: Request,
   };
 };
 
-const getNoFileDataReceivedHandler = (req: Request,
-                                      res: Response,
-                                      uploadResponderStrategy: IUploadResponderStrategy,
-                                      attachments: any[]): (filename: string) => void => {
+const getNoFileDataReceivedCallback = (req: Request,
+                                       res: Response,
+                                       uploadResponderStrategy: IUploadResponderStrategy,
+                                       attachments: any[]): (filename: string) => void => {
   return async (_filename: string) => {
     return await buildError(req, res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
 };
 
-const getUploadFinishedHandler = (req: Request,
-                                  res: Response,
-                                  next: NextFunction,
-                                  uploadResponderStrategy: IUploadResponderStrategy):
+const getUploadFinishedCallback = (req: Request,
+                                   res: Response,
+                                   next: NextFunction,
+                                   uploadResponderStrategy: IUploadResponderStrategy):
                                     (filename: string, fileData: Buffer, mimeType: string) => void => {
   return (filename: string, fileData: Buffer, mimeType: string) => {
     try {
@@ -75,35 +110,6 @@ const getUploadFinishedHandler = (req: Request,
     logger.debug("Successfully uploaded file " + filename);
     return uploadResponderStrategy.handleSuccess(req, res);
   };
-};
-
-export const post = async (req: Request, res: Response, next: NextFunction) => {
-  logger.debug("Add document http request type is " + (req.xhr ? "" : "NOT ") + "AJAX / XmlHttpRequest");
-  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(req.xhr);
-
-  const attachments = getAttachments(req.session as Session);
-
-  if (req.xhr) {
-    const fileSizeLimitExceededHandler =
-      getFileSizeLimitExceededHandler(req, res, uploadResponderStrategy, attachments);
-    const noFileDataReceivedHandler =
-      getNoFileDataReceivedHandler(req, res, uploadResponderStrategy, attachments);
-    const uploadFinishedHandler =
-      getUploadFinishedHandler(req, res, next, uploadResponderStrategy);
-
-    const maxSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
-
-    return uploadFile(req,
-                      maxSizeBytes,
-                      fileSizeLimitExceededHandler,
-                      noFileDataReceivedHandler,
-                      uploadFinishedHandler);
-  } else {
-    if (attachments && attachments.length === 0) {
-      return buildError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
-    }
-    res.redirect("TODO - PAGE AFTER UPLOAD");
-  }
 };
 
 const buildError = async (req: Request,
