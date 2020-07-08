@@ -15,14 +15,15 @@ import objectionSessionMiddleware from "../../src/middleware/objection.session.m
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
-import { createNewObjection } from "../../src/services/objection.service";
+import { createNewObjection, updateObjectionReason } from "../../src/services/objection.service";
 import {
-  addToObjectionSession, retrieveCompanyProfileFromObjectionSession,
+  addToObjectionSession, retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const COMPANY_NUMBER: string = "00006400";
 const OBJECTION_ID: string = "123456";
+const REASON = "Owed Money";
 
 const SESSION: Session = {
         data: {},
@@ -30,6 +31,9 @@ const SESSION: Session = {
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
+const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
+
+const mockUpdateObjectionReason = updateObjectionReason as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -43,7 +47,7 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
-    req.session.data[OBJECTIONS_SESSION_NAME] = {};
+    req.session.data[OBJECTIONS_SESSION_NAME] = { objection_id: OBJECTION_ID };
     return next();
   }
 
@@ -82,6 +86,27 @@ describe("enter information tests", () => {
         const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
           .set("Referer", "/")
           .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+        expect(response.status).toEqual(302);
+        expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
+    });
+
+    it("should call the API to update the objection with the reason", async () => {
+
+        mockGetObjectionSessionValue.mockReset();
+        mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+
+        mockRetrieveFromObjectionSession.mockReset();
+        mockRetrieveFromObjectionSession.mockImplementationOnce(() => OBJECTION_ID);
+
+        mockUpdateObjectionReason.mockReset();
+
+        const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+            .set("Referer", "/")
+            .set("Cookie", [`${COOKIE_NAME}=123`])
+            .send({ information: REASON });
+
+        expect(mockUpdateObjectionReason).toHaveBeenCalledWith(COMPANY_NUMBER, OBJECTION_ID, undefined, REASON);
 
         expect(response.status).toEqual(302);
         expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);

@@ -4,14 +4,17 @@ import { ApiError } from "./types";
 
 export const STATUS_NO_RESPONSE = -1;
 export const HTTP_POST: Method = "post";
+export const HTTP_PATCH: Method = "patch";
 
 /**
- * An axios config with common elements for API calls.
+ * Gets axios config with common elements for API calls. Some clients may need to add further details
+ * to the returned config object, e.g. a 'data' field.
  * @param {Method} httpMethod the http method to use eg. get, post
  * @param {string} url of the api endpoint
  * @param {string} bearerToken token for API call
  */
-export const getAxiosRequestConfig = (httpMethod: Method, url: string, bearerToken: string): AxiosRequestConfig => {
+export const getBaseAxiosRequestConfig = (
+    httpMethod: Method, url: string, bearerToken: string): AxiosRequestConfig => {
   return {
     headers: {
       Accept: "application/json",

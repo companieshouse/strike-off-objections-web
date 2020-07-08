@@ -11,7 +11,7 @@ import logger from "../utils/logger";
  * @param next
  */
 
-const route = (req: Request, res: Response, next: NextFunction) => {
+export const get = (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
@@ -27,5 +27,3 @@ const route = (req: Request, res: Response, next: NextFunction) => {
 
   return next(new Error("No Session present"));
 };
-
-export default route;

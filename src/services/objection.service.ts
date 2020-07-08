@@ -1,5 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import * as objectionsSdk from "../modules/sdk/objections";
+import { ObjectionPatch } from "../modules/sdk/objections/types";
 import logger from "../utils/logger";
 
 /**
@@ -25,14 +26,16 @@ export const createNewObjection = async (companyNumber: string, token: string): 
  *
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
- * @param {string} reason
+ * @param {string} objectionReason reason why the user is objecting to strike-off
  */
-export const updateObjectionReason = (objectionId: string, token: string, reason: string) => {
+export const updateObjectionReason = async (
+    companyNumber: string, objectionId: string, token: string, objectionReason: string) => {
 
   logger.info(`Updating objection reason for objectionId ${objectionId}`);
 
-  // TODO Call the Objections SDK. Covered by JIRA
-  //      sub-task BI-4143
+  const patch: ObjectionPatch = { reason: objectionReason };
+
+  await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
 };
 
 /**
