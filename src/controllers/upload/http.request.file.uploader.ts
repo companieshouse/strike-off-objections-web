@@ -32,7 +32,8 @@ export const uploadFile = (req: Request,
       limits: {
         fileSize: maxSizeBytes,
       },
-  });
+    },
+  );
 
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",

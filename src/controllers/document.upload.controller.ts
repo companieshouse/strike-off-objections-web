@@ -15,10 +15,10 @@ import { uploadFile, UploadFileCallbacks } from "./upload/http.request.file.uplo
 import { createUploadResponderStrategy, IUploadResponderStrategy } from "./upload/upload.responder.strategy.factory";
 
 /**
- * Handle GET request
+ * Handle GET request for document upload page
  * @param req {Request} the http request
  * @param res {Response} the http response
- * @param next {NextFunction} teh next function in the middleware chain
+ * @param next {NextFunction} the next function in the middleware chain
  */
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const attachments = getAttachments(req.session as Session);
@@ -31,18 +31,20 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * Handle POST request
+ * Handle POST request for document upload page
  * @param req {Request} the http request
  * @param res {Response} the http response
- * @param next {NextFunction} teh next function in the middleware chain
+ * @param next {NextFunction} the next function in the middleware chain
  */
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  logger.debug("Add document http request type is " + (req.xhr ? "" : "NOT ") + "AJAX / XmlHttpRequest");
-  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(req.xhr);
+  const isAjaxRequest: boolean = req.xhr;
+  logger.debugRequest(req, "Add document http request type is " + (isAjaxRequest ? "" : "NOT ") + "AJAX / XmlHttpRequest");
+
+  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest);
 
   const attachments = getAttachments(req.session as Session);
 
-  if (req.xhr) {
+  if (isAjaxRequest) {
     const uploadCallbacks: UploadFileCallbacks = {
       fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
       noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
