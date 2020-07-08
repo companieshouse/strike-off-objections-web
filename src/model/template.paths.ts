@@ -5,4 +5,5 @@ export enum Templates {
   SERVICE_OFFLINE = "service-offline",
   DOCUMENT_UPLOAD = "document-upload",
   INDEX = "index",
+  ERROR = "error",
 }
