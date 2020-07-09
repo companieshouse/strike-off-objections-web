@@ -22,7 +22,8 @@
   "linterOptions": {
     "exclude": [
       "src/public/stylesheets/**/*.scss",
-      "src/public/stylesheets/**/*.css"
+      "src/public/stylesheets/**/*.css",
+      "test/resources/files/*.txt"
     ]
   },
   "rulesDirectory": []

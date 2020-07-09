@@ -18,9 +18,8 @@ import { createUploadResponderStrategy, IUploadResponderStrategy } from "./uploa
  * Handle GET request for document upload page
  * @param req {Request} the http request
  * @param res {Response} the http response
- * @param next {NextFunction} the next function in the middleware chain
  */
-export const get = async (req: Request, res: Response, next: NextFunction) => {
+export const get = async (req: Request, res: Response) => {
   const attachments = getAttachments(req.session as Session);
 
   return res.render(Templates.DOCUMENT_UPLOAD,
@@ -36,7 +35,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
  * @param res {Response} the http response
  * @param next {NextFunction} the next function in the middleware chain
  */
-export const post = async (req: Request, res: Response, next: NextFunction) => {
+export const postFile = async (req: Request, res: Response, next: NextFunction) => {
   const isAjaxRequest: boolean = req.xhr;
   logger.debugRequest(req, "Add document http request type is " + (isAjaxRequest ? "" : "NOT ") + "AJAX / XmlHttpRequest");
 
@@ -44,21 +43,26 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
   const attachments = getAttachments(req.session as Session);
 
-  if (isAjaxRequest) {
-    const uploadCallbacks: UploadFileCallbacks = {
-      fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
-      noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
-      uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),
-    };
-    const maxSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
+  const uploadCallbacks: UploadFileCallbacks = {
+    fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
+    noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
+    uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),
+  };
+  const maxSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
 
-    return uploadFile(req, maxSizeBytes, uploadCallbacks);
-  } else {
-    if (attachments && attachments.length === 0) {
-      return buildError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
-    }
-    res.redirect("TODO - PAGE AFTER UPLOAD");
+  return uploadFile(req, maxSizeBytes, uploadCallbacks);
+};
+
+export const postContinueButton = async (req: Request, res: Response, next: NextFunction) => {
+  const isAjaxRequest: boolean = req.xhr;
+  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest);
+
+  const attachments = getAttachments(req.session as Session);
+
+  if (attachments && attachments.length === 0) {
+    return buildError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
+  res.redirect("TODO - PAGE AFTER UPLOAD");
 };
 
 const getFileSizeLimitExceededCallback = (req: Request,

@@ -2,7 +2,7 @@
 {% from "govuk/components/file-upload/macro.njk"   import govukFileUpload %}
 
 {% set uploadText %}
-  {% if reason and reason.attachments and reason.attachments.length > 0 %}
+  {% if attachments and attachments.length > 0 %}
     Add another document
   {% else %}
     Add a document
