@@ -8,15 +8,13 @@ import {
 describe("upload responder factory tests", () => {
 
   it("should return HtmlUploadResponderStrategy", () => {
-    const isXhrRequest: boolean = false;
-    const uploadResponder: IUploadResponderStrategy = createUploadResponderStrategy(isXhrRequest);
+    const uploadResponder: IUploadResponderStrategy = createUploadResponderStrategy(false);
     expect(uploadResponder instanceof HtmlUploadResponderStrategy).toBeTruthy();
     expect(uploadResponder instanceof AjaxUploadResponderStrategy).toBeFalsy();
   });
 
   it("should return AjaxUploadResponderStrategy", () => {
-    const isXhrRequest: boolean = true;
-    const uploadResponder: IUploadResponderStrategy = createUploadResponderStrategy(isXhrRequest);
+    const uploadResponder: IUploadResponderStrategy = createUploadResponderStrategy(true);
     expect(uploadResponder instanceof AjaxUploadResponderStrategy).toBeTruthy();
     expect(uploadResponder instanceof HtmlUploadResponderStrategy).toBeFalsy();
   });

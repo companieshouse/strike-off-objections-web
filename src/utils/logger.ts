@@ -1,5 +1,5 @@
 import { createLogger } from "ch-logging";
-import ApplicationLogger = require("ch-logging/lib/ApplicationLogger");
+import ApplicationLogger from "ch-logging/lib/ApplicationLogger";
 import { APP_NAME } from "../constants";
 import { LOG_LEVEL } from "./properties";
 

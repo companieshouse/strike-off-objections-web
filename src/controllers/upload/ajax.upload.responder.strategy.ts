@@ -34,7 +34,7 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
     }
   }
 
-  public handleGenericError = (res: Response, e: Error, next?: NextFunction) => {
+  public handleGenericError = (res: Response, e: Error, _next?: NextFunction) => {
     logger.error(ErrorMessages.ERROR_500 + ": " + e);
     res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
   }
