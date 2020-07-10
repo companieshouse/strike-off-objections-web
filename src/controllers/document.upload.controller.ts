@@ -16,8 +16,8 @@ import { createUploadResponderStrategy, IUploadResponderStrategy } from "./uploa
 
 /**
  * Handle GET request for document upload page
- * @param req {Request} the http request
- * @param res {Response} the http response
+ * @param {Request} req the http request
+ * @param {Response} res the http response
  */
 export const get = async (req: Request, res: Response) => {
   const attachments = getAttachments(req.session as Session);
@@ -31,9 +31,9 @@ export const get = async (req: Request, res: Response) => {
 
 /**
  * Handle POST request for document upload page
- * @param req {Request} the http request
- * @param res {Response} the http response
- * @param next {NextFunction} the next function in the middleware chain
+ * @param {Request} req the http request
+ * @param {Response} res the http response
+ * @param {NextFunction} next the next function in the middleware chain
  */
 export const postFile = async (req: Request, res: Response, next: NextFunction) => {
   const isAjaxRequest: boolean = req.xhr;
@@ -60,7 +60,7 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
   const attachments = getAttachments(req.session as Session);
 
   if (attachments && attachments.length === 0) {
-    return buildError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    return displayError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
   res.redirect("TODO - PAGE AFTER UPLOAD");
 };
@@ -73,7 +73,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
-    return buildError(req, res, errorMsg, uploadResponderStrategy, attachments);
+    return displayError(req, res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
 
@@ -82,7 +82,7 @@ const getNoFileDataReceivedCallback = (req: Request,
                                        uploadResponderStrategy: IUploadResponderStrategy,
                                        attachments: any[]): (filename: string) => void => {
   return async (_filename: string) => {
-    return await buildError(req, res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
+    return await displayError(req, res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
 };
 
@@ -108,7 +108,7 @@ const getUploadFinishedCallback = (req: Request,
       // // render errors in the view
       // if (e.status === 415) {
       //   return await
-      //     buildError(req, res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+      //     displayError(req, res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       // }
       return uploadResponderStrategy.handleGenericError(res, e, next);
     }
@@ -117,11 +117,11 @@ const getUploadFinishedCallback = (req: Request,
   };
 };
 
-const buildError = async (req: Request,
-                          res: Response,
-                          errorMessage: string,
-                          uploadResponderStrategy: IUploadResponderStrategy,
-                          attachments: any) => {
+const displayError = async (req: Request,
+                            res: Response,
+                            errorMessage: string,
+                            uploadResponderStrategy: IUploadResponderStrategy,
+                            attachments: any) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);

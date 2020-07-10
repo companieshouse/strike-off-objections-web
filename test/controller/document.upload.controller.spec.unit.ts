@@ -6,6 +6,7 @@ jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/controllers/upload/upload.responder.strategy.factory");
 jest.mock("../../src/controllers/upload/http.request.file.uploader");
+jest.mock("../../src/model/govuk.error.data");
 
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
@@ -22,7 +23,8 @@ import {
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import { GovUkErrorData } from "../../src/model/govuk.error.data";
+import { UploadErrorMessages } from "../../src/model/error.messages";
+import { createGovUkErrorData, GovUkErrorData } from "../../src/model/govuk.error.data";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   DOCUMENT_UPLOAD_FILE,
@@ -37,6 +39,7 @@ import {
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const COMPANY_NUMBER = "00006400";
+const EXPECTED_MAX_FILE_SIZE_MESSAGE = "File size must be smaller than 0 MB";
 
 const SESSION: Session = {
   data: {},
@@ -77,30 +80,65 @@ mockCreateUploadResponderStrategy.mockImplementation(() => mockUploadResponderSt
 
 const expectedBuffer = fs.readFileSync(path.join(__dirname + "/../resources/files/text.txt"));
 
-const mockUploadFileSuccess = uploadFile as jest.Mock;
-mockUploadFileSuccess.mockImplementation((req: Request,
-                                          maxSizeBytes: number,
-                                          callbacks: UploadFileCallbacks) => {
-  return callbacks.uploadFinishedCallback("text.txt", expectedBuffer, "application/text");
-});
+const mockUploadFile = uploadFile as jest.Mock;
+
+const setUploadFileToReturnSuccess = () => {
+  mockUploadFile.mockImplementation((req: Request, maxSizeBytes: number, callbacks: UploadFileCallbacks) => {
+    return callbacks.uploadFinishedCallback("text.txt", expectedBuffer, "application/text");
+  });
+};
+
+const setUploadFileToTriggerFileLimitExceeded = () => {
+  mockUploadFile.mockImplementation((req: Request, maxSizeBytes: number, callbacks: UploadFileCallbacks) => {
+    return callbacks.fileSizeLimitExceededCallback("text_large.txt",
+                                                   parseInt(process.env.MAX_FILE_SIZE_BYTES as string, 10));
+  });
+};
+
+const setUploadFileToTriggerNoFileDataReceived = () => {
+  mockUploadFile.mockImplementation((req: Request, maxSizeBytes: number, callbacks: UploadFileCallbacks) => {
+    return callbacks.noFileDataReceivedCallback("text.txt");
+  });
+};
 
 const mockGetAttachments = getAttachments as jest.Mock;
-mockGetAttachments.mockImplementation(() => {
-  return [
-    {
-      id: "sghsaghj-3623-khh",
-      name: "document1.jpg",
-    },
-    {
-      id: "dshkj-5456-fdhfddf",
-      name: "document2.jpg",
-    },
-  ];
-});
+const mockAttachments = [
+  {
+    id: "sghsaghj-3623-khh",
+    name: "document1.jpg",
+  },
+  {
+    id: "dshkj-5456-fdhfddf",
+    name: "document2.jpg",
+  },
+];
+mockGetAttachments.mockImplementation(() => mockAttachments);
+
+const mockCreateGovUkErrorData = createGovUkErrorData as jest.Mock;
+const mockGovUkErrorData = {} as GovUkErrorData;
+mockCreateGovUkErrorData.mockImplementation(() => mockGovUkErrorData);
+
+const mockUploadResponderStrategy: IUploadResponderStrategy = {
+  handleGenericError: jest.fn((res: Response, e: Error, next?: NextFunction) => {
+    res.send(); // calling res.send() sends a response back to the test and prevents tests from hanging
+  }),
+  handleGovUKError: jest.fn((res: Response, errorData: GovUkErrorData, attachments: any[]) => {
+    res.send();
+  }),
+  handleSuccess: jest.fn((req: Request, res: Response) => {
+    res.send();
+  }),
+};
 
 describe ("document.upload.controller tests", () => {
+  beforeEach(() => {
+    (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mockClear();
+    mockCreateGovUkErrorData.mockClear();
+  });
 
-  it ("should redirect when file uploaded - NOT AJAX REQUEST", async (done) => {
+  it ("should call success handler when file uploaded successfully - NOT AJAX REQUEST", async () => {
+
+    setUploadFileToReturnSuccess();
 
     const res = await request(app)
       .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
@@ -114,34 +152,59 @@ describe ("document.upload.controller tests", () => {
                                              expectedBuffer,
                                              "text.txt");
     expect(mockUploadResponderStrategy.handleSuccess).toHaveBeenCalledTimes(1);
-    done();
   });
 
-  // it ("should render error message when file is too big", async (done) => {
-  //   // See global.setup.ts for unit test file size limit
-  //   const response = await request(app)
-  //     .post(pageURLs.EXTENSIONS_DOCUMENT_UPLOAD)
-  //     .set("Referer", "/")
-  //     .set("Cookie", [`${COOKIE_NAME}=123`])
-  //     .attach('file-upload', path.join(__dirname + "/../client/files/text_large.txt"));
-  //   expect(response.text).toContain(EXPECTED_MAX_FILE_SIZE_MESSAGE);
-  //   done();
-  // });
+  it ("should call displayError when file is too big - NOT AJAX REQUEST", async () => {
+    // See global.setup.ts for unit test file size limit
 
+    setUploadFileToTriggerFileLimitExceeded();
+
+    const response = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", path.join(__dirname + "/../resources/files/text_large.txt"));
+
+    expect(mockCreateGovUkErrorData).toHaveBeenCalledTimes(1);
+    const createGovUkErrorParams = mockCreateGovUkErrorData.mock.calls[0];
+    expect(createGovUkErrorParams[0]).toBe(EXPECTED_MAX_FILE_SIZE_MESSAGE);
+    expect(createGovUkErrorParams[1]).toBe("#file-upload");
+    expect(createGovUkErrorParams[2]).toBe(true);
+    expect(createGovUkErrorParams[3]).toBe("");
+
+    expect(mockUploadResponderStrategy.handleGovUKError).toHaveBeenCalledTimes(1);
+
+    const params = (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mock.calls[0];
+    expect(params[1]).toBe(mockGovUkErrorData);
+    expect(params[2]).toBe(mockAttachments);
+  });
+
+  it ("should call displayError when no file data received - NOT AJAX REQUEST", async () => {
+    // See global.setup.ts for unit test file size limit
+
+    setUploadFileToTriggerNoFileDataReceived();
+
+    const response = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", path.join(__dirname + "/../resources/files/text.txt"));
+
+    expect(mockCreateGovUkErrorData).toHaveBeenCalledTimes(1);
+    const createGovUkErrorParams = mockCreateGovUkErrorData.mock.calls[0];
+    expect(createGovUkErrorParams[0]).toBe(UploadErrorMessages.NO_FILE_CHOSEN);
+    expect(createGovUkErrorParams[1]).toBe("#file-upload");
+    expect(createGovUkErrorParams[2]).toBe(true);
+    expect(createGovUkErrorParams[3]).toBe("");
+
+    expect(mockUploadResponderStrategy.handleGovUKError).toHaveBeenCalledTimes(1);
+
+    const strategyParams = (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mock.calls[0];
+    expect(strategyParams[1]).toBe(mockGovUkErrorData);
+    expect(strategyParams[2]).toBe(mockAttachments);
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyNumber: COMPANY_NUMBER,
 } as ObjectionCompanyProfile;
-
-const mockUploadResponderStrategy: IUploadResponderStrategy = {
-  handleGenericError: jest.fn((res: Response, e: Error, next?: NextFunction) => {
-    return;
-  }),
-  handleGovUKError: jest.fn((res: Response, errorData: GovUkErrorData, attachments: any[]) => {
-    return;
-  }),
-  handleSuccess: jest.fn((req: Request, res: Response) => {
-    res.send();
-  }),
-};

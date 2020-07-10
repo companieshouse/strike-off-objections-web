@@ -5,10 +5,29 @@ import logger from "../../utils/logger";
 
 /**
  * The callback functions needed to upload a file using the uploadFile function
+ * You provide functions to be executed when the following events occur
+ * File size limit exceeded
+ * No file data received
+ * Upload finished
  */
 export interface UploadFileCallbacks {
+  /**
+   * File size limit exceeded
+   * @param {string} filename of the file being uploaded
+   * @param {number} maxSizeBytes the maximum file size allowed in bytes
+   */
   fileSizeLimitExceededCallback: (filename: string, maxSizeBytes: number) => void;
+  /**
+   * No file data received
+   * @param {string} filename of the file being uploaded
+   */
   noFileDataReceivedCallback: (filename: string) => void;
+  /**
+   * Upload finished
+   * @param {string} filename of the file being uploaded
+   * @param {Buffer} fileData the data contained in the file
+   * @param {string} mimeType of the file being uploaded
+   */
   uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void;
 }
 
@@ -16,12 +35,12 @@ export interface UploadFileCallbacks {
  * Upload File
  * Uses Busboy to upload a file from the client.
  * Looks for the file in a field type "file" in a multipart/form-data form
- * @param req
- * @param maxSizeBytes
- * @param callbacks
+ * @param {Request} req the http request
+ * @param {number} maxFileSizeBytes the maximum allowed size of file in bytes
+ * @param {UploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
  */
 export const uploadFile = (req: Request,
-                           maxSizeBytes: number,
+                           maxFileSizeBytes: number,
                            callbacks: UploadFileCallbacks) => {
 
   const chunkArray: Buffer[] = [];
@@ -30,7 +49,7 @@ export const uploadFile = (req: Request,
     {
       headers: req.headers,
       limits: {
-        fileSize: maxSizeBytes,
+        fileSize: maxFileSizeBytes,
       },
     },
   );
@@ -52,7 +71,7 @@ export const uploadFile = (req: Request,
     // File on limit event - fired when file size limit is reached
     fileStream.on("limit", () => {
       fileStream.destroy();
-      return callbacks.fileSizeLimitExceededCallback(filename, maxSizeBytes);
+      return callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
     });
 
     // File on end event - fired when file has finished - could be if file completed fully or ended
