@@ -64,13 +64,14 @@ describe("objections SDK service unit tests", () => {
     expect(mockAxiosRequest).toBeCalled();
   });
 
-  it("objections API is called when posting an attachment", async () => {
+  it("objections API is called when posting an attachment", () => {
 
-    await objectionsSdk.addAttachment("companyNumber",
+    objectionsSdk.addAttachment("companyNumber",
       "token",
       "objectionId",
       new Buffer("Buffer"),
-      "fileName");
+      "fileName",
+    );
 
     expect(mockAxiosRequest).toBeCalled();
   });
