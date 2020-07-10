@@ -1,10 +1,15 @@
+import { Session } from "ch-node-session-handler";
+
 jest.mock("../../src/modules/sdk/objections");
 
 import * as objectionsSdk from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
+import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
+import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
+const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
@@ -35,12 +40,35 @@ describe("objections API service unit tests", () => {
   });
 
   it("returns undefined when adding an attachment", () => {
+    mockAddAttachment.mockImplementationOnce(() => {
+      return;
+    });
+    const session = {
+      data: {
+      },
+      } as Session;
+    session.data[OBJECTIONS_SESSION_NAME] = {
+      [SESSION_COMPANY_PROFILE] : dummyCompanyProfile,
+      [SESSION_OBJECTION_ID] : NEW_OBJECTION_ID,
+    };
     const FILE_NAME = "test_file";
-    const attachmentResult = objectionsService.addAttachment(COMPANY_NUMBER,
-        ACCESS_TOKEN,
-        NEW_OBJECTION_ID,
+    const attachmentResult = objectionsService.addAttachment(session,
         new Buffer(""),
         FILE_NAME );
-    expect(attachmentResult).toBeUndefined();
+
+    expect(attachmentResult).toEqual(Promise.resolve());
   });
 });
+
+const dummyCompanyProfile: ObjectionCompanyProfile = {
+  address: {
+    line_1: "line1",
+    line_2: "line2",
+    postCode: "post code",
+  },
+  companyName: "Girls school trust",
+  companyNumber: "00006400",
+  companyStatus: "Active",
+  companyType: "limited",
+  incorporationDate: "26 June 1872",
+};

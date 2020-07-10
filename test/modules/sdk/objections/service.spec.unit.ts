@@ -63,4 +63,15 @@ describe("objections SDK service unit tests", () => {
 
     expect(mockAxiosRequest).toBeCalled();
   });
+
+  it("objections API is called when posting an attachment", async () => {
+
+    await objectionsSdk.addAttachment("companyNumber",
+      "token",
+      "objectionId",
+      new Buffer("Buffer"),
+      "fileName");
+
+    expect(mockAxiosRequest).toBeCalled();
+  });
 });
