@@ -11,8 +11,9 @@ export const COMPANY_NUMBER: string = SEPARATOR + Templates.COMPANY_NUMBER;
 export const CONFIRM_COMPANY: string = SEPARATOR + Templates.CONFIRM_COMPANY;
 export const ENTER_INFORMATION: string = SEPARATOR + Templates.ENTER_INFORMATION;
 export const DOCUMENT_UPLOAD: string = SEPARATOR + Templates.DOCUMENT_UPLOAD;
-export const DOCUMENT_UPLOAD_FILE: string = SEPARATOR + "document-upload-file";
-export const DOCUMENT_UPLOAD_CONTINUE: string = SEPARATOR + "document-upload-continue";
+export const ERROR: string = SEPARATOR + Templates.ERROR;
+export const DOCUMENT_UPLOAD_FILE: string = SEPARATOR + "document-upload-file"; // not a template
+export const DOCUMENT_UPLOAD_CONTINUE: string = SEPARATOR + "document-upload-continue"; // not a template
 
 /**
  * URLs for redirects will need to start with the application name
@@ -22,5 +23,4 @@ export const OBJECTIONS_CONFIRM_COMPANY: string = STRIKE_OFF_OBJECTIONS + CONFIR
 export const OBJECTIONS_ENTER_INFORMATION: string = STRIKE_OFF_OBJECTIONS + ENTER_INFORMATION;
 export const OBJECTIONS_DOCUMENT_UPLOAD: string = STRIKE_OFF_OBJECTIONS + DOCUMENT_UPLOAD;
 export const OBJECTIONS_DOCUMENT_UPLOAD_FILE: string = STRIKE_OFF_OBJECTIONS + DOCUMENT_UPLOAD_FILE;
-// TODO error page
-export const OBJECTIONS_ERROR: string = "TODO";
+export const OBJECTIONS_ERROR: string = STRIKE_OFF_OBJECTIONS + ERROR;

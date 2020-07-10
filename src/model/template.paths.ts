@@ -8,4 +8,5 @@ export enum Templates {
   UPLOAD_FILE_PICKER = "includes/document-upload-file-picker",
   UPLOAD_ERROR_SUMMARY = "includes/document-upload-error-summary",
   INDEX = "index",
+  ERROR = "error",
 }
