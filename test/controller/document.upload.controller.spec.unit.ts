@@ -28,7 +28,7 @@ import { createGovUkErrorData, GovUkErrorData } from "../../src/model/govuk.erro
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   DOCUMENT_UPLOAD_FILE,
-  OBJECTIONS_DOCUMENT_UPLOAD,
+  OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE,
   OBJECTIONS_DOCUMENT_UPLOAD_FILE,
 } from "../../src/model/page.urls";
 import { addAttachment, getAttachments } from "../../src/services/objection.service";
@@ -134,9 +134,11 @@ describe ("document.upload.controller tests", () => {
   beforeEach(() => {
     (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mockClear();
     mockCreateGovUkErrorData.mockClear();
+    mockAddAttachment.mockReset();
+    mockGetAttachments.mockClear();
   });
 
-  it ("should call success handler when file uploaded successfully - NOT AJAX REQUEST", async () => {
+  it ("should call success handler when file uploaded successfully", async () => {
 
     setUploadFileToReturnSuccess();
 
@@ -154,7 +156,7 @@ describe ("document.upload.controller tests", () => {
     expect(mockUploadResponderStrategy.handleSuccess).toHaveBeenCalledTimes(1);
   });
 
-  it ("should call displayError when file is too big - NOT AJAX REQUEST", async () => {
+  it ("should call displayError when file is too big", async () => {
     // See global.setup.ts for unit test file size limit
 
     setUploadFileToTriggerFileLimitExceeded();
@@ -179,7 +181,7 @@ describe ("document.upload.controller tests", () => {
     expect(params[2]).toBe(mockAttachments);
   });
 
-  it ("should call displayError when no file data received - NOT AJAX REQUEST", async () => {
+  it ("should call displayError when no file data received", async () => {
     // See global.setup.ts for unit test file size limit
 
     setUploadFileToTriggerNoFileDataReceived();
@@ -202,6 +204,60 @@ describe ("document.upload.controller tests", () => {
     const strategyParams = (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mock.calls[0];
     expect(strategyParams[1]).toBe(mockGovUkErrorData);
     expect(strategyParams[2]).toBe(mockAttachments);
+  });
+
+  it ("should call handleGenericError when add attachment throws error", async () => {
+    // See global.setup.ts for unit test file size limit
+
+    setUploadFileToReturnSuccess();
+
+    const error = { status: 404 };
+    mockAddAttachment.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", path.join(__dirname + "/../resources/files/text.txt"));
+
+    expect(mockUploadResponderStrategy.handleGenericError).toHaveBeenCalledTimes(1);
+    const handleGenericErrorParams = (mockUploadResponderStrategy.handleGenericError as jest.Mock).mock.calls[0];
+    expect(handleGenericErrorParams[1]).toBe(error);
+  });
+
+  it ("should redirect to next page when POST /document-upload-continue is called", async () => {
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetAttachments).toHaveBeenCalledTimes(1);
+    expect(res.status).toEqual(302);
+    expect(res.header.location).toEqual("TODO%20-%20PAGE%20AFTER%20UPLOAD");
+  });
+
+  it ("should call displayError when no attachments are present and trying to continue", async () => {
+    mockGetAttachments.mockImplementationOnce(() => []);
+
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockCreateGovUkErrorData).toHaveBeenCalledTimes(1);
+    const createGovUkErrorParams = mockCreateGovUkErrorData.mock.calls[0];
+    expect(createGovUkErrorParams[0]).toBe(UploadErrorMessages.NO_DOCUMENTS_ADDED);
+    expect(createGovUkErrorParams[1]).toBe("#file-upload");
+    expect(createGovUkErrorParams[2]).toBe(true);
+    expect(createGovUkErrorParams[3]).toBe("");
+
+    expect(mockUploadResponderStrategy.handleGovUKError).toHaveBeenCalledTimes(1);
+
+    const strategyParams = (mockUploadResponderStrategy.handleGovUKError as jest.Mock).mock.calls[0];
+    expect(strategyParams[1]).toBe(mockGovUkErrorData);
+    expect(strategyParams[2]).toStrictEqual([]);
   });
 });
 
