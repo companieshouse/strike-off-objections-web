@@ -19,7 +19,6 @@ import * as pageURLs from "../../../src/model/page.urls";
 import {
   OBJECTIONS_DOCUMENT_UPLOAD,
   OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE,
-  OBJECTIONS_DOCUMENT_UPLOAD_FILE,
 } from "../../../src/model/page.urls";
 import { addAttachment, getAttachments } from "../../../src/services/objection.service";
 import {
@@ -147,7 +146,7 @@ describe ("document.document_upload.controller tests", () => {
     const largeBuffer = Buffer.alloc(50000);
 
     const response = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .attach("file-upload", largeBuffer, TEXT_FILE_LARGE_NAME);
@@ -160,7 +159,7 @@ describe ("document.document_upload.controller tests", () => {
     const largeBuffer = Buffer.alloc(50000);
 
     const response = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .set("X-Requested-With", "XMLHttpRequest")
@@ -184,7 +183,7 @@ describe ("document.document_upload.controller tests", () => {
     const emptyBuffer = Buffer.alloc(0);
 
     const response = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .attach("file-upload", emptyBuffer, TEXT_FILE_NAME);
@@ -197,7 +196,7 @@ describe ("document.document_upload.controller tests", () => {
     const emptyBuffer = Buffer.alloc(0);
 
     const response = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .set("X-Requested-With", "XMLHttpRequest")
@@ -221,7 +220,7 @@ describe ("document.document_upload.controller tests", () => {
     const buffer = Buffer.alloc(5);
 
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .attach("file-upload", buffer, TEXT_FILE_NAME);
@@ -237,7 +236,7 @@ describe ("document.document_upload.controller tests", () => {
     const buffer = Buffer.alloc(5);
 
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .set("X-Requested-With", "XMLHttpRequest")
@@ -256,7 +255,7 @@ describe ("document.document_upload.controller tests", () => {
     const buffer = Buffer.alloc(5);
 
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .attach("file-upload", buffer, TEXT_FILE_NAME);
@@ -273,7 +272,7 @@ describe ("document.document_upload.controller tests", () => {
     const buffer = Buffer.alloc(5);
 
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .set("X-Requested-With", "XMLHttpRequest")
@@ -325,7 +324,7 @@ describe ("document.document_upload.controller tests", () => {
   it ("should redirect back to itself when file uploaded successfully - NOT AJAX", async () => {
     const buffer = Buffer.alloc(5);
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .attach("file-upload", buffer, TEXT_FILE_NAME);
@@ -344,7 +343,7 @@ describe ("document.document_upload.controller tests", () => {
     mockGetAttachments.mockImplementationOnce(() => dummyAttachments);
 
     const res = await request(app)
-      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .set("X-Requested-With", "XMLHttpRequest")

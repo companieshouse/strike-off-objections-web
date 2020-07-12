@@ -39,7 +39,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
   public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: any[]) => {
     return res.render(Templates.DOCUMENT_UPLOAD, {
       attachments,
-      documentsUploadErr: errorData,
+      documentUploadErr: errorData,
       errorList: [errorData],
       templateName: Templates.DOCUMENT_UPLOAD,
     });

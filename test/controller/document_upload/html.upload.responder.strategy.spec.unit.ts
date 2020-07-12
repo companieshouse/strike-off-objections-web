@@ -56,7 +56,7 @@ describe("html upload responder tests", () => {
 
     expect(mockRenderFunc).toBeCalledWith(Templates.DOCUMENT_UPLOAD, {
       attachments,
-      documentsUploadErr: errorData,
+      documentUploadErr: errorData,
       errorList: [errorData],
       templateName: Templates.DOCUMENT_UPLOAD,
     });

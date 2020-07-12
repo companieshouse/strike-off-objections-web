@@ -28,7 +28,7 @@ router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute.get);
 router.post(pageURLs.ENTER_INFORMATION, enterInformationRoute.post);
 
 router.get(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.get);
-router.post(pageURLs.DOCUMENT_UPLOAD_FILE, documentUploadRoute.postFile);
+router.post(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.postFile);
 router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueButton);
 
 export default router;
