@@ -83,7 +83,6 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
     req.session.data[OBJECTIONS_SESSION_NAME] = { };
     return next();
   }
-  return next(new Error("No session on request"));
 });
 
 const mockRetrieveCompanyProfileFromObjectionSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
@@ -219,7 +218,7 @@ describe ("document.upload.controller tests", () => {
     expect(mockAddAttachment).toHaveBeenCalled();
   });
 
-  it ("should return error screen if something goes wrong sending file to api - AJAX", async () => {
+  it ("should return redirect to error screen if something goes wrong sending file to api - AJAX", async () => {
     mockAddAttachment.mockImplementationOnce(() => { throw new Error(); });
     const buffer = Buffer.alloc(5);
 

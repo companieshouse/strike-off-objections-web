@@ -91,6 +91,6 @@ export const uploadFile = (req: Request,
     }); // end fileStream.on("end") event
   }); // end busboy.on("file") event
 
-  // send the request to busboy
+  // send the request to busboy and starts the upload
   req.pipe(busboy);
 };

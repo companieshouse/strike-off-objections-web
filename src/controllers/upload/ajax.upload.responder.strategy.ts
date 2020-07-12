@@ -6,7 +6,7 @@ import * as pageURLs from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
 import { getAttachments } from "../../services/objection.service";
 import logger from "../../utils/logger";
-import { IUploadResponderStrategy } from "./upload.responder.strategy.factory";
+import { IUploadResponderStrategy } from "./upload.responder.strategy";
 
 const FILE_LIST_DIV = "fileListDiv";
 const CHOOSE_FILE_DIV = "fileUploadDiv";

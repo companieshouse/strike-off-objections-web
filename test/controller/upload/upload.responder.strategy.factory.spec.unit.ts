@@ -1,9 +1,7 @@
 import { AjaxUploadResponderStrategy } from "../../../src/controllers/upload/ajax.upload.responder.strategy";
 import { HtmlUploadResponderStrategy } from "../../../src/controllers/upload/html.upload.responder.strategy";
-import {
-  createUploadResponderStrategy,
-  IUploadResponderStrategy,
-} from "../../../src/controllers/upload/upload.responder.strategy.factory";
+import { IUploadResponderStrategy } from "../../../src/controllers/upload/upload.responder.strategy";
+import { createUploadResponderStrategy } from "../../../src/controllers/upload/upload.responder.strategy.factory";
 
 describe("upload responder factory tests", () => {
 
