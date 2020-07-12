@@ -12,8 +12,17 @@ const FILE_LIST_DIV = "fileListDiv";
 const CHOOSE_FILE_DIV = "fileUploadDiv";
 const ERROR_SUMMARY_DIV = "errorSummaryDiv";
 
+/**
+ * UploadResponderStrategy for responding to AJAX requests to upload
+ * Renders page fragments to get html which is sent back to upload.js to dynamically update the screen
+ */
 export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
+  /**
+   * Render new file list and file picker fragments on successful upload
+   * @param {Request} req http request
+   * @param {Response} res http response
+   */
   public handleSuccess = async (req: Request, res: Response) => {
     const session: Session = req.session as Session;
     const replacementDivs: object[] = [];
@@ -33,11 +42,24 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
     }
   }
 
+  /**
+   * As the AJAX response is handled by upload.js this will return a message to instruct it to redirect
+   * to the error page
+   * @param {Request} res http request
+   * @param {Error} e the error
+   * @param {NextFunction} _next the next middleware function
+   */
   public handleGenericError = (res: Response, e: Error, _next?: NextFunction) => {
     logger.error(ErrorMessages.ERROR_500 + ": " + e);
     res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
   }
 
+  /**
+   * Renders the 'red' gov.uk error boxes and returns them to upload.js
+   * @param {Response} res http response
+   * @param {GovUkErrorData} errorData data to display in the nunjucks error component
+   * @param {any[]} attachments list of uploaded attachments
+   */
   public handleGovUKError = async (res: Response,
                                    errorData: GovUkErrorData,
                                    attachments: any[]) => {
@@ -66,6 +88,12 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
         divId: id });
   }
 
+  /**
+   * Renders a nunjucks template and captures the html
+   * @param {Response} res http response
+   * @param {string} view the name of the template
+   * @param {object} options the data to pass into the template
+   */
   private renderFragment = async (res: Response, view: string, options: object): Promise<string> => {
     return new Promise((resolve, reject) => {
       res.render(view,

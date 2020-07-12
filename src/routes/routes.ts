@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
-import * as documentUploadRoute from "../controllers/document.upload.controller";
 import * as enterInformationRoute from "../controllers/enter.information.controller";
+import * as documentUploadRoute from "../controllers/upload/document.upload.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 

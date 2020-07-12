@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { HtmlUploadResponderStrategy } from "../../../src/controllers/upload_strategy/html.upload.responder.strategy";
+import { HtmlUploadResponderStrategy } from "../../../src/controllers/upload/html.upload.responder.strategy";
 import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";

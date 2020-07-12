@@ -1,32 +1,32 @@
 jest.mock("ioredis");
-jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
-jest.mock("../../src/middleware/objection.session.middleware");
-jest.mock("../../src/services/objection.session.service");
-jest.mock("../../src/services/objection.service");
+jest.mock("../../../src/middleware/authentication.middleware");
+jest.mock("../../../src/middleware/session.middleware");
+jest.mock("../../../src/middleware/objection.session.middleware");
+jest.mock("../../../src/services/objection.session.service");
+jest.mock("../../../src/services/objection.service");
 
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
-import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
-import sessionMiddleware from "../../src/middleware/session.middleware";
-import { UploadErrorMessages } from "../../src/model/error.messages";
-import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import * as pageURLs from "../../src/model/page.urls";
+import app from "../../../src/app";
+import { OBJECTIONS_SESSION_NAME } from "../../../src/constants";
+import authenticationMiddleware from "../../../src/middleware/authentication.middleware";
+import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
+import sessionMiddleware from "../../../src/middleware/session.middleware";
+import { UploadErrorMessages } from "../../../src/model/error.messages";
+import ObjectionCompanyProfile from "../../../src/model/objection.company.profile";
+import * as pageURLs from "../../../src/model/page.urls";
 import {
   OBJECTIONS_DOCUMENT_UPLOAD,
   OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE,
   OBJECTIONS_DOCUMENT_UPLOAD_FILE,
-} from "../../src/model/page.urls";
-import { addAttachment, getAttachments } from "../../src/services/objection.service";
+} from "../../../src/model/page.urls";
+import { addAttachment, getAttachments } from "../../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
-} from "../../src/services/objection.session.service";
-import { COOKIE_NAME } from "../../src/utils/properties";
+} from "../../../src/services/objection.session.service";
+import { COOKIE_NAME } from "../../../src/utils/properties";
 
 ////////////////////////////////
 // Constants

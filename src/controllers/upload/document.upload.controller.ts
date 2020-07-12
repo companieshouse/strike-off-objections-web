@@ -1,19 +1,19 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { SESSION_OBJECTION_ID } from "../constants";
-import { UploadErrorMessages } from "../model/error.messages";
-import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
-import { Templates } from "../model/template.paths";
-import * as objectionService from "../services/objection.service";
+import { SESSION_OBJECTION_ID } from "../../constants";
+import { UploadErrorMessages } from "../../model/error.messages";
+import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
+import { Templates } from "../../model/template.paths";
+import * as objectionService from "../../services/objection.service";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
-} from "../services/objection.session.service";
-import logger from "../utils/logger";
-import { MAX_FILE_SIZE_BYTES } from "../utils/properties";
-import { uploadFile, UploadFileCallbacks } from "./upload_strategy/http.request.file.uploader";
-import { IUploadResponderStrategy } from "./upload_strategy/upload.responder.strategy";
-import { createUploadResponderStrategy } from "./upload_strategy/upload.responder.strategy.factory";
+} from "../../services/objection.session.service";
+import logger from "../../utils/logger";
+import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
+import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
+import { IUploadResponderStrategy } from "./upload.responder.strategy";
+import { createUploadResponderStrategy } from "./upload.responder.strategy.factory";
 
 /**
  * Document upload controller
