@@ -71,8 +71,8 @@ describe("ajax upload responder tests", () => {
 
     await ajaxResponder.handleSuccess(req, res);
 
-    expect(mockRenderFunc.mock.calls[0][0]).toContain(Templates.UPLOAD_FILE_LIST);
-    expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.UPLOAD_FILE_PICKER);
+    expect(mockRenderFunc.mock.calls[0][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_LIST);
+    expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_PICKER);
     expect(mockSendFunc).toBeCalledWith({
       divs : [
         { divHtml: "DUMMY HTML", divId: "fileListDiv" },
@@ -115,9 +115,9 @@ describe("ajax upload responder tests", () => {
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
 
-    expect(mockRenderFunc.mock.calls[0][0]).toContain(Templates.UPLOAD_ERROR_SUMMARY);
+    expect(mockRenderFunc.mock.calls[0][0]).toContain(Templates.DOCUMENT_UPLOAD_ERROR_SUMMARY);
     expect(mockRenderFunc.mock.calls[0][1].errorList).toEqual([errorData]);
-    expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.UPLOAD_FILE_PICKER);
+    expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_PICKER);
     expect(mockRenderFunc.mock.calls[1][1].documentUploadErr).toEqual(errorData);
     expect(mockSendFunc).toBeCalledWith({
       divs : [

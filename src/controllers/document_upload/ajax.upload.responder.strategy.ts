@@ -28,13 +28,13 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
     const replacementDivs: object[] = [];
     try {
       const attachments = getAttachments(session);
-      await this.renderFragment(res, Templates.UPLOAD_FILE_LIST, { attachments })
+      await this.renderFragment(res, Templates.DOCUMENT_UPLOAD_FILE_LIST, { attachments })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, FILE_LIST_DIV));
-      logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_LIST);
+      logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_LIST);
 
-      await this.renderFragment(res, Templates.UPLOAD_FILE_PICKER, { attachments })
+      await this.renderFragment(res, Templates.DOCUMENT_UPLOAD_FILE_PICKER, { attachments })
         .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
-      logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_PICKER);
+      logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
       res.send({divs: replacementDivs});
     } catch (e) {
@@ -66,15 +66,17 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
     const replacementDivs: object[] = [];
 
     try {
-      await this.renderFragment(res, Templates.UPLOAD_ERROR_SUMMARY, { errorList: [errorData] })
-        .then( (html: string) => this.addReplacementDiv(replacementDivs, html, ERROR_SUMMARY_DIV));
+      await this.renderFragment(res, Templates.DOCUMENT_UPLOAD_ERROR_SUMMARY, { errorList: [errorData] })
+        .then((html: string) => this.addReplacementDiv(replacementDivs, html, ERROR_SUMMARY_DIV));
 
-      logger.trace("Rendered fragment " + Templates.UPLOAD_ERROR_SUMMARY);
+      logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_ERROR_SUMMARY);
 
-      await this.renderFragment(res, Templates.UPLOAD_FILE_PICKER, { attachments, documentUploadErr: errorData })
+      await this.renderFragment(res,
+                                Templates.DOCUMENT_UPLOAD_FILE_PICKER,
+                                { attachments, documentUploadErr: errorData })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
 
-      logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_PICKER);
+      logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
       res.send({ divs: replacementDivs });
     } catch (e) {
