@@ -101,7 +101,7 @@ const mockGetAttachments = getAttachments as jest.Mock;
 ////////////////////////////////
 // Tests
 
-describe ("document.upload.controller tests", () => {
+describe ("document.document_upload.controller tests", () => {
   beforeEach(() => {
     mockAddAttachment.mockClear();
     mockGetAttachments.mockReset().mockImplementation(() => dummyAttachments);

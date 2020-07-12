@@ -11,7 +11,7 @@ import {
 } from "../../services/objection.session.service";
 import logger from "../../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
-import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
+import { IUploadFileCallbacks, uploadFile } from "./http.request.file.uploader";
 import { IUploadResponderStrategy } from "./upload.responder.strategy";
 import { createUploadResponderStrategy } from "./upload.responder.strategy.factory";
 
@@ -65,7 +65,7 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
     return uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
-  const uploadCallbacks: UploadFileCallbacks = {
+  const uploadCallbacks: IUploadFileCallbacks = {
     fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
     noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
     uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),

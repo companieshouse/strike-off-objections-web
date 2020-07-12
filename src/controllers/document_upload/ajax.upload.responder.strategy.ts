@@ -13,7 +13,7 @@ const CHOOSE_FILE_DIV = "fileUploadDiv";
 const ERROR_SUMMARY_DIV = "errorSummaryDiv";
 
 /**
- * UploadResponderStrategy for responding to AJAX requests to upload
+ * UploadResponderStrategy for responding to AJAX requests to document upload
  * Renders page fragments to get html which is sent back to upload.js to dynamically update the screen
  */
 export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
