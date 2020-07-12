@@ -130,12 +130,25 @@ describe ("document.document_upload.controller tests", () => {
     expect(res.header.location).toEqual("TODO%20-%20PAGE%20AFTER%20UPLOAD");
   });
 
-  it ("should show error message if continue pressed with no docs added", async () => {
+  it ("should show error message if continue pressed with no docs added - NOT AJAX", async () => {
     mockGetAttachments.mockImplementationOnce(() => []);
     const res = await request(app)
       .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(res.status).toEqual(200);
+    expect(res.text).toContain("govuk-error-summary");
+    expect(res.text).toContain(UploadErrorMessages.NO_DOCUMENTS_ADDED);
+  });
+
+  it ("should show error message if continue pressed with no docs added - AJAX", async () => {
+    mockGetAttachments.mockImplementationOnce(() => []);
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .set("X-Requested-With", "XMLHttpRequest");
+
     expect(res.status).toEqual(200);
     expect(res.text).toContain("govuk-error-summary");
     expect(res.text).toContain(UploadErrorMessages.NO_DOCUMENTS_ADDED);

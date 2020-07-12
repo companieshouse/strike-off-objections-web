@@ -31,4 +31,5 @@ router.get(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.get);
 router.post(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.postFile);
 router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueButton);
 
+router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
 export default router;
