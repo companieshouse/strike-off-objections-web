@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { IGovUkErrorData } from "../../model/govuk.error.data";
+import { GovUkErrorData } from "../../model/govuk.error.data";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
-import { IUploadResponderStrategy } from "./upload.responder.strategy";
+import { UploadResponderStrategy } from "./upload.responder.strategy";
 
 /**
  * UploadResponderStrategy for responding to HTML (non AJAX) requests to upload
  */
-export class HtmlUploadResponderStrategy implements IUploadResponderStrategy {
+export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
 
   /**
    * Redirects back to the upload screen to force it to reload
@@ -33,10 +33,10 @@ export class HtmlUploadResponderStrategy implements IUploadResponderStrategy {
   /**
    * Renders the upload screen with the error
    * @param {Response} res http response
-   * @param {IGovUkErrorData} errorData the error information to display
+   * @param {GovUkErrorData} errorData the error information to display
    * @param {any[]} attachments the list of uploaded attachments
    */
-  public handleGovUKError = (res: Response, errorData: IGovUkErrorData, attachments: any[]) => {
+  public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: any[]) => {
     return res.render(Templates.DOCUMENT_UPLOAD, {
       attachments,
       documentsUploadErr: errorData,

@@ -3,9 +3,9 @@ jest.mock("../../../src/utils/logger");
 
 import { Request, Response } from "express";
 import { AjaxUploadResponderStrategy } from "../../../src/controllers/document_upload/ajax.upload.responder.strategy";
-import { IUploadResponderStrategy } from "../../../src/controllers/document_upload/upload.responder.strategy";
+import { UploadResponderStrategy } from "../../../src/controllers/document_upload/upload.responder.strategy";
 import { ErrorMessages } from "../../../src/model/error.messages";
-import { createGovUkErrorData, IGovUkErrorData } from "../../../src/model/govuk.error.data";
+import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_ERROR } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";
 import { getAttachments } from "../../../src/services/objection.service";
@@ -67,7 +67,7 @@ beforeEach(() => {
 describe("ajax upload responder tests", () => {
 
   it("should return html fragments on success", async () => {
-    const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
+    const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
 
     await ajaxResponder.handleSuccess(req, res);
 
@@ -87,7 +87,7 @@ describe("ajax upload responder tests", () => {
       throw err;
     });
 
-    const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
+    const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
 
     await ajaxResponder.handleSuccess(req, res);
 
@@ -97,7 +97,7 @@ describe("ajax upload responder tests", () => {
   });
 
   it("should return error page and status 500 on generic error", () => {
-    const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
+    const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
     const err: Error = new Error("Oh Noes");
 
     ajaxResponder.handleGenericError(res, err);
@@ -108,9 +108,9 @@ describe("ajax upload responder tests", () => {
   });
 
   it("should call render error divs on user error", async () => {
-    const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
-    const errorData: IGovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                            true, "user");
+    const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
+    const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
+                                                           true, "user");
     const attachments: any[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
@@ -133,9 +133,9 @@ describe("ajax upload responder tests", () => {
       throw err;
     });
 
-    const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
-    const errorData: IGovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                            true, "user");
+    const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
+    const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
+                                                           true, "user");
     const attachments: any[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);

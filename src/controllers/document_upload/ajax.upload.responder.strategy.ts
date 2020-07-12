@@ -1,12 +1,12 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { ErrorMessages } from "../../model/error.messages";
-import { IGovUkErrorData } from "../../model/govuk.error.data";
+import { GovUkErrorData } from "../../model/govuk.error.data";
 import * as pageURLs from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
 import { getAttachments } from "../../services/objection.service";
 import logger from "../../utils/logger";
-import { IUploadResponderStrategy } from "./upload.responder.strategy";
+import { UploadResponderStrategy } from "./upload.responder.strategy";
 
 const FILE_LIST_DIV = "fileListDiv";
 const CHOOSE_FILE_DIV = "fileUploadDiv";
@@ -16,7 +16,7 @@ const ERROR_SUMMARY_DIV = "errorSummaryDiv";
  * UploadResponderStrategy for responding to AJAX requests to document upload
  * Renders page fragments to get html which is sent back to upload.js to dynamically update the screen
  */
-export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
+export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
 
   /**
    * Render new file list and file picker fragments on successful upload
@@ -57,11 +57,11 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
   /**
    * Renders the 'red' gov.uk error boxes and returns them to upload.js
    * @param {Response} res http response
-   * @param {IGovUkErrorData} errorData data to display in the nunjucks error component
+   * @param {GovUkErrorData} errorData data to display in the nunjucks error component
    * @param {any[]} attachments list of uploaded attachments
    */
   public handleGovUKError = async (res: Response,
-                                   errorData: IGovUkErrorData,
+                                   errorData: GovUkErrorData,
                                    attachments: any[]) => {
     const replacementDivs: object[] = [];
 

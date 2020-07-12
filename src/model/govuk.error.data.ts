@@ -1,7 +1,7 @@
 // Used by the Gov.uk nunjucks components to extract
 // validation error messages
 
-export interface IGovUkErrorData {
+export interface GovUkErrorData {
   href: string;
   flag: boolean;
   text: string;
@@ -11,7 +11,7 @@ export interface IGovUkErrorData {
 export const createGovUkErrorData = (errorText: string,
                                      errorHref: string,
                                      errorFlag: boolean,
-                                     errorType: string): IGovUkErrorData => {
+                                     errorType: string): GovUkErrorData => {
   return {
     flag: errorFlag,
     href: errorHref,

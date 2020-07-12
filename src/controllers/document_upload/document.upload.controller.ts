@@ -2,7 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { SESSION_OBJECTION_ID } from "../../constants";
 import { UploadErrorMessages } from "../../model/error.messages";
-import { createGovUkErrorData, IGovUkErrorData } from "../../model/govuk.error.data";
+import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { Templates } from "../../model/template.paths";
 import * as objectionService from "../../services/objection.service";
 import {
@@ -11,8 +11,8 @@ import {
 } from "../../services/objection.session.service";
 import logger from "../../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
-import { IUploadFileCallbacks, uploadFile } from "./http.request.file.uploader";
-import { IUploadResponderStrategy } from "./upload.responder.strategy";
+import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
+import { UploadResponderStrategy } from "./upload.responder.strategy";
 import { createUploadResponderStrategy } from "./upload.responder.strategy.factory";
 
 /**
@@ -54,7 +54,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 export const postFile = async (req: Request, res: Response, next: NextFunction) => {
   logger.debugRequest(req, "Add document http request type is " + (isAjaxRequest(req) ? "" : "NOT ") + "AJAX / XmlHttpRequest");
 
-  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
+  const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
   let attachments: any[] = [];
   try {
@@ -65,7 +65,7 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
     return uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
-  const uploadCallbacks: IUploadFileCallbacks = {
+  const uploadCallbacks: UploadFileCallbacks = {
     fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
     noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
     uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),
@@ -82,7 +82,7 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
  * @param {NextFunction} next the next function in the middleware chain
  */
 export const postContinueButton = async (req: Request, res: Response, next: NextFunction) => {
-  const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
+  const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
   let attachments: any[] = [];
   try {
@@ -103,13 +103,13 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
  * Get uploadFile callback function for file size limit exceeded event
  * @param {Request} req http request
  * @param {Response} res http response
- * @param {IUploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
+ * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
  * @returns {((filename: string, maxInBytes: number): void)} the callback function
  */
 const getFileSizeLimitExceededCallback = (req: Request,
                                           res: Response,
-                                          uploadResponderStrategy: IUploadResponderStrategy,
+                                          uploadResponderStrategy: UploadResponderStrategy,
                                           attachments: any[]): (filename: string, maxInBytes: number) => void => {
   return (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
@@ -123,13 +123,13 @@ const getFileSizeLimitExceededCallback = (req: Request,
  * Get uploadFile callback function for no file data received
  * @param {Request} req http request
  * @param {Response} res http response
- * @param {IUploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
+ * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
  * @returns {((filename: string): void)} the callback function
  */
 const getNoFileDataReceivedCallback = (req: Request,
                                        res: Response,
-                                       uploadResponderStrategy: IUploadResponderStrategy,
+                                       uploadResponderStrategy: UploadResponderStrategy,
                                        attachments: any[]): (filename: string) => void => {
   return async (_filename: string) => {
     return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
@@ -141,13 +141,13 @@ const getNoFileDataReceivedCallback = (req: Request,
  * @param {Request} req http request
  * @param {Response} res http response
  * @param {NextFunction} next the next function in the middleware chain
- * @param {IUploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
+ * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @returns {((filename: string, fileData: Buffer, mimeType: string): void)} the callback function
  */
 const getUploadFinishedCallback = (req: Request,
                                    res: Response,
                                    next: NextFunction,
-                                   uploadResponderStrategy: IUploadResponderStrategy):
+                                   uploadResponderStrategy: UploadResponderStrategy):
                                     (filename: string, fileData: Buffer, mimeType: string) => void => {
   return (filename: string, fileData: Buffer, mimeType: string) => {
     try {
@@ -180,14 +180,14 @@ const getUploadFinishedCallback = (req: Request,
  * Displays an error message on the page
  * @param {Response} res http response
  * @param {string} errorMessage the error message to display on the page
- * @param {IUploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
+ * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
  */
 const displayError = async (res: Response,
                             errorMessage: string,
-                            uploadResponderStrategy: IUploadResponderStrategy,
+                            uploadResponderStrategy: UploadResponderStrategy,
                             attachments: any[]) => {
-  const documentUploadErrorData: IGovUkErrorData =
+  const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };

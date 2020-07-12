@@ -10,7 +10,7 @@ import logger from "../../utils/logger";
  * No file data received
  * Upload finished
  */
-export interface IUploadFileCallbacks {
+export interface UploadFileCallbacks {
   /**
    * File size limit exceeded
    * @param {string} filename of the file being uploaded
@@ -37,11 +37,11 @@ export interface IUploadFileCallbacks {
  * Looks for the file in a field type "file" in a multipart/form-data form
  * @param {Request} req the http request
  * @param {number} maxFileSizeBytes the maximum allowed size of file in bytes
- * @param {IUploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
+ * @param {UploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
  */
 export const uploadFile = (req: Request,
                            maxFileSizeBytes: number,
-                           callbacks: IUploadFileCallbacks) => {
+                           callbacks: UploadFileCallbacks) => {
 
   const chunkArray: Buffer[] = [];
 
