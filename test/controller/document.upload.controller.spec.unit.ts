@@ -103,7 +103,21 @@ const mockGetAttachments = getAttachments as jest.Mock;
 
 describe ("document.upload.controller tests", () => {
   beforeEach(() => {
+    mockAddAttachment.mockClear();
     mockGetAttachments.mockReset().mockImplementation(() => dummyAttachments);
+  });
+
+  it ("should redirect to error page when error is thrown getting attachments on page load", async () => {
+    mockGetAttachments.mockImplementationOnce(() => { throw new Error(); });
+
+    const res = await request(app)
+      .get(OBJECTIONS_DOCUMENT_UPLOAD)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetAttachments).toHaveBeenCalledTimes(1);
+    expect(res.status).toEqual(500);
+    expect(res.text).toContain(SORRY_ERROR_MESSAGE);
   });
 
   it ("should redirect to next page when continue is clicked and files have been added", async () => {
@@ -234,6 +248,78 @@ describe ("document.upload.controller tests", () => {
     expect(res.text).toEqual("{\"redirect\":\"" + pageURLs.OBJECTIONS_ERROR + "\"}");
     expect(mockGetAttachments).toHaveBeenCalled();
     expect(mockAddAttachment).toHaveBeenCalled();
+  });
+
+  it ("should show error screen if getting attachments from api " +
+        "on submitting file throws error - NOT AJAX", async () => {
+    mockGetAttachments.mockImplementationOnce(() => { throw new Error(); });
+    const buffer = Buffer.alloc(5);
+
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
+
+    expect(res.status).toEqual(500);
+    expect(res.text).toContain(SORRY_ERROR_MESSAGE);
+    expect(mockGetAttachments).toHaveBeenCalled();
+    expect(mockAddAttachment).not.toHaveBeenCalled();
+  });
+
+  it ("should return redirect to error screen if getting attachments from api " +
+  "on submitting file throws error - AJAX", async () => {
+    mockGetAttachments.mockImplementationOnce(() => { throw new Error(); });
+    const buffer = Buffer.alloc(5);
+
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_FILE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .set("X-Requested-With", "XMLHttpRequest")
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
+
+    expect(res.status).toEqual(500);
+    // this is sent back to the AJAX call
+    expect(res.text).toEqual("{\"redirect\":\"" + pageURLs.OBJECTIONS_ERROR + "\"}");
+    expect(mockGetAttachments).toHaveBeenCalled();
+    expect(mockAddAttachment).not.toHaveBeenCalled();
+  });
+
+  it ("should show error screen if getting attachments from api " +
+        "on continue button throws error - NOT AJAX", async () => {
+    mockGetAttachments.mockImplementationOnce(() => { throw new Error(); });
+    const buffer = Buffer.alloc(5);
+
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
+
+    expect(res.status).toEqual(500);
+    expect(res.text).toContain(SORRY_ERROR_MESSAGE);
+    expect(mockGetAttachments).toHaveBeenCalled();
+    expect(mockAddAttachment).not.toHaveBeenCalled();
+  });
+
+  it ("should return redirect to error screen if getting attachments from api " +
+  "on continue button throws error - AJAX", async () => {
+    mockGetAttachments.mockImplementationOnce(() => { throw new Error(); });
+    const buffer = Buffer.alloc(5);
+
+    const res = await request(app)
+      .post(OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .set("X-Requested-With", "XMLHttpRequest")
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
+
+    expect(res.status).toEqual(500);
+    // this is sent back to the AJAX call
+    expect(res.text).toEqual("{\"redirect\":\"" + pageURLs.OBJECTIONS_ERROR + "\"}");
+    expect(mockGetAttachments).toHaveBeenCalled();
+    expect(mockAddAttachment).not.toHaveBeenCalled();
   });
 
   it ("should redirect back to itself when file uploaded successfully - NOT AJAX", async () => {

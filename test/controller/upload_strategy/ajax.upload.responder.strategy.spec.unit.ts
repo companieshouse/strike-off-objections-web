@@ -2,8 +2,8 @@ jest.mock("../../../src/services/objection.service");
 jest.mock("../../../src/utils/logger");
 
 import { Request, Response } from "express";
-import { AjaxUploadResponderStrategy } from "../../../src/controllers/upload/ajax.upload.responder.strategy";
-import { IUploadResponderStrategy } from "../../../src/controllers/upload/upload.responder.strategy";
+import { AjaxUploadResponderStrategy } from "../../../src/controllers/upload_strategy/ajax.upload.responder.strategy";
+import { IUploadResponderStrategy } from "../../../src/controllers/upload_strategy/upload.responder.strategy";
 import { ErrorMessages } from "../../../src/model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_ERROR } from "../../../src/model/page.urls";

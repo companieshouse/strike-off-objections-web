@@ -4,16 +4,16 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import { UploadErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { Templates } from "../model/template.paths";
-import { addAttachment, getAttachments } from "../services/objection.service";
+import * as objectionService from "../services/objection.service";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../utils/properties";
-import { uploadFile, UploadFileCallbacks } from "./upload/http.request.file.uploader";
-import { IUploadResponderStrategy } from "./upload/upload.responder.strategy";
-import { createUploadResponderStrategy } from "./upload/upload.responder.strategy.factory";
+import { uploadFile, UploadFileCallbacks } from "./upload_strategy/http.request.file.uploader";
+import { IUploadResponderStrategy } from "./upload_strategy/upload.responder.strategy";
+import { createUploadResponderStrategy } from "./upload_strategy/upload.responder.strategy.factory";
 
 /**
  * Document upload controller
@@ -26,9 +26,17 @@ import { createUploadResponderStrategy } from "./upload/upload.responder.strateg
  * Handle GET request for document upload page
  * @param {Request} req the http request
  * @param {Response} res the http response
+ * @param {NextFunction} next function in middleware chain - used to catch errors
  */
-export const get = async (req: Request, res: Response) => {
-  const attachments = getAttachments(req.session as Session);
+export const get = async (req: Request, res: Response, next: NextFunction) => {
+  let attachments: any[] = [];
+  try {
+    // TODO this will have to have await if getAttachments is made async
+    attachments = objectionService.getAttachments(req.session as Session);
+  } catch (e) {
+    logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
+    return next(e);
+  }
 
   return res.render(Templates.DOCUMENT_UPLOAD,
     {
@@ -48,8 +56,14 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
 
   const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
-  // TODO - try catch handlegeneric
-  const attachments = getAttachments(req.session as Session);
+  let attachments: any[] = [];
+  try {
+    // TODO this will have to have await if getAttachments is made async
+    attachments = objectionService.getAttachments(req.session as Session);
+  } catch (e) {
+    logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
+    return uploadResponderStrategy.handleGenericError(res, e, next);
+  }
 
   const uploadCallbacks: UploadFileCallbacks = {
     fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
@@ -67,14 +81,20 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
  * @param {Response} res the http response
  * @param {NextFunction} next the next function in the middleware chain
  */
-export const postContinueButton = async (req: Request, res: Response) => {
+export const postContinueButton = async (req: Request, res: Response, next: NextFunction) => {
   const uploadResponderStrategy: IUploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
-  // TODO - try catch? handlegeneric
-  const attachments = getAttachments(req.session as Session);
+  let attachments: any[] = [];
+  try {
+    // TODO this will have to have await if getAttachments is made async
+    attachments = objectionService.getAttachments(req.session as Session);
+  } catch (e) {
+    logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
+    return uploadResponderStrategy.handleGenericError(res, e, next);
+  }
 
   if (attachments && attachments.length === 0) {
-    return displayError(req, res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    return displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
   res.redirect("TODO - PAGE AFTER UPLOAD");
 };
@@ -95,7 +115,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
-    return displayError(req, res, errorMsg, uploadResponderStrategy, attachments);
+    return displayError(res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
 
@@ -112,7 +132,7 @@ const getNoFileDataReceivedCallback = (req: Request,
                                        uploadResponderStrategy: IUploadResponderStrategy,
                                        attachments: any[]): (filename: string) => void => {
   return async (_filename: string) => {
-    return await displayError(req, res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
+    return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
 };
 
@@ -136,7 +156,8 @@ const getUploadFinishedCallback = (req: Request,
       const token: string = retrieveAccessTokenFromSession(session);
       const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
 
-      addAttachment(companyNumber, token, objectionId, fileData, filename);
+      // TODO this will need await if addAttachment is made async
+      objectionService.addAttachment(companyNumber, token, objectionId, fileData, filename);
     } catch (e) {
       logger.error(`User has attempted to upload a ` +
                      `file ${filename}, mime-type: ${mimeType} ` +
@@ -157,14 +178,12 @@ const getUploadFinishedCallback = (req: Request,
 
 /**
  * Displays an error message on the page
- * @param {Request} req http request
  * @param {Response} res http response
  * @param {string} errorMessage the error message to display on the page
  * @param {IUploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
  */
-const displayError = async (req: Request, // TODO is this needed?
-                            res: Response,
+const displayError = async (res: Response,
                             errorMessage: string,
                             uploadResponderStrategy: IUploadResponderStrategy,
                             attachments: any[]) => {

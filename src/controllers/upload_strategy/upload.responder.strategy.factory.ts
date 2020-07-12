@@ -7,9 +7,5 @@ import { IUploadResponderStrategy } from "./upload.responder.strategy";
  * @param {boolean} isAjaxRequest do we need an ajax responder or not
  */
 export const createUploadResponderStrategy = (isAjaxRequest: boolean): IUploadResponderStrategy => {
-  if (isAjaxRequest) {
-    return new AjaxUploadResponderStrategy();
-  } else {
-    return new HtmlUploadResponderStrategy();
-  }
+  return isAjaxRequest ? new AjaxUploadResponderStrategy() : new HtmlUploadResponderStrategy();
 };

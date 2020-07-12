@@ -16,10 +16,9 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
   public handleSuccess = async (req: Request, res: Response) => {
     const session: Session = req.session as Session;
-    const attachments = getAttachments(session);
     const replacementDivs: object[] = [];
-
     try {
+      const attachments = getAttachments(session);
       await this.renderFragment(res, Templates.UPLOAD_FILE_LIST, { attachments })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, FILE_LIST_DIV));
       logger.trace("Rendered fragment " + Templates.UPLOAD_FILE_LIST);
@@ -41,7 +40,7 @@ export class AjaxUploadResponderStrategy implements IUploadResponderStrategy {
 
   public handleGovUKError = async (res: Response,
                                    errorData: GovUkErrorData,
-                                   attachments: any) => {
+                                   attachments: any[]) => {
     const replacementDivs: object[] = [];
 
     try {
