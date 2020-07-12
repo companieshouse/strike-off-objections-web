@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { GovUkErrorData } from "../../model/govuk.error.data";
+import { IGovUkErrorData } from "../../model/govuk.error.data";
 
 /**
  * Interface for a strategy to allow the document upload controller
@@ -8,5 +8,5 @@ import { GovUkErrorData } from "../../model/govuk.error.data";
 export interface IUploadResponderStrategy {
   handleSuccess(req: Request, res: Response): void;
   handleGenericError(res: Response, e: Error, next?: NextFunction): void;
-  handleGovUKError(res: Response, errorData: GovUkErrorData, attachments: any[]): void;
+  handleGovUKError(res: Response, errorData: IGovUkErrorData, attachments: any[]): void;
 }

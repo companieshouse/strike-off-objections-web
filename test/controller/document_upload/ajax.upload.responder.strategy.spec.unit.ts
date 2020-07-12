@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { AjaxUploadResponderStrategy } from "../../../src/controllers/document_upload/ajax.upload.responder.strategy";
 import { IUploadResponderStrategy } from "../../../src/controllers/document_upload/upload.responder.strategy";
 import { ErrorMessages } from "../../../src/model/error.messages";
-import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
+import { createGovUkErrorData, IGovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_ERROR } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";
 import { getAttachments } from "../../../src/services/objection.service";
@@ -109,8 +109,8 @@ describe("ajax upload responder tests", () => {
 
   it("should call render error divs on user error", async () => {
     const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
-    const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-      true, "user");
+    const errorData: IGovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
+                                                            true, "user");
     const attachments: any[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
@@ -134,8 +134,8 @@ describe("ajax upload responder tests", () => {
     });
 
     const ajaxResponder: IUploadResponderStrategy = new AjaxUploadResponderStrategy();
-    const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-      true, "user");
+    const errorData: IGovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
+                                                            true, "user");
     const attachments: any[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);

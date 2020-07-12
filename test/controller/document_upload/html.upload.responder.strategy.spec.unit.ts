@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { HtmlUploadResponderStrategy } from "../../../src/controllers/document_upload/html.upload.responder.strategy";
-import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
+import { createGovUkErrorData, IGovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";
 
@@ -48,8 +48,8 @@ describe("html upload responder tests", () => {
 
   it("should call render on user error", () => {
     const htmlResponder: HtmlUploadResponderStrategy = new HtmlUploadResponderStrategy();
-    const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                           true, "user");
+    const errorData: IGovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
+                                                            true, "user");
     const attachments: any[] = [];
 
     htmlResponder.handleGovUKError(res, errorData, attachments);

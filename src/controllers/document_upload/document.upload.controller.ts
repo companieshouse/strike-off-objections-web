@@ -2,7 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { SESSION_OBJECTION_ID } from "../../constants";
 import { UploadErrorMessages } from "../../model/error.messages";
-import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
+import { createGovUkErrorData, IGovUkErrorData } from "../../model/govuk.error.data";
 import { Templates } from "../../model/template.paths";
 import * as objectionService from "../../services/objection.service";
 import {
@@ -187,7 +187,7 @@ const displayError = async (res: Response,
                             errorMessage: string,
                             uploadResponderStrategy: IUploadResponderStrategy,
                             attachments: any[]) => {
-  const documentUploadErrorData: GovUkErrorData =
+  const documentUploadErrorData: IGovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };
