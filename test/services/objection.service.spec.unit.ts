@@ -20,12 +20,50 @@ const mockRetrieveProfileFromSession = retrieveCompanyProfileFromObjectionSessio
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
+const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
+
+const mockAttachments = [
+  {
+    id: "abc123",
+    name: "test.doc",
+  },
+  {
+    id: "xyz789",
+    name: "mock.doc",
+  },
+];
+mockGetAttachments.prototype.constructor.mockImplementation(async (companyNumber: string, token: string,
+                                                                   objectionId: string): Promise<Attachment[]> => {
+  return mockAttachments;
+});
+
+const session = {
+  data: {
+  },
+} as Session;
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
 const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
 const REASON = "Owed Money";
 
 describe("objections API service unit tests", () => {
+
+  beforeEach(() => {
+    mockRetrieveProfileFromSession.mockImplementationOnce(() => {
+      return dummyCompanyProfile as ObjectionCompanyProfile;
+    });
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => {
+      return NEW_OBJECTION_ID as string;
+    });
+    mockRetrieveAccessToken.mockImplementationOnce(() => {
+      return ACCESS_TOKEN as string;
+    });
+
+    session.data[OBJECTIONS_SESSION_NAME] = {
+      [SESSION_COMPANY_PROFILE]: dummyCompanyProfile,
+      [SESSION_OBJECTION_ID]: NEW_OBJECTION_ID,
+    };
+  });
 
   it("returns an id when a new objection is created", async () => {
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
@@ -49,24 +87,6 @@ describe("objections API service unit tests", () => {
   });
 
   it("returns undefined when adding an attachment", () => {
-    mockRetrieveProfileFromSession.mockImplementationOnce(() => {
-      return dummyCompanyProfile as ObjectionCompanyProfile;
-    });
-    mockRetrieveFromObjectionSession.mockImplementationOnce(() => {
-      return NEW_OBJECTION_ID as string;
-    });
-    mockRetrieveAccessToken.mockImplementationOnce(() => {
-      return ACCESS_TOKEN as string;
-    });
-
-    const session = {
-      data: {
-      },
-    } as Session;
-    session.data[OBJECTIONS_SESSION_NAME] = {
-      [SESSION_COMPANY_PROFILE] : dummyCompanyProfile,
-      [SESSION_OBJECTION_ID] : NEW_OBJECTION_ID,
-    };
     const FILE_NAME = "test_file";
     const BUFFER = Buffer.from("Test buffer");
     const attachmentResult = objectionsService.addAttachment(session,
@@ -82,22 +102,11 @@ describe("objections API service unit tests", () => {
   });
 
   it("should return list of attachment objects when getting attachments for an object", async () => {
-    const session: Session = new Session();
-    session.data = {
-      extra_data: {
-        companyProfileInSession: {
-          companyNumber: "00006400",
-        },
-        objectionId: "obj123",
-      },
-      signin_info: {
-        access_token: {
-          access_token: ACCESS_TOKEN,
-        },
-      },
-    };
     const attachmentsList: Attachment[] = await objectionsService.getAttachments(session);
-
+    expect(mockGetAttachments).toBeCalledWith(dummyCompanyProfile.companyNumber,
+        ACCESS_TOKEN,
+        NEW_OBJECTION_ID);
+    expect(attachmentsList).toEqual(mockAttachments);
   });
 });
 

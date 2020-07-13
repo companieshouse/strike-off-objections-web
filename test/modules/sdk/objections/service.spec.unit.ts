@@ -81,4 +81,12 @@ describe("objections SDK service unit tests", () => {
     const streamOne = usedAxiosConfig.data[STREAMS_DATA_PARAMATER][1];
     expect(streamOne).toEqual(BUFFER);
   });
+
+  it("should call objections API getting attachments list", () => {
+    objectionsSdk.getAttachments("companyNumber",
+        "token",
+        "obj123");
+
+    expect(mockAxiosRequest).toBeCalled();
+  });
 });
