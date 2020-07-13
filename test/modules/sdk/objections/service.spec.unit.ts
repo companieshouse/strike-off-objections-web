@@ -1,6 +1,6 @@
 jest.mock("axios");
 
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 
 const mockAxiosRequest = axios.request as jest.Mock;
@@ -65,14 +65,20 @@ describe("objections SDK service unit tests", () => {
   });
 
   it("objections API is called when posting an attachment", () => {
-
+    const fileName: string = "fileName";
+    const BUFFER = Buffer.from("Buffer");
+    const STREAMS_DATA_PARAMATER = "_streams";
     objectionsSdk.addAttachment("companyNumber",
       "token",
       "objectionId",
-      new Buffer("Buffer"),
-      "fileName",
+      BUFFER,
+      fileName,
     );
+    const usedAxiosConfig: AxiosRequestConfig = mockAxiosRequest.mock.calls[0][0];
+    const streamZero = usedAxiosConfig.data[STREAMS_DATA_PARAMATER][0];
+    expect(streamZero).toContain(fileName);
 
-    expect(mockAxiosRequest).toBeCalled();
+    const streamOne = usedAxiosConfig.data[STREAMS_DATA_PARAMATER][1];
+    expect(streamOne).toEqual(BUFFER);
   });
 });
