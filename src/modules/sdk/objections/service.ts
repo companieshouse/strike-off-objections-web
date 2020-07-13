@@ -3,12 +3,16 @@ import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import { ObjectionPatch } from "./types";
+import FormData from "form-data";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
     `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
 
 const OBJECTIONS_API_PATCH_URL = (companyNumber: string, objectionId: string): string =>
     OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
+
+const OBJECTIONS_API_ADD_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
+  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
 /**
  * Create a new objection for the given company.
@@ -32,6 +36,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
  * Patch an objection for the given company.
  *
  * @param companyNumber the company number
+ * @param objectionId the id of the objection to patch
  * @param token the bearer security token to use to call the api
  * @param patch the changes to be applied to the objection
  *
@@ -48,13 +53,21 @@ export const patchObjection = async (
   await makeAPICall(axiosConfig);
 };
 
-export const addAttachment = (companyNumber: string,
-                              token: string,
-                              objectionId: string,
-                              attachment: Buffer,
-                              fileName: string) => {
+export const addAttachment = async (companyNumber: string,
+                                    token: string,
+                                    objectionId: string,
+                                    attachment: Buffer,
+                                    fileName: string) => {
 
-  // TODO Call the actual Objections API when end-point is implemented. Covered by JIRA
-  //      sub-tasks OBJ-63 and OBJ-70
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+    HTTP_POST,
+    OBJECTIONS_API_ADD_ATTACHMENT_URL(companyNumber, objectionId),
+    token,
+  );
 
+  const data = new FormData();
+  data.append("file", attachment, {filename: fileName});
+
+  axiosConfig.data = data;
+  await makeAPICall(axiosConfig);
 };
