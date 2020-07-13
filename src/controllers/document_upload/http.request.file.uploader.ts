@@ -28,7 +28,7 @@ export interface UploadFileCallbacks {
    * @param {Buffer} fileData the data contained in the file
    * @param {string} mimeType of the file being uploaded
    */
-  uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void;
+  uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => Promise<void>;
 }
 
 /**
@@ -87,7 +87,7 @@ export const uploadFile = (req: Request,
         return callbacks.noFileDataReceivedCallback(filename);
       }
 
-      return callbacks.uploadFinishedCallback(filename, fileData, mimeType);
+      return await callbacks.uploadFinishedCallback(filename, fileData, mimeType);
     }); // end fileStream.on("end") event
   }); // end busboy.on("file") event
 

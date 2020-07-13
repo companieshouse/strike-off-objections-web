@@ -21,21 +21,15 @@ import {
   OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE,
 } from "../../../src/model/page.urls";
 import { addAttachment, getAttachments } from "../../../src/services/objection.service";
-import {
-  retrieveAccessTokenFromSession,
-  retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
-} from "../../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../../src/utils/properties";
 
 ////////////////////////////////
 // Constants
 
 const COMPANY_NUMBER = "00006400";
-const ACCESS_TOKEN = "token";
 const EXPECTED_MAX_FILE_SIZE_MESSAGE = "File size must be smaller than 0 MB";
 const SORRY_ERROR_MESSAGE = "Sorry, there is a problem with the service";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
-const OBJECTION_ID = "objectionId";
 const TEXT_FILE_NAME = "text.txt";
 const TEXT_FILE_LARGE_NAME = "text_large.txt";
 const DIV_ID_FILE_LIST = "fileListDiv";
@@ -83,15 +77,6 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
     return next();
   }
 });
-
-const mockRetrieveCompanyProfileFromObjectionSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
-mockRetrieveCompanyProfileFromObjectionSession.mockImplementation( () => dummyCompanyProfile );
-
-const mockRetrieveAccessTokenFromSession = retrieveAccessTokenFromSession as jest.Mock;
-mockRetrieveAccessTokenFromSession.mockImplementation(() => ACCESS_TOKEN);
-
-const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
-mockRetrieveFromObjectionSession.mockImplementation(() => OBJECTION_ID);
 
 const mockAddAttachment = addAttachment as jest.Mock;
 
@@ -344,9 +329,7 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
-    expect(mockAddAttachment).toBeCalledWith(COMPANY_NUMBER,
-                                             ACCESS_TOKEN,
-                                             OBJECTION_ID,
+    expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
                                              TEXT_FILE_NAME);
   });
@@ -376,9 +359,7 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[1].divHtml).toContain(CLASS_FILE_UPLOAD);
     expect(responseObj.divs[1].divHtml).toContain("Add another document");
 
-    expect(mockAddAttachment).toBeCalledWith(COMPANY_NUMBER,
-                                             ACCESS_TOKEN,
-                                             OBJECTION_ID,
+    expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
                                              TEXT_FILE_NAME);
   });

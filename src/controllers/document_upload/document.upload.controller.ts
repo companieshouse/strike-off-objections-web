@@ -1,14 +1,9 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { SESSION_OBJECTION_ID } from "../../constants";
 import { UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { Templates } from "../../model/template.paths";
 import * as objectionService from "../../services/objection.service";
-import {
-  retrieveAccessTokenFromSession,
-  retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession,
-} from "../../services/objection.session.service";
 import logger from "../../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
 import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
@@ -105,7 +100,7 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
  * @param {Response} res http response
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
- * @returns {((filename: string, maxInBytes: number): void)} the callback function
+ * @returns {(filename: string, maxInBytes: number): void} the callback function
  */
 const getFileSizeLimitExceededCallback = (req: Request,
                                           res: Response,
@@ -125,7 +120,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
  * @param {Response} res http response
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {any[]} attachments the list of attachments
- * @returns {((filename: string): void)} the callback function
+ * @returns {(filename: string): void} the callback function
  */
 const getNoFileDataReceivedCallback = (req: Request,
                                        res: Response,
@@ -142,22 +137,17 @@ const getNoFileDataReceivedCallback = (req: Request,
  * @param {Response} res http response
  * @param {NextFunction} next the next function in the middleware chain
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
- * @returns {((filename: string, fileData: Buffer, mimeType: string): void)} the callback function
+ * @returns {(filename: string, fileData: Buffer, mimeType: string): Promise<void>} the callback function
  */
 const getUploadFinishedCallback = (req: Request,
                                    res: Response,
                                    next: NextFunction,
                                    uploadResponderStrategy: UploadResponderStrategy):
-                                    (filename: string, fileData: Buffer, mimeType: string) => void => {
-  return (filename: string, fileData: Buffer, mimeType: string) => {
+                                    (filename: string, fileData: Buffer, mimeType: string) => Promise<void> => {
+  return async (filename: string, fileData: Buffer, mimeType: string) => {
     try {
       const session: Session = req.session as Session;
-      const companyNumber: string = retrieveCompanyProfileFromObjectionSession(session).companyNumber;
-      const token: string = retrieveAccessTokenFromSession(session);
-      const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-
-      // TODO this will need await if addAttachment is made async
-      objectionService.addAttachment(companyNumber, token, objectionId, fileData, filename);
+      await objectionService.addAttachment(session, fileData, filename);
     } catch (e) {
       logger.error(`User has attempted to upload a ` +
                      `file ${filename}, mime-type: ${mimeType} ` +
