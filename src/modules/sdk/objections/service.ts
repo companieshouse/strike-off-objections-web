@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from "axios";
-
+import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
