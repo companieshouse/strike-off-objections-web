@@ -6,4 +6,5 @@ export default () => {
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";
   process.env.LOG_LEVEL = "error";
   process.env.INTERNAL_API_URL = "http://localhost:9333";
+  process.env.MAX_FILE_SIZE_BYTES = "10";
 };

@@ -70,8 +70,14 @@ export const addAttachment = async (companyNumber: string,
 
   const data = new FormData();
   data.append("file", attachment, {filename: fileName});
-
   axiosConfig.data = data;
+
+  axiosConfig.headers = {
+    post: {
+      ...{Authorization: "Bearer " + token},
+      ...data.getHeaders(),
+    },
+  };
   await makeAPICall(axiosConfig);
 };
 

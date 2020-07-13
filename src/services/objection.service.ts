@@ -32,6 +32,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
 /**
  * Update an objection reason for the given objection ID.
  *
+ * @param {string} companyNumber the company number
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
  * @param {string} objectionReason reason why the user is objecting to strike-off

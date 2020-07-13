@@ -4,8 +4,8 @@ jest.mock("../../src/services/objection.session.service");
 import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { Attachment } from "../../src/modules/sdk/objections";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
+import { Attachment } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,

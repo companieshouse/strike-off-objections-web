@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { Templates } from "../model/template.paths";
 import logger from "../utils/logger";
 
 /**
@@ -7,7 +8,7 @@ import logger from "../utils/logger";
  */
 const errorHandler = (err, req: Request, res: Response, next: NextFunction) => {
   logger.errorRequest(req, "An error has occurred. Re-routing to the error screen - " + err.stack);
-  res.status(err.status || 500).render("error");
+  res.status(err.status || 500).render(Templates.ERROR);
 };
 
 export default errorHandler;

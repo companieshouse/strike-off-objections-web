@@ -31,11 +31,11 @@ export const getBaseAxiosRequestConfig = (
  * Call the API using the supplied Axios request config.
  * @param {AxiosRequestConfig} config axios request config
  * @returns {Promise<AxiosResponse>} the api response
- * @throws {ApiError}
+ * @throws {ApiError} if something goes wrong
  */
 export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResponse> => {
   try {
-    logger.debug(`Calling ${config.method} ${config.url} with data ${config.data}`);
+    logger.debug(`Calling ${config.method} ${config.url}`);
     const axiosResponse: AxiosResponse = await axios.request<any>(config);
     logger.debug(`data returned from axios api call : ${JSON.stringify(axiosResponse.data, null, 2)}`);
     return axiosResponse;

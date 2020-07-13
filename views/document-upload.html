@@ -58,7 +58,7 @@
 
       </form>
 
-      <form method="post" id="continue">
+      <form method="post" action="document-upload-continue" id="continue">
         {{ govukButton({
           text: "Continue",
           attributes: {
@@ -70,4 +70,5 @@
     </div>
   </div>
 
+  <script src="{{CDN_URL}}/javascripts/app/strike-off-objections/upload.js"></script>
 {% endblock %}
