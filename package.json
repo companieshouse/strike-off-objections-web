@@ -23,6 +23,7 @@
     "ch-sdk-node": "git+ssh://git@github.com/companieshouse/ch-sdk-node.git#0.2.10",
     "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
+    "form-data": "^2.3.3",
     "govuk-frontend": "^3.6.0",
     "ioredis": "^4.17.3",
     "js-yaml": "^3.14.0",

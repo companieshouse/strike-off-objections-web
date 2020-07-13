@@ -2,6 +2,14 @@ import { Session } from "ch-node-session-handler";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { ObjectionPatch } from "../modules/sdk/objections/types";
 import logger from "../utils/logger";
+import { Session } from "ch-node-session-handler";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
+import {
+  retrieveAccessTokenFromSession,
+  retrieveCompanyProfileFromObjectionSession,
+  retrieveFromObjectionSession
+} from "./objection.session.service";
+import { SESSION_OBJECTION_ID } from "../constants";
 
 /**
  * Create a new objection for the given company.
@@ -52,14 +60,16 @@ export const submitObjection = (objectionId: string, token: string) => {
   //      sub-task BI-4143
 };
 
-export const addAttachment = (companyNumber: string,
-                              token: string,
-                              objectionId: string,
-                              attachment: Buffer,
-                              fileName: string) => {
+export const addAttachment = async (session: Session,
+                                    attachment: Buffer,
+                                    fileName: string) => {
+  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+  const companyNumber: string = companyProfileInSession.companyNumber;
+  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+  const token: string = retrieveAccessTokenFromSession(session);
 
   logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
-  objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+  await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
 
 export const getAttachments = (session: Session): any[] => {
