@@ -1,9 +1,9 @@
 import { AxiosRequestConfig } from "axios";
+
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
-import { getBaseAxiosRequestConfig, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
-import { ObjectionPatch } from "./types";
-import FormData from "form-data";
+import { getBaseAxiosRequestConfig, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
+import { Attachment, ObjectionPatch } from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
     `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
@@ -13,6 +13,9 @@ const OBJECTIONS_API_PATCH_URL = (companyNumber: string, objectionId: string): s
 
 const OBJECTIONS_API_ADD_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
   OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
+
+const OBJECTIONS_API_GET_ATTACHMENTS_LIST_URL = (companyNumber: string, objectionId: string): string =>
+    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
 /**
  * Create a new objection for the given company.
@@ -70,4 +73,16 @@ export const addAttachment = async (companyNumber: string,
 
   axiosConfig.data = data;
   await makeAPICall(axiosConfig);
+};
+
+export const getAttachments = async (companyNumber: string,
+                                     token: string,
+                                     objectionId: string): Promise<Attachment[]> => {
+
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+    HTTP_GET,
+    OBJECTIONS_API_GET_ATTACHMENTS_LIST_URL(companyNumber, objectionId),
+    token);
+  const response = await makeAPICall(axiosConfig);
+  return response.data as Attachment[];
 };

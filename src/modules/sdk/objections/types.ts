@@ -26,3 +26,12 @@ export interface ObjectionPatch {
   reason?: string;
   status?: ObjectionStatus;
 }
+
+/**
+ * List of attachments for an objection
+ * @interface
+ */
+export interface Attachment {
+  id: string;
+  name: string;
+}

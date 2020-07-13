@@ -1,12 +1,13 @@
-import { Session } from "ch-node-session-handler";
+import {Attachment} from "../../src/modules/sdk/objections";
 
 jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/services/objection.session.service");
 
-import * as objectionsSdk from "../../src/modules/sdk/objections";
-import * as objectionsService from "../../src/services/objection.service";
+import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import * as objectionsSdk from "../../src/modules/sdk/objections";
+import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
@@ -79,6 +80,25 @@ describe("objections API service unit tests", () => {
       NEW_OBJECTION_ID,
       BUFFER,
       FILE_NAME);
+  });
+
+  it("should return list of attachment objects when getting attachments for an object", async () => {
+    const session: Session = new Session();
+    session.data = {
+      extra_data: {
+        companyProfileInSession: {
+          companyNumber: "00006400",
+        },
+        objectionId: "obj123",
+      },
+      signin_info: {
+        access_token: {
+          access_token: ACCESS_TOKEN,
+        },
+      },
+    };
+    const attachmentsList: Attachment[] = await objectionsService.getAttachments(session);
+
   });
 });
 

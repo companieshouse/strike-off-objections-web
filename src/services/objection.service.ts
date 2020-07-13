@@ -1,15 +1,15 @@
-
+import { Session } from "ch-node-session-handler";
+import { SESSION_OBJECTION_ID } from "../constants";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
+import { Attachment } from "../modules/sdk/objections";
 import { ObjectionPatch } from "../modules/sdk/objections/types";
 import logger from "../utils/logger";
-import { Session } from "ch-node-session-handler";
-import ObjectionCompanyProfile from "../model/objection.company.profile";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveFromObjectionSession
+  retrieveFromObjectionSession,
 } from "./objection.session.service";
-import { SESSION_OBJECTION_ID } from "../constants";
 
 /**
  * Create a new objection for the given company.
@@ -70,4 +70,13 @@ export const addAttachment = async (session: Session,
 
   logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
   await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+};
+
+export const getAttachments = async (session: Session): Promise<Attachment[]> => {
+  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+  const companyNumber: string = companyProfileInSession.companyNumber;
+  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+  const token: string = retrieveAccessTokenFromSession(session);
+  logger.debug(`Getting attachments for objection ${objectionId}`);
+  return await objectionsSdk.getAttachments(companyNumber, token, objectionId);
 };
