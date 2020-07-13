@@ -1,9 +1,9 @@
 import { AxiosRequestConfig } from "axios";
+import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import { ObjectionPatch } from "./types";
-import FormData from "form-data";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
     `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
@@ -67,7 +67,13 @@ export const addAttachment = async (companyNumber: string,
 
   const data = new FormData();
   data.append("file", attachment, {filename: fileName});
-
   axiosConfig.data = data;
+
+  axiosConfig.headers = {
+    post: {
+      ...{Authorization: "Bearer " + token},
+      ...data.getHeaders(),
+    },
+  };
   await makeAPICall(axiosConfig);
 };

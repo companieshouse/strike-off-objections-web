@@ -1,15 +1,14 @@
-
-import * as objectionsSdk from "../modules/sdk/objections";
-import { ObjectionPatch } from "../modules/sdk/objections/types";
-import logger from "../utils/logger";
 import { Session } from "ch-node-session-handler";
+import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
+import * as objectionsSdk from "../modules/sdk/objections";
+import { ObjectionPatch } from "../modules/sdk/objections";
+import logger from "../utils/logger";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveFromObjectionSession
+  retrieveFromObjectionSession,
 } from "./objection.session.service";
-import { SESSION_OBJECTION_ID } from "../constants";
 
 /**
  * Create a new objection for the given company.
@@ -32,6 +31,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
 /**
  * Update an objection reason for the given objection ID.
  *
+ * @param {string} companyNumber the company number
  * @param {string} objectionId the id of the objection
  * @param {string} token the bearer security token to use to call the api
  * @param {string} objectionReason reason why the user is objecting to strike-off
@@ -70,4 +70,19 @@ export const addAttachment = async (session: Session,
 
   logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
   await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+};
+
+export const getAttachments = (session: Session): any[] => {
+
+  // TODO - any[] will be replaced with Attachment[]
+  return [
+    {
+      id: "sghsaghj-3623-khh",
+      name: "document1.jpg",
+    },
+    {
+      id: "dshkj-5456-fdhfddf",
+      name: "document2.jpg",
+    },
+  ];
 };
