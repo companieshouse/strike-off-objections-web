@@ -105,12 +105,13 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
 const getFileSizeLimitExceededCallback = (req: Request,
                                           res: Response,
                                           uploadResponderStrategy: UploadResponderStrategy,
-                                          attachments: any[]): (filename: string, maxInBytes: number) => void => {
-  return (filename: string, maxInBytes: number) => {
+                                          attachments: any[]):
+                                            (filename: string, maxInBytes: number) => Promise<void> => {
+  return async (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
-    return displayError(res, errorMsg, uploadResponderStrategy, attachments);
+    return await displayError(res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
 
@@ -125,7 +126,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
 const getNoFileDataReceivedCallback = (req: Request,
                                        res: Response,
                                        uploadResponderStrategy: UploadResponderStrategy,
-                                       attachments: any[]): (filename: string) => void => {
+                                       attachments: any[]): (filename: string) => Promise<void> => {
   return async (_filename: string) => {
     return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };

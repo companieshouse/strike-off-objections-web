@@ -16,19 +16,19 @@ export interface UploadFileCallbacks {
    * @param {string} filename of the file being uploaded
    * @param {number} maxSizeBytes the maximum file size allowed in bytes
    */
-  fileSizeLimitExceededCallback: (filename: string, maxSizeBytes: number) => void;
+  fileSizeLimitExceededCallback: (filename: string, maxSizeBytes: number) => Promise<void>;
   /**
    * No file data received
    * @param {string} filename of the file being uploaded
    */
-  noFileDataReceivedCallback: (filename: string) => void;
+  noFileDataReceivedCallback: (filename: string) => Promise<void>;
   /**
    * Upload finished
    * @param {string} filename of the file being uploaded
    * @param {Buffer} fileData the data contained in the file
    * @param {string} mimeType of the file being uploaded
    */
-  uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => void;
+  uploadFinishedCallback: (filename: string, fileData: Buffer, mimeType: string) => Promise<void>;
 }
 
 /**
@@ -69,9 +69,9 @@ export const uploadFile = (req: Request,
     });
 
     // File on limit event - fired when file size limit is reached
-    fileStream.on("limit", () => {
+    fileStream.on("limit", async () => {
       fileStream.destroy();
-      return callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
+      return await callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
     });
 
     // File on end event - fired when file has finished - could be if file completed fully or ended
@@ -84,10 +84,10 @@ export const uploadFile = (req: Request,
       const fileData: Buffer = Buffer.concat(chunkArray);
       logger.debug("Total bytes received for " + filename + " = " + fileData.length);
       if (fileData.length === 0) {
-        return callbacks.noFileDataReceivedCallback(filename);
+        return await callbacks.noFileDataReceivedCallback(filename);
       }
 
-      return callbacks.uploadFinishedCallback(filename, fileData, mimeType);
+      return await callbacks.uploadFinishedCallback(filename, fileData, mimeType);
     }); // end fileStream.on("end") event
   }); // end busboy.on("file") event
 
