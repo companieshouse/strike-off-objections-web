@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { Templates } from "../../model/template.paths";
+import { Attachment } from "../../modules/sdk/objections";
 import * as objectionService from "../../services/objection.service";
 import logger from "../../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
@@ -24,10 +25,9 @@ import { createUploadResponderStrategy } from "./upload.responder.strategy.facto
  * @param {NextFunction} next function in middleware chain - used to catch errors
  */
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  let attachments: any[] = [];
+  let attachments: Attachment[] = [];
   try {
-    // TODO this will have to have await if getAttachments is made async
-    attachments = objectionService.getAttachments(req.session as Session);
+    attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
     return next(e);
@@ -51,10 +51,9 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
 
   const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
-  let attachments: any[] = [];
+  let attachments: Attachment[] = [];
   try {
-    // TODO this will have to have await if getAttachments is made async
-    attachments = objectionService.getAttachments(req.session as Session);
+    attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
     return uploadResponderStrategy.handleGenericError(res, e, next);
@@ -79,10 +78,9 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
 export const postContinueButton = async (req: Request, res: Response, next: NextFunction) => {
   const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
-  let attachments: any[] = [];
+  let attachments: Attachment[] = [];
   try {
-    // TODO this will have to have await if getAttachments is made async
-    attachments = objectionService.getAttachments(req.session as Session);
+    attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
     return uploadResponderStrategy.handleGenericError(res, e, next);
@@ -99,13 +97,13 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
  * @param {Request} req http request
  * @param {Response} res http response
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
- * @param {any[]} attachments the list of attachments
+ * @param {Attachment[]} attachments the list of attachments
  * @returns {(filename: string, maxInBytes: number): void} the callback function
  */
 const getFileSizeLimitExceededCallback = (req: Request,
                                           res: Response,
                                           uploadResponderStrategy: UploadResponderStrategy,
-                                          attachments: any[]):
+                                          attachments: Attachment[]):
                                             (filename: string, maxInBytes: number) => Promise<void> => {
   return async (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
@@ -120,13 +118,13 @@ const getFileSizeLimitExceededCallback = (req: Request,
  * @param {Request} req http request
  * @param {Response} res http response
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
- * @param {any[]} attachments the list of attachments
+ * @param {Attachment[]} attachments the list of attachments
  * @returns {(filename: string): void} the callback function
  */
 const getNoFileDataReceivedCallback = (req: Request,
                                        res: Response,
                                        uploadResponderStrategy: UploadResponderStrategy,
-                                       attachments: any[]): (filename: string) => Promise<void> => {
+                                       attachments: Attachment[]): (filename: string) => Promise<void> => {
   return async (_filename: string) => {
     return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
@@ -172,12 +170,12 @@ const getUploadFinishedCallback = (req: Request,
  * @param {Response} res http response
  * @param {string} errorMessage the error message to display on the page
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
- * @param {any[]} attachments the list of attachments
+ * @param {Attachment[]} attachments the list of attachments
  */
 const displayError = async (res: Response,
                             errorMessage: string,
                             uploadResponderStrategy: UploadResponderStrategy,
-                            attachments: any[]) => {
+                            attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);

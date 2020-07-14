@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { GovUkErrorData } from "../../model/govuk.error.data";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
+import { Attachment } from "../../modules/sdk/objections";
 import { UploadResponderStrategy } from "./upload.responder.strategy";
 
 /**
@@ -34,9 +35,9 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * Renders the upload screen with the error
    * @param {Response} res http response
    * @param {GovUkErrorData} errorData the error information to display
-   * @param {any[]} attachments the list of uploaded attachments
+   * @param {Attachment[]} attachments the list of uploaded attachments
    */
-  public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: any[]) => {
+  public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: Attachment[]) => {
     return res.render(Templates.DOCUMENT_UPLOAD, {
       attachments,
       documentUploadErr: errorData,

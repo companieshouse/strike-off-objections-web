@@ -3,6 +3,7 @@ import logger from "../../../utils/logger";
 import { ApiError } from "./types";
 
 export const STATUS_NO_RESPONSE = -1;
+export const HTTP_GET: Method = "get";
 export const HTTP_POST: Method = "post";
 export const HTTP_PATCH: Method = "patch";
 
