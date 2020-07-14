@@ -28,7 +28,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
     const session: Session = req.session as Session;
     const replacementDivs: object[] = [];
     try {
-      const attachments = getAttachments(session);
+      const attachments = await getAttachments(session);
       await this.renderFragment(res, Templates.DOCUMENT_UPLOAD_FILE_LIST, { attachments })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, FILE_LIST_DIV));
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_LIST);
