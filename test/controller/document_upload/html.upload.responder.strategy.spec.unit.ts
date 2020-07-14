@@ -3,6 +3,7 @@ import { HtmlUploadResponderStrategy } from "../../../src/controllers/document_u
 import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";
+import { Attachment } from "../../../src/modules/sdk/objections";
 
 // mock the request
 const req: Request = {} as Request;
@@ -50,7 +51,7 @@ describe("html upload responder tests", () => {
     const htmlResponder: HtmlUploadResponderStrategy = new HtmlUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
                                                            true, "user");
-    const attachments: any[] = [];
+    const attachments: Attachment[] = [];
 
     htmlResponder.handleGovUKError(res, errorData, attachments);
 

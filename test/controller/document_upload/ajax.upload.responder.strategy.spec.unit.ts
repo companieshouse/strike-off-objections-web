@@ -8,6 +8,7 @@ import { ErrorMessages } from "../../../src/model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../../src/model/govuk.error.data";
 import { OBJECTIONS_ERROR } from "../../../src/model/page.urls";
 import { Templates } from "../../../src/model/template.paths";
+import { Attachment } from "../../../src/modules/sdk/objections";
 import { getAttachments } from "../../../src/services/objection.service";
 import logger from "../../../src/utils/logger";
 
@@ -111,7 +112,7 @@ describe("ajax upload responder tests", () => {
     const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
                                                            true, "user");
-    const attachments: any[] = [];
+    const attachments: Attachment[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
 
@@ -136,7 +137,7 @@ describe("ajax upload responder tests", () => {
     const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
                                                            true, "user");
-    const attachments: any[] = [];
+    const attachments: Attachment[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
 

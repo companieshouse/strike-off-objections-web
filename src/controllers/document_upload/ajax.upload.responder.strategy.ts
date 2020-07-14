@@ -4,6 +4,7 @@ import { ErrorMessages } from "../../model/error.messages";
 import { GovUkErrorData } from "../../model/govuk.error.data";
 import * as pageURLs from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
+import { Attachment } from "../../modules/sdk/objections";
 import { getAttachments } from "../../services/objection.service";
 import logger from "../../utils/logger";
 import { UploadResponderStrategy } from "./upload.responder.strategy";
@@ -58,11 +59,11 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * Renders the 'red' gov.uk error boxes and returns them to upload.js
    * @param {Response} res http response
    * @param {GovUkErrorData} errorData data to display in the nunjucks error component
-   * @param {any[]} attachments list of uploaded attachments
+   * @param {Attachment[]} attachments list of uploaded attachments
    */
   public handleGovUKError = async (res: Response,
                                    errorData: GovUkErrorData,
-                                   attachments: any[]) => {
+                                   attachments: Attachment[]) => {
     const replacementDivs: object[] = [];
 
     try {
