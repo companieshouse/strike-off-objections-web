@@ -11,10 +11,7 @@ const OBJECTIONS_API_URL = (companyNumber: string): string =>
 const OBJECTIONS_API_PATCH_URL = (companyNumber: string, objectionId: string): string =>
     OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
 
-const OBJECTIONS_API_ADD_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
-  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
-
-const OBJECTIONS_API_GET_ATTACHMENTS_LIST_URL = (companyNumber: string, objectionId: string): string =>
+const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
     OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
 /**
@@ -64,7 +61,7 @@ export const addAttachment = async (companyNumber: string,
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST,
-    OBJECTIONS_API_ADD_ATTACHMENT_URL(companyNumber, objectionId),
+    OBJECTIONS_API_ATTACHMENT_URL(companyNumber, objectionId),
     token,
   );
 
@@ -87,7 +84,7 @@ export const getAttachments = async (companyNumber: string,
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_GET,
-    OBJECTIONS_API_GET_ATTACHMENTS_LIST_URL(companyNumber, objectionId),
+    OBJECTIONS_API_ATTACHMENT_URL(companyNumber, objectionId),
     token);
   const response = await makeAPICall(axiosConfig);
   return response.data as Attachment[];
