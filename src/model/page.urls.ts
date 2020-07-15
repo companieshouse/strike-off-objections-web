@@ -12,6 +12,7 @@ export const CONFIRM_COMPANY: string = SEPARATOR + Templates.CONFIRM_COMPANY;
 export const ENTER_INFORMATION: string = SEPARATOR + Templates.ENTER_INFORMATION;
 export const DOCUMENT_UPLOAD: string = SEPARATOR + Templates.DOCUMENT_UPLOAD;
 export const DOCUMENT_UPLOAD_CONTINUE: string = SEPARATOR + "document-upload-continue"; // not a template
+export const REMOVE_DOCUMENT: string = SEPARATOR + Templates.REMOVE_DOCUMENT;
 export const ERROR: string = SEPARATOR + Templates.ERROR;
 
 /**
