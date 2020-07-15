@@ -3,6 +3,7 @@ import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as documentUploadRoute from "../controllers/document_upload/document.upload.controller";
 import * as enterInformationRoute from "../controllers/enter.information.controller";
+import * as removeDocumentRoute from "../controllers/remove.document.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
@@ -30,6 +31,8 @@ router.post(pageURLs.ENTER_INFORMATION, enterInformationRoute.post);
 router.get(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.get);
 router.post(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.postFile);
 router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueButton);
+
+router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
 
 router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
 export default router;
