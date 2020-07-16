@@ -8,7 +8,7 @@ const mockAxiosRequest = axios.request as jest.Mock;
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
 const OBJECTION_ID = "444222";
-const REASON = "Owed Money";
+const ATTACHMENT_ID = "file123";
 
 describe("objections SDK service unit tests", () => {
 
@@ -68,9 +68,9 @@ describe("objections SDK service unit tests", () => {
     const fileName: string = "fileName";
     const BUFFER = Buffer.from("Buffer");
     const STREAMS_DATA_PARAMATER = "_streams";
-    objectionsSdk.addAttachment("companyNumber",
-      "token",
-      "objectionId",
+    objectionsSdk.addAttachment(COMPANY_NUMBER,
+        ACCESS_TOKEN,
+        OBJECTION_ID,
       BUFFER,
       fileName,
     );
@@ -83,9 +83,18 @@ describe("objections SDK service unit tests", () => {
   });
 
   it("should call objections API getting attachments list", () => {
-    objectionsSdk.getAttachments("companyNumber",
-        "token",
-        "obj123");
+    objectionsSdk.getAttachments(COMPANY_NUMBER,
+        ACCESS_TOKEN,
+        OBJECTION_ID);
+
+    expect(mockAxiosRequest).toBeCalled();
+  });
+
+  it("should call objections API getting single attachment", () => {
+    objectionsSdk.getAttachment(COMPANY_NUMBER,
+        ACCESS_TOKEN,
+        OBJECTION_ID,
+        ATTACHMENT_ID);
 
     expect(mockAxiosRequest).toBeCalled();
   });

@@ -14,7 +14,7 @@ import authenticationMiddleware from "../../../src/middleware/authentication.mid
 import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../../src/middleware/session.middleware";
 import * as pageURLs from "../../../src/model/page.urls";
-import { getAttachments } from "../../../src/services/objection.service";
+import { getAttachment } from "../../../src/services/objection.service";
 import { COOKIE_NAME } from "../../../src/utils/properties";
 
 const QUERY_ID: string = "?documentID=attachment1";
@@ -24,12 +24,10 @@ const dummySession: Session = {
   data: {},
 } as Session;
 
-const dummyAttachments = [
- {
+const dummyAttachment = {
    id: ATTACHMENT_ID,
    name: TEXT_FILE_NAME,
- },
-];
+ };
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -48,12 +46,12 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   }
 });
 
-const mockGetAttachments = getAttachments as jest.Mock;
+const mockGetAttachment = getAttachment as jest.Mock;
 
 describe("remove document url tests", () => {
 
   beforeEach(() => {
-    mockGetAttachments.mockReset().mockImplementation(() => dummyAttachments);
+    mockGetAttachment.mockReset().mockImplementation(() => dummyAttachment);
   });
 
   it ("should find remove document page with get", async () => {
@@ -72,8 +70,8 @@ describe("remove document url tests", () => {
     expect(res.status).toEqual(404);
   });
 
-  it ("should find remove document page when attachments are missing", async () => {
-    mockGetAttachments.mockReset().mockImplementation(() => []);
+  it ("should find remove document page even when attachment is missing", async () => {
+    mockGetAttachment.mockReset().mockImplementation(() => null);
     const res = await request(app)
       .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
