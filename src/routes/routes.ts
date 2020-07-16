@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import * as checkYourAnswersRoute from "../controllers/check.your.answers.controller";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as documentUploadRoute from "../controllers/document_upload/document.upload.controller";
@@ -33,6 +34,8 @@ router.post(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.postFile);
 router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueButton);
 
 router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
+
+router.get(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.get);
 
 router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
 export default router;

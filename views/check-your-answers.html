@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Check your answers before submitting your objection application
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/document-upload"
+  }) }}
+{% endblock %}
+
+{% set documentList %}
+<ul class="govuk-list govuk-list--bullet">
+  <li>
+    <a href='' class='govuk-link'>Document1.jpg</a>
+  </li>
+  <li>
+    <a href='' class='govuk-link'>Document2.pdf</a>
+  </li>
+</ul>
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <h1 class="govuk-heading-xl">
+        Check your objection application
+      </h1>
+
+      <h2 class="govuk-heading-m">
+        Company details
+      </h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Company name"
+            },
+            value: {
+              html: companyName
+            }
+          },
+          {
+            key: {
+              text: "Company number"
+            },
+            value: {
+              html: companyNumber
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">
+        Objection details
+      </h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Information"
+            },
+            value: {
+              text: "Reason for objection"
+            }
+          },
+          {
+            key: {
+              text: "Supporting documents"
+            },
+            value: {
+              html: documentList
+            }
+          }
+        ]
+      }) }}
+
+      <h2 class="govuk-heading-m">Submit your objection</h2>
+      <p>
+        By submitting this objection you are confirming that, to the best of your knowledge, the details you are providing are true.
+      </p>
+      <form action="/check-your-answers" method="post">
+        {{ govukButton({
+          text: "Confirm and submit objection"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
