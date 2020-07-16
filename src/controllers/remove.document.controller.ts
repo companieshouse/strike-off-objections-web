@@ -5,6 +5,7 @@ import { Attachment } from "../modules/sdk/objections";
 import * as objectionService from "../services/objection.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: Change the two lines below to call endpoint for individual attachment - see spec
   const attachments: Attachment[] = await objectionService.getAttachments(req.session as Session);
   const attachment = attachments.filter((attachmentItem) => attachmentItem.id === req.query.documentID).pop();
   if (attachment) {
