@@ -14,6 +14,10 @@ const OBJECTIONS_API_PATCH_URL = (companyNumber: string, objectionId: string): s
 const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
     OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
+const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
+    (companyNumber: string, objectionId: string, attachmentId: string): string =>
+    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
+
 /**
  * Create a new objection for the given company.
  *
@@ -88,4 +92,17 @@ export const getAttachments = async (companyNumber: string,
     token);
   const response = await makeAPICall(axiosConfig);
   return response.data as Attachment[];
+};
+
+export const getAttachment = async (companyNumber: string,
+                                    token: string,
+                                    objectionId: string,
+                                    attachmentId: string): Promise<Attachment> => {
+
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+      HTTP_GET,
+      OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
+      token);
+  const response = await makeAPICall(axiosConfig);
+  return response.data as Attachment;
 };
