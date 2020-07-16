@@ -96,6 +96,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/Add documents to support your objection/);
   });
 
+  it("should find the check your answers page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/check-your-answers");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Check your answers before submitting your objection application/);
+  });
+
   it("should find the error page", async () => {
     const response = await request(app)
       .get("/strike-off-objections/error");
