@@ -21,6 +21,7 @@ const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mo
 const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
+const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
 
 const mockAttachments = [
   {
@@ -32,9 +33,22 @@ const mockAttachments = [
     name: "mock.doc",
   },
 ];
+
+const mockAttachment = {
+    id: "abc123",
+    name: "test.doc",
+};
+
 mockGetAttachments.prototype.constructor.mockImplementation(async (companyNumber: string, token: string,
                                                                    objectionId: string): Promise<Attachment[]> => {
   return mockAttachments;
+});
+
+mockGetAttachment.prototype.constructor.mockImplementation(async (companyNumber: string,
+                                                                  token: string,
+                                                                  objectionId: string,
+                                                                  attachmentId: string): Promise<Attachment> => {
+  return mockAttachment;
 });
 
 const session = {
@@ -45,6 +59,7 @@ const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
 const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
 const REASON = "Owed Money";
+const ATTACHMENT_ID = "file123";
 
 describe("objections API service unit tests", () => {
 
@@ -107,6 +122,15 @@ describe("objections API service unit tests", () => {
         ACCESS_TOKEN,
         NEW_OBJECTION_ID);
     expect(attachmentsList).toEqual(mockAttachments);
+  });
+
+  it("should return single attachment object when getting an attachment for an object", async () => {
+    const attachment: Attachment = await objectionsService.getAttachment(session, ATTACHMENT_ID);
+    expect(mockGetAttachment).toBeCalledWith(dummyCompanyProfile.companyNumber,
+        ACCESS_TOKEN,
+        NEW_OBJECTION_ID,
+        ATTACHMENT_ID);
+    expect(attachment).toEqual(mockAttachment);
   });
 });
 
