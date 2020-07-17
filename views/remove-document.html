@@ -7,7 +7,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="" method="post">
+      <form method="post">
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
             titleText: "There is a problem",
@@ -50,7 +50,10 @@
         {{
           govukButton({
             text: "Continue",
-            href: "/upload"
+            attributes: {
+              "data-event-id": "continue-button",
+              id: "submit"
+            }
           })
         }}
       </form>
