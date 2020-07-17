@@ -1,3 +1,5 @@
+import { OBJECTIONS_CONFIRM_COMPANY, OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
+
 jest.mock("ioredis");
 jest.mock("../../../src/middleware/authentication.middleware");
 jest.mock("../../../src/middleware/session.middleware");
@@ -17,6 +19,7 @@ import * as pageURLs from "../../../src/model/page.urls";
 import { getAttachment } from "../../../src/services/objection.service";
 import { COOKIE_NAME } from "../../../src/utils/properties";
 
+const REMOVE_DOCUMENT_FORM_FIELD: string = "removeDocument";
 const QUERY_ID: string = "?documentID=attachment1";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
 const TEXT_FILE_NAME = "text.txt";
@@ -77,5 +80,16 @@ describe("remove document url tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(200);
+  });
+
+  it("should redirect to document upload page if No submitted", async () => {
+    const res = await  request(app)
+      .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
+      .set(REMOVE_DOCUMENT_FORM_FIELD, "no")
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(res.status).toEqual(302);
+    expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
   });
 });

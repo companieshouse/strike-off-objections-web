@@ -34,6 +34,7 @@ router.post(pageURLs.DOCUMENT_UPLOAD, documentUploadRoute.postFile);
 router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueButton);
 
 router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
+router.post(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.post);
 
 router.get(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.get);
 
