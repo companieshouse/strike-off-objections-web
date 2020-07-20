@@ -90,3 +90,12 @@ export const getAttachment = async (session: Session, attachmentId: string): Pro
   logger.debug(`Getting attachment ${attachmentId} for objection ${objectionId}`);
   return await objectionsSdk.getAttachment(companyNumber, token, objectionId, attachmentId);
 };
+
+export const deleteAttachment = async (session: Session, attachmentId: string): Promise<void> => {
+  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+  const companyNumber: string = companyProfileInSession.companyNumber;
+  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+  const token: string = retrieveAccessTokenFromSession(session);
+  logger.debug(`Deleting attachment ${attachmentId} for objection ${objectionId}`);
+  return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+};

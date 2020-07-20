@@ -98,4 +98,13 @@ describe("objections SDK service unit tests", () => {
 
     expect(mockAxiosRequest).toBeCalled();
   });
+
+  it("should call objections API deleting single attachment", () => {
+    objectionsSdk.deleteAttachment(COMPANY_NUMBER,
+      ACCESS_TOKEN,
+      OBJECTION_ID,
+      ATTACHMENT_ID);
+
+    expect(mockAxiosRequest).toBeCalled();
+  });
 });
