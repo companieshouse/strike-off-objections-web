@@ -9,22 +9,21 @@ import logger from "../utils/logger";
 const REMOVE_DOCUMENT_FORM_FIELD: string = "removeDocument";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  const session: Session = req.session as Session;
-  const attachmentId: string = req.query.documentID as string;
-  if (session && attachmentId) {
+  try {
+    const session: Session = req.session as Session;
+    const attachmentId: string = req.query.documentID as string;
     const attachment: Attachment = await getAttachment(session, attachmentId);
-    if (attachment) {
-      return res.render(Templates.REMOVE_DOCUMENT, {
+
+    return res.render(Templates.REMOVE_DOCUMENT, {
         fileName: attachment.name,
         templateName: Templates.REMOVE_DOCUMENT,
       });
-    } else {
-      return res.render(Templates.REMOVE_DOCUMENT);
-    }
+  } catch (e) {
+    return next(e);
   }
 };
 
-export const post = async (req: Request, res: Response, next: NextFunction) => {
+export const post = (req: Request, res: Response, next: NextFunction) => {
   if (req.body[REMOVE_DOCUMENT_FORM_FIELD] === "yes") {
     logger.infoRequest(req, "Yes journey not yet implemented");
     return next(new Error("Yes journey not yet implemented"));
