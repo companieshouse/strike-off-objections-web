@@ -99,7 +99,7 @@ describe("remove document url tests", () => {
   it("should redirect to document upload page if No submitted", async () => {
     const res = await request(app)
       .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
-      .set(REMOVE_DOCUMENT_FORM_FIELD, "no")
+      .send({[REMOVE_DOCUMENT_FORM_FIELD]: "no"})
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
