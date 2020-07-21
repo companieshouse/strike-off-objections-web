@@ -91,7 +91,7 @@ export const getAttachment = async (session: Session, attachmentId: string): Pro
   return await objectionsSdk.getAttachment(companyNumber, token, objectionId, attachmentId);
 };
 
-export const deleteAttachment = async (session: Session, attachmentId: string): Promise<void> => {
+export const deleteAttachment = async (session: Session, attachmentId: string) => {
   const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
   const companyNumber: string = companyProfileInSession.companyNumber;
   const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
