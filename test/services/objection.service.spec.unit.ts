@@ -5,7 +5,7 @@ import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import { Attachment } from "../../src/modules/sdk/objections";
+import { Attachment, Objection } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
@@ -22,6 +22,7 @@ const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
 const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
+const mockGetObjection = objectionsSdk.getObjection as jest.Mock;
 
 const mockAttachments = [
   {
@@ -39,6 +40,19 @@ const mockAttachment = {
     name: "test.doc",
 };
 
+const mockObjection = {
+  attachments: [
+    { id: "ATT001",
+        name: "attachment.jpg",
+      },
+    {
+      id: "ATT002",
+        name: "document.pdf",
+    }],
+  id: "OBJ123",
+  reason: "Owed some money",
+};
+
 mockGetAttachments.prototype.constructor.mockImplementation(async (companyNumber: string, token: string,
                                                                    objectionId: string): Promise<Attachment[]> => {
   return mockAttachments;
@@ -49,6 +63,12 @@ mockGetAttachment.prototype.constructor.mockImplementation(async (companyNumber:
                                                                   objectionId: string,
                                                                   attachmentId: string): Promise<Attachment> => {
   return mockAttachment;
+});
+
+mockGetObjection.prototype.constructor.mockImplementation(async (companyNumber: string,
+                                                                 token: string,
+                                                                 objectionId: string): Promise<Objection> => {
+  return mockObjection;
 });
 
 const session = {
@@ -131,6 +151,14 @@ describe("objections API service unit tests", () => {
         NEW_OBJECTION_ID,
         ATTACHMENT_ID);
     expect(attachment).toEqual(mockAttachment);
+  });
+
+  it("should return an objection when requested", async () => {
+    const objection: Objection = await objectionsService.getObjection(session);
+    expect(mockGetObjection).toBeCalledWith(dummyCompanyProfile.companyNumber,
+        ACCESS_TOKEN,
+        NEW_OBJECTION_ID);
+    expect(objection).toEqual(mockObjection);
   });
 });
 

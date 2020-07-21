@@ -17,6 +17,7 @@ import { UploadErrorMessages } from "../../../src/model/error.messages";
 import ObjectionCompanyProfile from "../../../src/model/objection.company.profile";
 import * as pageURLs from "../../../src/model/page.urls";
 import {
+  OBJECTIONS_CHECK_YOUR_ANSWERS,
   OBJECTIONS_DOCUMENT_UPLOAD,
   OBJECTIONS_DOCUMENT_UPLOAD_CONTINUE,
 } from "../../../src/model/page.urls";
@@ -112,7 +113,7 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(mockGetAttachments).toHaveBeenCalledTimes(1);
     expect(res.status).toEqual(302);
-    expect(res.header.location).toEqual("TODO%20-%20PAGE%20AFTER%20UPLOAD");
+    expect(res.header.location).toEqual(OBJECTIONS_CHECK_YOUR_ANSWERS);
   });
 
   it ("should show error message if continue pressed with no docs added - NOT AJAX", async () => {

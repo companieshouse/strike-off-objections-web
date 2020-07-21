@@ -3,6 +3,7 @@ jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
+jest.mock("../../src/services/objection.service");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -14,6 +15,8 @@ import objectionSessionMiddleware from "../../src/middleware/objection.session.m
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../src/model/page.urls";
+import { Objection } from "../../src/modules/sdk/objections";
+import { getObjection } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
 } from "../../src/services/objection.session.service";
@@ -42,12 +45,17 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
+const mockGetObjection = getObjection as jest.Mock;
+
 describe("check company tests", () => {
 
   it("should render the page with company data from the session", async () => {
 
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetObjection.mockReset();
+    mockGetObjection.mockImplementation(() => dummyObjection);
 
     const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
       .set("Referer", "/")
@@ -57,6 +65,9 @@ describe("check company tests", () => {
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
+    expect(response.text).toContain("Owed some money");
+    expect(response.text).toContain("attachment.jpg");
+    expect(response.text).toContain("document.pdf");
   });
 });
 
@@ -71,4 +82,17 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
+};
+
+const dummyObjection: Objection = {
+  attachments: [
+    { id: "ATT001",
+        name: "attachment.jpg",
+      },
+    {
+      id: "ATT002",
+        name: "document.pdf",
+    }],
+  id: "OBJ123",
+  reason: "Owed some money",
 };

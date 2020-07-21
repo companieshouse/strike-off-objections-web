@@ -13,12 +13,11 @@
 
 {% set documentList %}
   <ul class="govuk-list govuk-list--bullet">
+  {% for attachment in objection.attachments | reverse %}
     <li>
-      <a href='' class='govuk-link'>Document1.jpg</a>
+      <a href="#"" class="govuk-link">{{ attachment.name }}</a>
     </li>
-    <li>
-      <a href='' class='govuk-link'>Document2.pdf</a>
-    </li>
+  {% endfor %}
   </ul>
 {% endset %}
 
@@ -65,7 +64,7 @@
               text: "Information"
             },
             value: {
-              text: "Reason for objection"
+              html: objection.reason
             }
           },
           {
