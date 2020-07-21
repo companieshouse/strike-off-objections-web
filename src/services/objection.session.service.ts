@@ -22,7 +22,7 @@ export const retrieveAccessTokenFromSession = (session: Session): string => {
     throw new Error("No access token found in access token object");
   }
 
-  return token as string;
+  return token;
 };
 
 export const retrieveCompanyProfileFromObjectionSession = (session: Session): ObjectionCompanyProfile => {
