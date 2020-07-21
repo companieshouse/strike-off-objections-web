@@ -15,6 +15,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const attachment: Attachment = await getAttachment(session, attachmentId);
 
     return res.render(Templates.REMOVE_DOCUMENT, {
+        attachmentId,
         fileName: attachment.name,
         templateName: Templates.REMOVE_DOCUMENT,
       });
