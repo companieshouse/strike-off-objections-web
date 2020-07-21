@@ -1,5 +1,3 @@
-import { OBJECTIONS_CONFIRM_COMPANY, OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
-
 jest.mock("ioredis");
 jest.mock("../../../src/middleware/authentication.middleware");
 jest.mock("../../../src/middleware/session.middleware");
@@ -15,11 +13,13 @@ import { OBJECTIONS_SESSION_NAME } from "../../../src/constants";
 import authenticationMiddleware from "../../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../../src/middleware/session.middleware";
+import { OBJECTIONS_DOCUMENT_UPLOAD } from "../../../src/model/page.urls";
 import * as pageURLs from "../../../src/model/page.urls";
-import { getAttachment } from "../../../src/services/objection.service";
+import { deleteAttachment, getAttachment } from "../../../src/services/objection.service";
 import { COOKIE_NAME } from "../../../src/utils/properties";
 
 const REMOVE_DOCUMENT_FORM_FIELD: string = "removeDocument";
+const ATTACHMENT_ID_FORM_FIELD: string = "attachmentId";
 const QUERY_ID: string = "?documentID=attachment1";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
 const TEXT_FILE_NAME = "text.txt";
@@ -50,11 +50,13 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockGetAttachment = getAttachment as jest.Mock;
+const mockDeleteAttachment = deleteAttachment as jest.Mock;
 
 describe("remove document url tests", () => {
 
   beforeEach(() => {
     mockGetAttachment.mockReset().mockImplementation(() => dummyAttachment);
+    mockDeleteAttachment.mockReset();
   });
 
   it ("should find remove document page with get", async () => {
@@ -85,10 +87,27 @@ describe("remove document url tests", () => {
   it("should redirect to document upload page if No submitted", async () => {
     const res = await  request(app)
       .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
-      .set(REMOVE_DOCUMENT_FORM_FIELD, "no")
+      .send({[REMOVE_DOCUMENT_FORM_FIELD]: "no"})
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteAttachment).toBeCalledTimes(0);
+    expect(res.status).toEqual(302);
+    expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
+  });
+
+  it("should redirect to document upload page and call objections service if Yes submitted", async () => {
+    const res = await  request(app)
+      .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
+      .send({
+        [REMOVE_DOCUMENT_FORM_FIELD]: "yes",
+        [ATTACHMENT_ID_FORM_FIELD]: ATTACHMENT_ID,
+        },
+      )
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockDeleteAttachment).toBeCalledWith(dummySession, ATTACHMENT_ID);
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
   });

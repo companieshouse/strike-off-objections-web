@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from "axios";
 import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
-import { getBaseAxiosRequestConfig, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
+import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import { Attachment, ObjectionPatch } from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
@@ -105,4 +105,17 @@ export const getAttachment = async (companyNumber: string,
       token);
   const response = await makeAPICall(axiosConfig);
   return response.data as Attachment;
+};
+
+export const deleteAttachment = async (companyNumber: string,
+                                       token: string,
+                                       objectionId: string,
+                                       attachmentId: string): Promise<void> => {
+
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+    HTTP_DELETE,
+    OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
+    token);
+  await makeAPICall(axiosConfig);
+  return;
 };
