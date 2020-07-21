@@ -77,7 +77,7 @@ describe("remove document url tests", () => {
   });
 
   it ("should return error page when no attachment is found", async () => {
-    mockGetAttachment.mockImplementationOnce(() => null);
+    mockGetAttachment.mockResolvedValueOnce(null);
     const res = await request(app)
       .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
