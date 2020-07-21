@@ -28,7 +28,7 @@ describe("objections SDK service unit tests", () => {
 
   it("returns an id when a new objection is created", async () => {
     const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
-    mockMakeAPICall.mockClear().mockResolvedValueOnce({
+    mockMakeAPICall.mockResolvedValueOnce({
       data: {
         id: NEW_OBJECTION_ID,
       },
