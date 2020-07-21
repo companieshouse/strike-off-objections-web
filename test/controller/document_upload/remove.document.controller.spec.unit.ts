@@ -107,7 +107,7 @@ describe("remove document url tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockDeleteAttachment).toBeCalledTimes(1);
+    expect(mockDeleteAttachment).toBeCalledWith(dummySession, ATTACHMENT_ID);
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
   });

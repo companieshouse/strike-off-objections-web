@@ -40,17 +40,9 @@ const mockAttachment = {
     name: "test.doc",
 };
 
-mockGetAttachments.mockImplementation(async (companyNumber: string, token: string,
-                                             objectionId: string): Promise<Attachment[]> => {
-  return mockAttachments;
-});
+mockGetAttachments.mockResolvedValue(mockAttachments);
 
-mockGetAttachment.mockImplementation(async (companyNumber: string,
-                                            token: string,
-                                            objectionId: string,
-                                            attachmentId: string): Promise<Attachment> => {
-  return mockAttachment;
-});
+mockGetAttachment.mockResolvedValue(mockAttachment);
 
 const session = {
   data: {
@@ -136,7 +128,7 @@ describe("objections API service unit tests", () => {
 
   it("should call sdk when deleting attachment", async () => {
     await objectionsService.deleteAttachment(session, ATTACHMENT_ID);
-    expect(mockDeleteAttachment).toBeCalledTimes(1);
+    expect(mockDeleteAttachment).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, NEW_OBJECTION_ID, ATTACHMENT_ID);
   });
 });
 

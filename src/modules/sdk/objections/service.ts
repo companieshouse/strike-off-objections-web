@@ -110,12 +110,11 @@ export const getAttachment = async (companyNumber: string,
 export const deleteAttachment = async (companyNumber: string,
                                        token: string,
                                        objectionId: string,
-                                       attachmentId: string): Promise<void> => {
+                                       attachmentId: string) => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_DELETE,
     OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
     token);
-  await makeAPICall(axiosConfig);
-  return Promise.resolve();
+  return await makeAPICall(axiosConfig);
 };
