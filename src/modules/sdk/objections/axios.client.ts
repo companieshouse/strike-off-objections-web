@@ -6,6 +6,7 @@ export const STATUS_NO_RESPONSE = -1;
 export const HTTP_GET: Method = "get";
 export const HTTP_POST: Method = "post";
 export const HTTP_PATCH: Method = "patch";
+export const HTTP_DELETE: Method = "delete";
 
 /**
  * Gets axios config with common elements for API calls. Some clients may need to add further details

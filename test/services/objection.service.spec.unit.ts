@@ -22,6 +22,7 @@ const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
 const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
+const mockDeleteAttachment = objectionsSdk.deleteAttachment as jest.Mock;
 const mockGetObjection = objectionsSdk.getObjection as jest.Mock;
 
 const mockAttachments = [
@@ -53,17 +54,9 @@ const mockObjection = {
   reason: "Owed some money",
 };
 
-mockGetAttachments.prototype.constructor.mockImplementation(async (companyNumber: string, token: string,
-                                                                   objectionId: string): Promise<Attachment[]> => {
-  return mockAttachments;
-});
+mockGetAttachments.mockResolvedValue(mockAttachments);
 
-mockGetAttachment.prototype.constructor.mockImplementation(async (companyNumber: string,
-                                                                  token: string,
-                                                                  objectionId: string,
-                                                                  attachmentId: string): Promise<Attachment> => {
-  return mockAttachment;
-});
+mockGetAttachment.mockResolvedValue(mockAttachment);
 
 mockGetObjection.prototype.constructor.mockImplementation(async (companyNumber: string,
                                                                  token: string,
@@ -151,6 +144,11 @@ describe("objections API service unit tests", () => {
         NEW_OBJECTION_ID,
         ATTACHMENT_ID);
     expect(attachment).toEqual(mockAttachment);
+  });
+
+  it("should call sdk when deleting attachment", async () => {
+    await objectionsService.deleteAttachment(session, ATTACHMENT_ID);
+    expect(mockDeleteAttachment).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, NEW_OBJECTION_ID, ATTACHMENT_ID);
   });
 
   it("should return an objection when requested", async () => {
