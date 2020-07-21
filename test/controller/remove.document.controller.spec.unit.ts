@@ -60,20 +60,20 @@ describe("remove document url tests", () => {
     mockDeleteAttachment.mockReset();
   });
 
-  it ("should return 404 if remove document page with put", async () => {
-    const res = await request(app)
-      .put(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-    expect(res.status).toEqual(404);
-  });
-
   it ("should find remove document page", async () => {
     const res = await request(app)
       .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(200);
+  });
+
+  it ("should return 404 if remove document page with put", async () => {
+    const res = await request(app)
+      .put(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(res.status).toEqual(404);
   });
 
   it ("should return error page when no attachment is found", async () => {
