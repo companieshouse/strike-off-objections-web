@@ -51,11 +51,9 @@ describe("check company tests", () => {
 
   it("should render the page with company data from the session", async () => {
 
-    mockGetObjectionSessionValue.mockReset();
-    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
 
-    mockGetObjection.mockReset();
-    mockGetObjection.mockImplementation(() => dummyObjection);
+    mockGetObjection.mockReset().mockImplementation(() => dummyObjection);
 
     const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
       .set("Referer", "/")

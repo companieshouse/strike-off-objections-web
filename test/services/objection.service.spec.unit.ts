@@ -58,11 +58,7 @@ mockGetAttachments.mockResolvedValue(mockAttachments);
 
 mockGetAttachment.mockResolvedValue(mockAttachment);
 
-mockGetObjection.prototype.constructor.mockImplementation(async (companyNumber: string,
-                                                                 token: string,
-                                                                 objectionId: string): Promise<Objection> => {
-  return mockObjection;
-});
+mockGetObjection.mockResolvedValue(mockObjection);
 
 const session = {
   data: {
