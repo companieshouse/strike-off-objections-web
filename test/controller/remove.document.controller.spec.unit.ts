@@ -1,5 +1,3 @@
-import { OBJECTIONS_CONFIRM_COMPANY, OBJECTIONS_DOCUMENT_UPLOAD } from "../../src/model/page.urls";
-
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
@@ -15,7 +13,7 @@ import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import * as pageURLs from "../../src/model/page.urls";
+import { OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_REMOVE_DOCUMENT } from "../../src/model/page.urls";
 import { deleteAttachment, getAttachment } from "../../src/services/objection.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -62,7 +60,7 @@ describe("remove document url tests", () => {
 
   it ("should find remove document page", async () => {
     const res = await request(app)
-      .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .get(OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(200);
@@ -70,7 +68,7 @@ describe("remove document url tests", () => {
 
   it ("should return 404 if remove document page with put", async () => {
     const res = await request(app)
-      .put(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .put(OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(404);
@@ -79,7 +77,7 @@ describe("remove document url tests", () => {
   it ("should return error page when no attachment is found", async () => {
     mockGetAttachment.mockResolvedValueOnce(null);
     const res = await request(app)
-      .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .get(OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(500);
@@ -89,7 +87,7 @@ describe("remove document url tests", () => {
   it ("should return error page when api call throws error", async () => {
     mockGetAttachment.mockRejectedValueOnce(new Error("oh no"));
     const res = await request(app)
-      .get(pageURLs.OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .get(OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(res.status).toEqual(500);
@@ -98,7 +96,7 @@ describe("remove document url tests", () => {
 
   it("should redirect to document upload page if No submitted", async () => {
     const res = await request(app)
-      .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
+      .post(OBJECTIONS_REMOVE_DOCUMENT)
       .send({[REMOVE_DOCUMENT_FORM_FIELD]: "no"})
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -110,7 +108,7 @@ describe("remove document url tests", () => {
 
   it("should redirect to document upload page and call objections service if Yes submitted", async () => {
     const res = await  request(app)
-      .post(pageURLs.OBJECTIONS_REMOVE_DOCUMENT)
+      .post(OBJECTIONS_REMOVE_DOCUMENT)
       .send({
         [REMOVE_DOCUMENT_FORM_FIELD]: "yes",
         [ATTACHMENT_ID_FORM_FIELD]: ATTACHMENT_ID,
