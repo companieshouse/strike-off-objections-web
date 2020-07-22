@@ -108,13 +108,11 @@ describe("objections SDK service unit tests", () => {
     expect(mockAxiosRequest).toBeCalled();
   });
 
-  // TODO Uncomment this test when end-point to retrieve an objection is available (OBJ-125)
+  it("should call objections API getting an objection", () => {
+    objectionsSdk.getObjection(COMPANY_NUMBER,
+        ACCESS_TOKEN,
+        OBJECTION_ID);
 
-  // it("should call objections API getting an objection", () => {
-  //   objectionsSdk.getObjection(COMPANY_NUMBER,
-  //       ACCESS_TOKEN,
-  //       OBJECTION_ID);
-
-  //   expect(mockAxiosRequest).toBeCalled();
-  // });
+    expect(mockAxiosRequest).toBeCalled();
+  });
 });

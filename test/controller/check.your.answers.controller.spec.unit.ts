@@ -84,13 +84,11 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 
 const dummyObjection: Objection = {
   attachments: [
-    { id: "ATT001",
-        name: "attachment.jpg",
-      },
     {
-      id: "ATT002",
-        name: "document.pdf",
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
     }],
-  id: "OBJ123",
   reason: "Owed some money",
 };

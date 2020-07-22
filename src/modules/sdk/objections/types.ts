@@ -41,10 +41,8 @@ export interface Attachment {
  * @interface
  */
 export interface Objection {
-  id: string;
   reason: string;
   attachments: Array<{
-    id: string;
     name: string;
   }>;
 }

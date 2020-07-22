@@ -124,27 +124,12 @@ export const getObjection = async (companyNumber: string,
                                    token: string,
                                    objectionId: string): Promise<Objection> => {
 
-  // TODO Uncomment these lines, remove the stub code below and call the API when end-point
-  //      is available (OBJ-125)
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+      HTTP_GET,
+      OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
+      token);
 
-  // const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-  //     HTTP_GET,
-  //     OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
-  //     token);
+  const response = await makeAPICall(axiosConfig);
 
-  // const response = await makeAPICall(axiosConfig);
-
-  // return response.data as Objection;
-
-  return {
-    attachments: [
-      { id: "ABC123",
-        name: "attachment.jpg",
-      },
-      {
-        id: "ABC456",
-          name: "document.pdf",
-      }],
-    id: "XYZ123",
-    reason: "Owed money" };
+  return response.data as Objection;
 };
