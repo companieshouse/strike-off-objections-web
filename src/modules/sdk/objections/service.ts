@@ -3,12 +3,12 @@ import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
-import { Attachment, ObjectionPatch } from "./types";
+import { Attachment, Objection, ObjectionPatch } from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
     `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
 
-const OBJECTIONS_API_PATCH_URL = (companyNumber: string, objectionId: string): string =>
+const OBJECTIONS_API_PATCH_OR_GET_URL = (companyNumber: string, objectionId: string): string =>
     OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
 
 const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
@@ -51,7 +51,7 @@ export const patchObjection = async (
   logger.debug(`Patching an objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_PATCH, OBJECTIONS_API_PATCH_URL(companyNumber, objectionId), token);
+      HTTP_PATCH, OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId), token);
   axiosConfig.data = patch;
 
   await makeAPICall(axiosConfig);
@@ -118,4 +118,18 @@ export const deleteAttachment = async (companyNumber: string,
     token);
   await makeAPICall(axiosConfig);
   return;
+};
+
+export const getObjection = async (companyNumber: string,
+                                   token: string,
+                                   objectionId: string): Promise<Objection> => {
+
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+      HTTP_GET,
+      OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
+      token);
+
+  const response = await makeAPICall(axiosConfig);
+
+  return response.data as Objection;
 };

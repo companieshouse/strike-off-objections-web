@@ -2,7 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
-import { Attachment } from "../modules/sdk/objections";
+import { Attachment, Objection } from "../modules/sdk/objections";
 import { ObjectionPatch } from "../modules/sdk/objections/types";
 import logger from "../utils/logger";
 import {
@@ -89,6 +89,21 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
 
   logger.debug(`Deleting attachment ${attachmentId} for objection ${objectionId}`);
   return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+};
+
+/**
+ * Gets objection details for the company and objection present in the web session.
+ *
+ * @param {Session} session the web session
+ *
+ * @returns {Objection} details of the existing objection
+ */
+export const getObjection = async (session: Session): Promise<Objection> => {
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
+
+  logger.debug(`Getting objection ${objectionId}`);
+
+  return await objectionsSdk.getObjection(companyNumber, token, objectionId);
 };
 
 /**

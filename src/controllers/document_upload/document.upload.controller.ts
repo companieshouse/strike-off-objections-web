@@ -2,6 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
+import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
 import { Attachment } from "../../modules/sdk/objections";
 import * as objectionService from "../../services/objection.service";
@@ -89,7 +90,8 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
   if (attachments && attachments.length === 0) {
     return displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
-  res.redirect("TODO - PAGE AFTER UPLOAD");
+
+  res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
 };
 
 /**

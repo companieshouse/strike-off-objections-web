@@ -5,7 +5,7 @@ import { Session } from "ch-node-session-handler";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import { Attachment } from "../../src/modules/sdk/objections";
+import { Attachment, Objection } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
@@ -23,6 +23,7 @@ const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
 const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
 const mockDeleteAttachment = objectionsSdk.deleteAttachment as jest.Mock;
+const mockGetObjection = objectionsSdk.getObjection as jest.Mock;
 
 const mockAttachments = [
   {
@@ -40,9 +41,24 @@ const mockAttachment = {
     name: "test.doc",
 };
 
+const mockObjection = {
+  attachments: [
+    { id: "ATT001",
+        name: "attachment.jpg",
+      },
+    {
+      id: "ATT002",
+        name: "document.pdf",
+    }],
+  id: "OBJ123",
+  reason: "Owed some money",
+};
+
 mockGetAttachments.mockResolvedValue(mockAttachments);
 
 mockGetAttachment.mockResolvedValue(mockAttachment);
+
+mockGetObjection.mockResolvedValue(mockObjection);
 
 const session = {
   data: {
@@ -129,6 +145,14 @@ describe("objections API service unit tests", () => {
   it("should call sdk when deleting attachment", async () => {
     await objectionsService.deleteAttachment(session, ATTACHMENT_ID);
     expect(mockDeleteAttachment).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, NEW_OBJECTION_ID, ATTACHMENT_ID);
+  });
+
+  it("should return an objection when requested", async () => {
+    const objection: Objection = await objectionsService.getObjection(session);
+    expect(mockGetObjection).toBeCalledWith(dummyCompanyProfile.companyNumber,
+        ACCESS_TOKEN,
+        NEW_OBJECTION_ID);
+    expect(objection).toEqual(mockObjection);
   });
 });
 

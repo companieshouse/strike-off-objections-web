@@ -35,3 +35,14 @@ export interface Attachment {
   id: string;
   name: string;
 }
+
+/**
+ * Data structure representing an Objection
+ * @interface
+ */
+export interface Objection {
+  reason: string;
+  attachments: Array<{
+    name: string;
+  }>;
+}

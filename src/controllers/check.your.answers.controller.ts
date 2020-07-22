@@ -1,16 +1,22 @@
+import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { Templates } from "../model/template.paths";
+import { Objection } from "../modules/sdk/objections";
+import { getObjection } from "../services/objection.service";
 import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
 import logger from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
-      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
+      const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
+
+      const objection: Objection = await getObjection(req.session as Session);
+
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
-        companyName: company.companyName,
-        companyNumber: company.companyNumber,
+        companyName,
+        companyNumber,
+        objection,
         templateName: Templates.CHECK_YOUR_ANSWERS,
       });
     } catch (e) {
