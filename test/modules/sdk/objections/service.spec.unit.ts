@@ -2,7 +2,7 @@ jest.mock("../../../../src/modules/sdk/objections/axios.client");
 
 import { AxiosRequestConfig, Method } from "axios";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
-import { Attachment } from "../../../../src/modules/sdk/objections";
+import { Attachment, Objection } from "../../../../src/modules/sdk/objections";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "../../../../src/modules/sdk/objections/axios.client";
 
 const mockMakeAPICall = makeAPICall as jest.Mock;
@@ -12,6 +12,17 @@ mockGetBaseAxiosRequestConfig.mockReturnValue({} as AxiosRequestConfig);
 const dummyAttachment: Attachment = {
   id: "32424",
   name: "test.jpg",
+};
+
+const dummyObjection: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  reason: "Owed some money",
 };
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
@@ -161,11 +172,17 @@ describe("objections SDK service unit tests", () => {
     );
   });
 
-  it("should call objections API getting an objection", () => {
-    objectionsSdk.getObjection(COMPANY_NUMBER,
+  it("should call objections API getting an objection", async () => {
+    mockMakeAPICall.mockResolvedValueOnce(
+      {
+        data: dummyObjection,
+      });
+
+    const returnedObjection: Objection = await objectionsSdk.getObjection(COMPANY_NUMBER,
         ACCESS_TOKEN,
         OBJECTION_ID);
 
+    expect(returnedObjection).toStrictEqual(dummyObjection);
     expect(mockMakeAPICall).toBeCalled();
 
     testCorrectApiValuesAreUsed(

@@ -92,6 +92,21 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
 };
 
 /**
+ * Gets objection details for the company and objection present in the web session.
+ *
+ * @param {Session} session the web session
+ *
+ * @returns {Objection} details of the existing objection
+ */
+export const getObjection = async (session: Session): Promise<Objection> => {
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
+
+  logger.debug(`Getting objection ${objectionId}`);
+
+  return await objectionsSdk.getObjection(companyNumber, token, objectionId);
+};
+
+/**
  * Gets values needed to call to the api
  * @param {Session} session the session object containing the values
  * @returns { string, string, string } { objectionId, companyNumber, token } the values for the api
@@ -102,22 +117,4 @@ const getValuesForApiCall = (session: Session) => {
   const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
   const token: string = retrieveAccessTokenFromSession(session);
   return { objectionId, companyNumber, token };
-};
-
-/**
- * Gets objection details for the company and objection present in the web session.
- *
- * @param {Session} session the web session
- *
- * @returns {Objection} details of the existing objection
- */
-export const getObjection = async (session: Session): Promise<Objection> => {
-  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-  const companyNumber: string = companyProfileInSession.companyNumber;
-  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-  const token: string = retrieveAccessTokenFromSession(session);
-
-  logger.debug(`Getting objection ${objectionId}`);
-
-  return await objectionsSdk.getObjection(companyNumber, token, objectionId);
 };
