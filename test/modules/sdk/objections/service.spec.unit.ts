@@ -166,7 +166,12 @@ describe("objections SDK service unit tests", () => {
         ACCESS_TOKEN,
         OBJECTION_ID);
 
-    expect(mockAxiosRequest).toBeCalled();
+    expect(mockMakeAPICall).toBeCalled();
+
+    testCorrectApiValuesAreUsed(
+      `company/${COMPANY_NUMBER}/strike-off-objections/${OBJECTION_ID}`,
+      HTTP_GET,
+    );
   });
 });
 
