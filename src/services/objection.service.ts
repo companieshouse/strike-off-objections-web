@@ -64,38 +64,42 @@ export const submitObjection = (objectionId: string, token: string) => {
 export const addAttachment = async (session: Session,
                                     attachment: Buffer,
                                     fileName: string) => {
-  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-  const companyNumber: string = companyProfileInSession.companyNumber;
-  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-  const token: string = retrieveAccessTokenFromSession(session);
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
   await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
 
 export const getAttachments = async (session: Session): Promise<Attachment[]> => {
-  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-  const companyNumber: string = companyProfileInSession.companyNumber;
-  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-  const token: string = retrieveAccessTokenFromSession(session);
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
+
   logger.debug(`Getting attachments for objection ${objectionId}`);
   return await objectionsSdk.getAttachments(companyNumber, token, objectionId);
 };
 
 export const getAttachment = async (session: Session, attachmentId: string): Promise<Attachment> => {
-  const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-  const companyNumber: string = companyProfileInSession.companyNumber;
-  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-  const token: string = retrieveAccessTokenFromSession(session);
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
+
   logger.debug(`Getting attachment ${attachmentId} for objection ${objectionId}`);
   return await objectionsSdk.getAttachment(companyNumber, token, objectionId, attachmentId);
 };
 
 export const deleteAttachment = async (session: Session, attachmentId: string) => {
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
+
+  logger.debug(`Deleting attachment ${attachmentId} for objection ${objectionId}`);
+  return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+};
+
+/**
+ * Gets values needed to call to the api
+ * @param {Session} session the session object containing the values
+ * @returns { string, string, string } { objectionId, companyNumber, token } the values for the api
+ */
+const getValuesForApiCall = (session: Session) => {
   const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
   const companyNumber: string = companyProfileInSession.companyNumber;
   const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
   const token: string = retrieveAccessTokenFromSession(session);
-  logger.debug(`Deleting attachment ${attachmentId} for objection ${objectionId}`);
-  return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+  return { objectionId, companyNumber, token };
 };
