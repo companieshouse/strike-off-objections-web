@@ -148,7 +148,8 @@ const getUploadFinishedCallback = (req: Request,
   return async (filename: string, fileData: Buffer, mimeType: string) => {
     try {
       const session: Session = req.session as Session;
-      await objectionService.addAttachment(session, fileData, filename);
+      const attachmentId: string = await objectionService.addAttachment(session, fileData, filename);
+      logger.debug(`Attachment with id ${attachmentId} successfully uploaded`);
     } catch (e) {
       logger.error(`User has attempted to upload a ` +
                      `file ${filename}, mime-type: ${mimeType} ` +
@@ -162,7 +163,6 @@ const getUploadFinishedCallback = (req: Request,
       // }
       return uploadResponderStrategy.handleGenericError(res, e, next);
     }
-    logger.debug("Successfully uploaded file " + filename);
     return uploadResponderStrategy.handleSuccess(req, res);
   };
 };

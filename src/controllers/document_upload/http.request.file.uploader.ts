@@ -82,7 +82,7 @@ export const uploadFile = (req: Request,
         return;
       }
       const fileData: Buffer = Buffer.concat(chunkArray);
-      logger.debug("Total bytes received for " + filename + " = " + fileData.length);
+      logger.debug("Total bytes received for file = " + fileData.length);
       if (fileData.length === 0) {
         return await callbacks.noFileDataReceivedCallback(filename);
       }

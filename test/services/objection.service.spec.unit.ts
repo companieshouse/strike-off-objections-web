@@ -69,6 +69,7 @@ const COMPANY_NUMBER = "00006400";
 const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
 const REASON = "Owed Money";
 const ATTACHMENT_ID = "file123";
+const NEW_ATTACHMENT_ID = "f89bc843-bfc2-4121-b00b-0d667947fe5f";
 
 describe("objections API service unit tests", () => {
 
@@ -110,14 +111,19 @@ describe("objections API service unit tests", () => {
     expect(patchResult).toBeUndefined();
   });
 
-  it("returns undefined when adding an attachment", () => {
+  it("returns an id when a new attachment is added", async () => {
+    mockAddAttachment.mockResolvedValueOnce(NEW_ATTACHMENT_ID);
+
     const FILE_NAME = "test_file";
     const BUFFER = Buffer.from("Test buffer");
-    const attachmentResult = objectionsService.addAttachment(session,
+    const attachmentId: string = await objectionsService.addAttachment(session,
         BUFFER,
         FILE_NAME );
 
-    expect(attachmentResult).toEqual(Promise.resolve());
+    expect(attachmentId).toBeDefined();
+    expect(typeof attachmentId).toBe("string");
+    expect(attachmentId).toStrictEqual(NEW_ATTACHMENT_ID);
+
     expect(mockAddAttachment).toBeCalledWith(dummyCompanyProfile.companyNumber,
       ACCESS_TOKEN,
       NEW_OBJECTION_ID,

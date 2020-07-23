@@ -63,11 +63,11 @@ export const submitObjection = (objectionId: string, token: string) => {
 
 export const addAttachment = async (session: Session,
                                     attachment: Buffer,
-                                    fileName: string) => {
+                                    fileName: string): Promise<string> => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
-  logger.info(`Adding attachment ${fileName} to objection ${objectionId}`);
-  await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+  logger.info(`Adding a new attachment to objection ${objectionId}`);
+  return await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
 
 export const getAttachments = async (session: Session): Promise<Attachment[]> => {
