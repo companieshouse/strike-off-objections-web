@@ -61,7 +61,7 @@ export const addAttachment = async (companyNumber: string,
                                     token: string,
                                     objectionId: string,
                                     attachment: Buffer,
-                                    fileName: string) => {
+                                    fileName: string): Promise<string> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST,
@@ -79,7 +79,8 @@ export const addAttachment = async (companyNumber: string,
       ...data.getHeaders(),
     },
   };
-  await makeAPICall(axiosConfig);
+
+  return (await makeAPICall(axiosConfig)).data.id as string;
 };
 
 export const getAttachments = async (companyNumber: string,

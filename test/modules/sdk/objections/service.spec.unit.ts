@@ -90,15 +90,28 @@ describe("objections SDK service unit tests", () => {
   });
 
   it("should call objections API when posting an attachment", async () => {
+
+    const NEW_ATTACHMENT_ID = "f89bc843-bfc2-4121-b00b-0d667947fe5f";
+    mockMakeAPICall.mockResolvedValueOnce({
+      data: {
+        id: NEW_ATTACHMENT_ID,
+      },
+    });
+
     const fileName: string = "fileName";
     const BUFFER = Buffer.from("Buffer");
     const STREAMS_DATA_PARAMATER = "_streams";
-    await objectionsSdk.addAttachment(COMPANY_NUMBER,
+    const attachmentId: string = await objectionsSdk.addAttachment(COMPANY_NUMBER,
         ACCESS_TOKEN,
         OBJECTION_ID,
       BUFFER,
       fileName,
     );
+
+    expect(attachmentId).toBeDefined();
+    expect(typeof attachmentId).toBe("string");
+    expect(attachmentId).toStrictEqual(NEW_ATTACHMENT_ID);
+
     const usedAxiosConfig: AxiosRequestConfig = mockMakeAPICall.mock.calls[0][0];
     const streamZero = usedAxiosConfig.data[STREAMS_DATA_PARAMATER][0];
     expect(streamZero).toContain(fileName);
