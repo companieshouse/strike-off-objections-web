@@ -355,7 +355,7 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(responseObj.divs[0].divHtml).toContain(CLASS_UPLOAD_LIST);
     expect(responseObj.divs[0].divHtml).toContain(TEXT_FILE_NAME);
-    expect(responseObj.divs[0].divHtml).toContain("documentID=" + ATTACHMENT_ID);
+    expect(responseObj.divs[0].divHtml).toContain("/remove-document/" + ATTACHMENT_ID);
 
     expect(responseObj.divs[1].divHtml).toContain(CLASS_FILE_UPLOAD);
     expect(responseObj.divs[1].divHtml).toContain("Add another document");
