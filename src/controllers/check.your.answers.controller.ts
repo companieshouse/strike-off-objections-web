@@ -10,9 +10,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
-
       const objection: Objection = await getObjection(req.session as Session);
-
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
         companyName,
         companyNumber,
@@ -24,6 +22,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return next(e);
     }
   }
-
   return next(new Error("No Session present"));
 };

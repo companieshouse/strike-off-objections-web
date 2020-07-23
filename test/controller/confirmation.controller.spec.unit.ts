@@ -53,10 +53,8 @@ const OBJECTION_ID: string = "a1b2c3";
 describe("confirmation screen tests", () => {
    it("should land on confirmation screen with submitted message and correct details", async () => {
 
-       mockRetrieveUserProfileFromSession.mockReset();
-       mockRetrieveUserProfileFromSession.mockResolvedValue(dummyUserProfile);
-       mockRetrieveFromObjectionSession.mockReset();
-       mockRetrieveFromObjectionSession.mockResolvedValue(OBJECTION_ID);
+       mockRetrieveUserProfileFromSession.mockReturnValueOnce(dummyUserProfile);
+       mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
        const response = await request(app).get(OBJECTIONS_CONFIRMATION)
            .set("Referer", "/")
