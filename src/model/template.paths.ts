@@ -9,6 +9,7 @@ export enum Templates {
   DOCUMENT_UPLOAD_ERROR_SUMMARY = "includes/document-upload-error-summary",
   REMOVE_DOCUMENT = "remove-document",
   CHECK_YOUR_ANSWERS = "check-your-answers",
+  CONFIRMATION = "confirmation",
   INDEX = "index",
   ERROR = "error",
 }
