@@ -66,7 +66,7 @@ export const addAttachment = async (session: Session,
                                     fileName: string): Promise<string> => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
-  logger.info(`Adding a new attachment objection ${objectionId}`);
+  logger.info(`Adding a new attachment to objection ${objectionId}`);
   return await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
 
