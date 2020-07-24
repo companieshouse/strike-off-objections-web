@@ -1,9 +1,9 @@
 import { Session } from "ch-node-session-handler";
+import { IUserProfile } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
 import {
   retrieveAccessTokenFromSession,
-  retrieveUserProfileFromSession
+  retrieveUserProfileFromSession,
 } from "../../src/services/objection.session.service";
-import {IUserProfile} from "ch-node-session-handler/lib/session/model/SessionInterfaces";
 
 const accessTokenValue = "tokenABC123";
 
