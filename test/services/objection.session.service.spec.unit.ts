@@ -1,9 +1,57 @@
 import { Session } from "ch-node-session-handler";
-import { retrieveAccessTokenFromSession } from "../../src/services/objection.session.service";
+import {
+  retrieveAccessTokenFromSession,
+  retrieveUserEmailFromSession,
+} from "../../src/services/objection.session.service";
 
 const accessTokenValue = "tokenABC123";
+const testEmail = "demo@ch.gov.uk";
 
 describe ("objections session service tests", () => {
+
+  it("should retrieve email when present in the session", () => {
+    const session: Session = new Session();
+    session.data = {
+      signin_info: {
+        user_profile: {
+          email: testEmail,
+
+        },
+      },
+    };
+    const email: string = retrieveUserEmailFromSession(session);
+    expect(email).not.toBeUndefined();
+    expect(email).toEqual(testEmail);
+  });
+
+  it("should throw error when sign in info is absent", () => {
+    const session: Session = new Session();
+    expect(() => {
+      retrieveUserEmailFromSession(session);
+    }).toThrow();
+  });
+
+  it("should throw error when user profile is absent", () => {
+    const session: Session = new Session();
+    session.data = {
+      signin_info: {},
+    };
+    expect(() => {
+      retrieveUserEmailFromSession(session);
+    }).toThrow();
+  });
+
+  it("should throw error when email is absent", () => {
+    const session: Session = new Session();
+    session.data = {
+      signin_info: {
+        user_profile: {},
+      },
+    };
+    expect(() => {
+      retrieveUserEmailFromSession(session);
+    }).toThrow();
+  });
 
   it("should retrieve access token when present in the session", () => {
     const session: Session = new Session();

@@ -1,5 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
+import { OBJECTIONS_CONFIRMATION } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { Objection } from "../modules/sdk/objections";
 import { getObjection } from "../services/objection.service";
@@ -10,9 +11,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
-
       const objection: Objection = await getObjection(req.session as Session);
-
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
         companyName,
         companyNumber,
@@ -24,6 +23,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return next(e);
     }
   }
-
   return next(new Error("No Session present"));
+};
+
+export const post = (req: Request, res: Response) => {
+  return res.redirect(OBJECTIONS_CONFIRMATION);
 };
