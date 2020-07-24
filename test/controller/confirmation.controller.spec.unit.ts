@@ -15,11 +15,11 @@ import sessionMiddleware from "../../src/middleware/session.middleware";
 import { OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import {
   retrieveFromObjectionSession,
-  retrieveUserProfileFromSession,
+  retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const mockRetrieveUserProfileFromSession = retrieveUserProfileFromSession  as jest.Mock;
+const mockRetrieveUserEmailFromSession = retrieveUserEmailFromSession  as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession  as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
@@ -31,37 +31,33 @@ const SESSION: Session = {
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    req.session = SESSION;
-    return next();
+  req.session = SESSION;
+  return next();
 });
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    if (req.session) {
-        req.session.data[OBJECTIONS_SESSION_NAME] = { objection_id: OBJECTION_ID };
-        return next();
-    }
-
-    return next(new Error("No session on request"));
+  if (req.session) {
+    req.session.data[OBJECTIONS_SESSION_NAME] = { objection_id: OBJECTION_ID };
+    return next();
+  }
+  return next(new Error("No session on request"));
 });
 
-const dummyUserProfile = {
-  email: "mttest@test.co.uk",
-};
+const email: string = "mttest@test.co.uk";
 const OBJECTION_ID: string = "a1b2c3";
 
 describe("confirmation screen tests", () => {
-   it("should land on confirmation screen with submitted message and correct details", async () => {
+  it("should land on confirmation screen with submitted message and correct details", async () => {
+    mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
-       mockRetrieveUserProfileFromSession.mockReturnValueOnce(dummyUserProfile);
-       mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
+    const response = await request(app).get(OBJECTIONS_CONFIRMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-       const response = await request(app).get(OBJECTIONS_CONFIRMATION)
-           .set("Referer", "/")
-           .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-       expect(response.status).toEqual(200);
-       expect(response.text).toContain(OBJECTION_ID);
-       expect(response.text).toContain("mttest@test.co.uk");
-   });
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(OBJECTION_ID);
+    expect(response.text).toContain(email);
+  });
 });

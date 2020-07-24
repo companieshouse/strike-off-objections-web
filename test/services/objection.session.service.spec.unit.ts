@@ -1,34 +1,45 @@
 import { Session } from "ch-node-session-handler";
-import { IUserProfile } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
 import {
   retrieveAccessTokenFromSession,
-  retrieveUserProfileFromSession,
+  retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
 
 const accessTokenValue = "tokenABC123";
+const testEmail = "demo@ch.gov.uk";
 
 describe ("objections session service tests", () => {
 
-  it("should retrieve user profile when present in the session", () => {
+  it("should retrieve email when present in the session", () => {
     const session: Session = new Session();
     session.data = {
       signin_info: {
         user_profile: {
-          email: "demo@ch.gov.uk",
-          forename: "Joe",
-          surname: "Bloggs",
+          email: testEmail,
+
         },
       },
     };
-    const userProfile: IUserProfile = retrieveUserProfileFromSession(session);
-    expect(userProfile).not.toBeUndefined();
-    expect(userProfile).toEqual({email: "demo@ch.gov.uk", forename: "Joe", surname: "Bloggs"});
+    const email: string = retrieveUserEmailFromSession(session);
+    expect(email).not.toBeUndefined();
+    expect(email).toEqual(testEmail);
   });
 
   it("should throw error when user profile is absent", () => {
     const session: Session = new Session();
     expect(() => {
-      retrieveUserProfileFromSession(session);
+      retrieveUserEmailFromSession(session);
+    }).toThrow();
+  });
+
+  it("should throw error when email is absent", () => {
+    const session: Session = new Session();
+    session.data = {
+      signin_info: {
+        user_profile: {},
+      },
+    };
+    expect(() => {
+      retrieveUserEmailFromSession(session);
     }).toThrow();
   });
 

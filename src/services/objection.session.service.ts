@@ -2,12 +2,13 @@ import { Session } from "ch-node-session-handler";
 import { AccessTokenKeys } from "ch-node-session-handler/lib/session/keys/AccessTokenKeys";
 import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
+import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 import { IAccessToken, ISignInInfo, IUserProfile } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 
-export const retrieveUserProfileFromSession = (session: Session): IUserProfile => {
+export const retrieveUserEmailFromSession = (session: Session): string => {
   const signInInfo: ISignInInfo | undefined = session.get(SessionKey.SignInInfo);
   if (!signInInfo) {
     throw new Error("No sign in info");
@@ -16,7 +17,11 @@ export const retrieveUserProfileFromSession = (session: Session): IUserProfile =
   if (!userProfile) {
     throw new Error("No user profile in sign in session");
   }
-  return userProfile;
+  const email: string | undefined = userProfile[UserProfileKeys.Email];
+  if (!email) {
+    throw new Error("No email in sign in user profile");
+  }
+  return email;
 };
 
 export const retrieveAccessTokenFromSession = (session: Session): string => {
