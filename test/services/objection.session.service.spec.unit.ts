@@ -24,8 +24,18 @@ describe ("objections session service tests", () => {
     expect(email).toEqual(testEmail);
   });
 
+  it("should throw error when sign in info is absent", () => {
+    const session: Session = new Session();
+    expect(() => {
+      retrieveUserEmailFromSession(session);
+    }).toThrow();
+  });
+
   it("should throw error when user profile is absent", () => {
     const session: Session = new Session();
+    session.data = {
+      signin_info: {},
+    };
     expect(() => {
       retrieveUserEmailFromSession(session);
     }).toThrow();
