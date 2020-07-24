@@ -14,7 +14,7 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../src/model/page.urls";
+import {OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION} from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection } from "../../src/services/objection.service";
 import {
@@ -66,6 +66,15 @@ describe("check company tests", () => {
     expect(response.text).toContain("Owed some money");
     expect(response.text).toContain("attachment.jpg");
     expect(response.text).toContain("document.pdf");
+  });
+
+  it ("should forward to confirmation page on post", async () => {
+    const res = await request(app)
+        .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
+        .set("referer", "/")
+        .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(res.status).toEqual(302);
+    expect(res.text).toContain(OBJECTIONS_CONFIRMATION);
   });
 });
 

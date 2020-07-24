@@ -38,6 +38,8 @@ router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
 router.post(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.post);
 
 router.get(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.get);
+router.post(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.post);
+
 router.get(pageURLs.CONFIRMATION, confirmationRoute.get);
 
 router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
