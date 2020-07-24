@@ -14,7 +14,7 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import {OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION} from "../../src/model/page.urls";
+import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection } from "../../src/services/objection.service";
 import {

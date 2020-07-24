@@ -14,8 +14,8 @@ import objectionSessionMiddleware from "../../src/middleware/objection.session.m
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import { OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import {
-    retrieveFromObjectionSession,
-    retrieveUserProfileFromSession,
+  retrieveFromObjectionSession,
+  retrieveUserProfileFromSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 

@@ -9,11 +9,12 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
     const session: Session | undefined  = req.session;
     if (session) {
         const userProfile = retrieveUserProfileFromSession(session);
-        const objId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+        const email: string = userProfile[UserProfileKeys.Email] as string;
+        const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
 
         return res.render(Templates.CONFIRMATION, {
-            email: userProfile[UserProfileKeys.Email],
-            objectionId: objId,
+            email,
+            objectionId,
             templateName: Templates.CONFIRMATION,
         });
     } else {
