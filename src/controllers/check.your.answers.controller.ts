@@ -27,5 +27,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, res: Response) => {
-  res.redirect(OBJECTIONS_CONFIRMATION);
+  return res.redirect(OBJECTIONS_CONFIRMATION);
 };
