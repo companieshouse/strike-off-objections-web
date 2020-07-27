@@ -84,7 +84,10 @@
       </p>
       <form method="post">
         {{ govukButton({
-          text: "Confirm and submit objection"
+          text: "Confirm and submit objection",
+          attributes: {
+            id: "submit"
+          }
         }) }}
       </form>
     </div>
