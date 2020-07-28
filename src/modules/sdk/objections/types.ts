@@ -14,8 +14,8 @@ export interface ApiError {
  */
 export enum ObjectionStatus {
   OPEN,
-  SUBMITTED,
   PROCESSED,
+  SUBMITTED,
 }
 
 /**

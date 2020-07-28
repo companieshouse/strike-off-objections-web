@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { OBJECTIONS_CONFIRMATION } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { Objection } from "../modules/sdk/objections";
-import { getObjection } from "../services/objection.service";
+import { getObjection, submitObjection } from "../services/objection.service";
 import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
 import logger from "../utils/logger";
 
@@ -26,6 +26,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   return next(new Error("No Session present"));
 };
 
-export const post = (req: Request, res: Response) => {
+export const post = async (req: Request, res: Response) => {
+  await submitObjection(req.session as Session);
+
   return res.redirect(OBJECTIONS_CONFIRMATION);
 };

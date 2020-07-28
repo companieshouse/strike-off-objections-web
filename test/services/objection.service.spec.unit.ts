@@ -6,6 +6,7 @@ import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID 
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
 import { Attachment, Objection } from "../../src/modules/sdk/objections";
+import { ObjectionStatus } from "../../src/modules/sdk/objections/types";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
@@ -106,9 +107,11 @@ describe("objections API service unit tests", () => {
     expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, { reason: REASON });
   });
 
-  it("returns undefined when updating an objection status to submitted", () => {
-    const patchResult = objectionsService.submitObjection(COMPANY_NUMBER, ACCESS_TOKEN);
-    expect(patchResult).toBeUndefined();
+  it("objections SDK is called when submitting an objection", async () => {
+    await objectionsService.submitObjection(session);
+
+    expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN,
+        { status: ObjectionStatus.SUBMITTED });
   });
 
   it("returns an id when a new attachment is added", async () => {

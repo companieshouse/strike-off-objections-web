@@ -16,11 +16,15 @@ import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
-import { getObjection } from "../../src/services/objection.service";
+import { getObjection, submitObjection } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
+
+const dummySession: Session = {
+  data: {},
+} as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 
@@ -29,9 +33,7 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = {
-    data: {},
-  } as Session;
+  req.session = dummySession;
   return next();
 });
 
@@ -46,6 +48,8 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockGetObjection = getObjection as jest.Mock;
+
+const mockSubmitObjection = submitObjection as jest.Mock;
 
 describe("check company tests", () => {
 
@@ -68,13 +72,16 @@ describe("check company tests", () => {
     expect(response.text).toContain("document.pdf");
   });
 
-  it ("should forward to confirmation page on post", async () => {
+  it ("should forward to confirmation page and submit the objection on post", async () => {
     const res = await request(app)
         .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
         .set("referer", "/")
         .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockSubmitObjection).toBeCalledWith(dummySession);
+
     expect(res.status).toEqual(302);
-    expect(res.text).toContain(OBJECTIONS_CONFIRMATION);
+    expect(res.header.location).toEqual(OBJECTIONS_CONFIRMATION);
   });
 });
 
