@@ -13,9 +13,10 @@ export interface ApiError {
  * @enum
  */
 export enum ObjectionStatus {
-  OPEN,
-  SUBMITTED,
-  PROCESSED,
+  // Note use of String enums to ensure that correct status values are mapped to/from API calls
+  OPEN = "OPEN",
+  SUBMITTED = "SUBMITTED",
+  PROCESSED = "PROCESSED",
 }
 
 /**

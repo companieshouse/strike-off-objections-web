@@ -3,7 +3,7 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { Attachment, Objection } from "../modules/sdk/objections";
-import { ObjectionPatch } from "../modules/sdk/objections/types";
+import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections/types";
 import logger from "../utils/logger";
 import {
   retrieveAccessTokenFromSession,
@@ -50,15 +50,17 @@ export const updateObjectionReason = async (
 /**
  * Update objection status to submitted for the given objection ID.
  *
- * @param {string} objectionId the id of the objection
- * @param {string} token the bearer security token to use to call the api
+ * @param {Session} session the web session
  */
-export const submitObjection = (objectionId: string, token: string) => {
+export const submitObjection = async (session: Session) => {
 
- logger.info(`Updating objection status to submitted for objectionId ${objectionId}`);
+  const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
-  // TODO Call the Objections SDK. Covered by JIRA
-  //      sub-task BI-4143
+  logger.info(`Updating objection status to submitted for objectionId ${objectionId}`);
+
+  const patch: ObjectionPatch = { status: ObjectionStatus.SUBMITTED };
+
+  await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
 };
 
 export const addAttachment = async (session: Session,
