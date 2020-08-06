@@ -42,7 +42,7 @@ const CLASS_UPLOAD_LIST = "govuk-upload-list";
 const CLASS_FILE_UPLOAD = "govuk-file-upload";
 const CLASS_ERROR_SUMMARY = "govuk-error-summary";
 const CLASS_ERROR_MESSAGE = "govuk-error-message";
-const INVALID_MIME_TYPE = "";
+const INVALID_MIME_TYPE = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG, PDF, DOCX or XLSX";
 
 ////////////////////////////////
 // Dummy Objects
@@ -400,7 +400,6 @@ describe ("document.document_upload.controller tests", () => {
       };
     });
 
-    const errorMessage: string = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG, PDF, DOCX or XLSX";
     const response = await request(app)
       .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
       .set("Referer", "/")
@@ -417,10 +416,10 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[1].divId).toContain("fileUploadDiv");
 
     expect(responseObj.divs[0].divHtml).toContain("govuk-error-summary");
-    expect(responseObj.divs[0].divHtml).toContain(errorMessage);
+    expect(responseObj.divs[0].divHtml).toContain(INVALID_MIME_TYPE);
 
     expect(responseObj.divs[1].divHtml).toContain("govuk-file-upload");
-    expect(responseObj.divs[1].divHtml).toContain(errorMessage);
+    expect(responseObj.divs[1].divHtml).toContain(INVALID_MIME_TYPE);
 
     expect(response.text).toContain(INVALID_MIME_TYPE);
     expect(mockAddAttachment).toHaveBeenCalled();
