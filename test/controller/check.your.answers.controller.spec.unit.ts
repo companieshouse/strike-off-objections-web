@@ -98,13 +98,13 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   incorporationDate: "26 June 1872",
 };
 
-const dummyObjection: Objection = {
-  attachments: [
+const dummyObjection: Objection = new Objection(
+  "Owed some money",
+  [
     {
       name: "attachment.jpg",
     },
     {
       name: "document.pdf",
     }],
-  reason: "Owed some money",
-};
+);

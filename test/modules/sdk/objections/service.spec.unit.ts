@@ -14,16 +14,16 @@ const dummyAttachment: Attachment = {
   name: "test.jpg",
 };
 
-const dummyObjection: Objection = {
-  attachments: [
+const dummyObjection: Objection = new Objection(
+  "Owed some money",
+  [
     {
       name: "attachment.jpg",
     },
     {
       name: "document.pdf",
     }],
-  reason: "Owed some money",
-};
+);
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";

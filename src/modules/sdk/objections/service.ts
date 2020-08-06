@@ -132,5 +132,5 @@ export const getObjection = async (companyNumber: string,
 
   const response = await makeAPICall(axiosConfig);
 
-  return response.data as Objection;
+  return new Objection(response.data.reason, response.data.attachments);
 };

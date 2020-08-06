@@ -2,6 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/modules/sdk/objections");
 
@@ -14,12 +15,14 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import { Objection } from "../../src/modules/sdk/objections";
+import { getObjection } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockRetrieveCompanyProfileFromObjectionSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -41,6 +44,8 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 
   return next(new Error("No session on request"));
 });
+
+const mockGetObjection = getObjection as jest.Mock;
 
 describe("Basic URL Tests", () => {
 
@@ -70,8 +75,7 @@ describe("Basic URL Tests", () => {
   });
 
   it("should find the confirm company page", async () => {
-    mockGetObjectionSessionValue.mockReset();
-    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockRetrieveCompanyProfileFromObjectionSession.mockReset().mockImplementation(() => dummyCompanyProfile);
 
     const response = await request(app)
       .get("/strike-off-objections/confirm-company");
@@ -97,6 +101,8 @@ describe("Basic URL Tests", () => {
   });
 
   it("should find the check your answers page", async () => {
+    mockRetrieveCompanyProfileFromObjectionSession.mockReset().mockReturnValue(dummyCompanyProfile);
+    mockGetObjection.mockReset().mockResolvedValue(dummyObjection);
     const response = await request(app)
       .get("/strike-off-objections/check-your-answers");
 
@@ -126,3 +132,14 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
     companyType: "limited",
     incorporationDate: "26 June 1872",
 };
+
+const dummyObjection: Objection = new Objection(
+  "Owed some money",
+  [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+);
