@@ -141,6 +141,5 @@ const dummyObjection: Objection = new Objection(
     },
     {
       name: "document.pdf",
-    },
-  ],
+    }],
 );
