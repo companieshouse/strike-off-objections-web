@@ -1,5 +1,3 @@
-import * as he from "he";
-
 /**
  * Api Error
  * @interface
@@ -40,44 +38,12 @@ export interface Attachment {
 }
 
 /**
- * Class representing an Objection
- * @class
+ * Data structure representing an Objection
+ * @interface
  */
-export class Objection {
-  private readonly _reason: string;
-  private readonly _attachments: Array<{
+export interface Objection {
+  reason: string;
+  attachments: Array<{
     name: string;
   }>;
-
-  constructor(reason: string, attachments: Array<{ name: string }>) {
-    this._reason = reason;
-    this._attachments = attachments;
-  }
-
-  get reason(): string {
-    return this._reason;
-  }
-
-  get attachments(): Array<{ name: string }> {
-    return this._attachments;
-  }
-
-  public getHtmlEncoded(): Objection {
-    const htmlReason: string = he.encode(this._reason);
-    const htmlAttachments: Array<{name: string}> = [];
-
-    this._attachments.forEach((attachment) => {
-      const name = he.encode(attachment.name);
-      const encodedAttachment = {
-        name,
-      };
-
-      htmlAttachments.push(encodedAttachment);
-    });
-
-    return new Objection(
-      htmlReason,
-      htmlAttachments,
-    );
-  }
 }

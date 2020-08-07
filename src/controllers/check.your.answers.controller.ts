@@ -15,7 +15,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
         companyName,
         companyNumber,
-        objection: objection.getHtmlEncoded(),
+        objection,
         templateName: Templates.CHECK_YOUR_ANSWERS,
       });
     } catch (e) {
