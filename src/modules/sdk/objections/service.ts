@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import { Response } from "express";
 import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
@@ -119,6 +120,12 @@ export const deleteAttachment = async (companyNumber: string,
     token);
   await makeAPICall(axiosConfig);
   return;
+};
+
+export const downloadAttachment = async (downloadUri: string,
+                                         httpResponse: Response,
+                                         token: string) => {
+  return Promise.resolve();
 };
 
 export const getObjection = async (companyNumber: string,
