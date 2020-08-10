@@ -1,6 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { UploadErrorMessages } from "../../model/error.messages";
+import { HttpStatusCodes, UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
@@ -157,9 +157,7 @@ const getUploadFinishedCallback = (req: Request,
                      `file ${filename}, mime-type: ${mimeType} ` +
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
-      // TODO OBJ-101 - file type error - uncomment below should do it
-      // // render errors in the view
-      if (e.status === 415) {
+      if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
         return await
           displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
