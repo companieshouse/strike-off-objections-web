@@ -1,3 +1,5 @@
+import * as path from "path";
+
 jest.mock("ioredis");
 jest.mock("../../../src/middleware/authentication.middleware");
 jest.mock("../../../src/middleware/session.middleware");
@@ -40,6 +42,7 @@ const CLASS_UPLOAD_LIST = "govuk-upload-list";
 const CLASS_FILE_UPLOAD = "govuk-file-upload";
 const CLASS_ERROR_SUMMARY = "govuk-error-summary";
 const CLASS_ERROR_MESSAGE = "govuk-error-message";
+const INVALID_MIME_TYPE = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG, PDF, DOCX or XLSX";
 
 ////////////////////////////////
 // Dummy Objects
@@ -363,5 +366,63 @@ describe ("document.document_upload.controller tests", () => {
     expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
                                              TEXT_FILE_NAME);
+  });
+
+  it ("should render error message on 415 error", async (done) => {
+    const buffer = Buffer.alloc(5);
+    mockAddAttachment.prototype.constructor.mockImplementationOnce(() => {
+      throw {
+        data: ["error"],
+        message: "error",
+        status: 415,
+      };
+    });
+
+    const response = await request(app)
+        .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
+        .set("Referer", "/")
+        .set("Cookie", [`${COOKIE_NAME}=123`])
+        .attach("file-upload", buffer, TEXT_FILE_NAME);
+    expect(response.status).toEqual(200);
+    expect(response).not.toBeUndefined();
+    expect(response.text).toContain(INVALID_MIME_TYPE);
+    expect(mockAddAttachment).toHaveBeenCalled();
+    done();
+  });
+
+  it ("AJAX - should render error message on 415 error", async (done) => {
+    const buffer = Buffer.alloc(5);
+    mockAddAttachment.prototype.constructor.mockImplementationOnce(() => {
+      throw {
+        data: ["error"],
+        message: "error",
+        status: 415,
+      };
+    });
+
+    const response = await request(app)
+      .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .set("X-Requested-With", "XMLHttpRequest")
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
+    expect(response.status).toEqual(200);
+    expect(response).not.toBeUndefined();
+
+    const responseObj = JSON.parse(response.text);
+    expect(responseObj.divs.length).toEqual(2);
+
+    expect(responseObj.divs[0].divId).toContain("errorSummaryDiv");
+    expect(responseObj.divs[1].divId).toContain("fileUploadDiv");
+
+    expect(responseObj.divs[0].divHtml).toContain("govuk-error-summary");
+    expect(responseObj.divs[0].divHtml).toContain(INVALID_MIME_TYPE);
+
+    expect(responseObj.divs[1].divHtml).toContain("govuk-file-upload");
+    expect(responseObj.divs[1].divHtml).toContain(INVALID_MIME_TYPE);
+
+    expect(response.text).toContain(INVALID_MIME_TYPE);
+    expect(mockAddAttachment).toHaveBeenCalled();
+    done();
   });
 });

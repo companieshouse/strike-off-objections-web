@@ -8,3 +8,7 @@ export enum UploadErrorMessages {
 export enum ErrorMessages {
   ERROR_500 = "An internal server error has occurred",
 }
+
+export enum HttpStatusCodes {
+  UNSUPPORTED_MEDIA_TYPE = 415,
+}

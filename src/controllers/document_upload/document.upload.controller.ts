@@ -1,6 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { UploadErrorMessages } from "../../model/error.messages";
+import { HttpStatusCodes, UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../model/page.urls";
 import { Templates } from "../../model/template.paths";
@@ -63,7 +63,7 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
   const uploadCallbacks: UploadFileCallbacks = {
     fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
     noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
-    uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy),
+    uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy, attachments),
   };
   const maxFileSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
 
@@ -138,12 +138,14 @@ const getNoFileDataReceivedCallback = (req: Request,
  * @param {Response} res http response
  * @param {NextFunction} next the next function in the middleware chain
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
+ * @param {attachments} required to display invalid mime types error
  * @returns {(filename: string, fileData: Buffer, mimeType: string): Promise<void>} the callback function
  */
 const getUploadFinishedCallback = (req: Request,
                                    res: Response,
                                    next: NextFunction,
-                                   uploadResponderStrategy: UploadResponderStrategy):
+                                   uploadResponderStrategy: UploadResponderStrategy,
+                                   attachments: Attachment[]):
                                     (filename: string, fileData: Buffer, mimeType: string) => Promise<void> => {
   return async (filename: string, fileData: Buffer, mimeType: string) => {
     try {
@@ -155,12 +157,10 @@ const getUploadFinishedCallback = (req: Request,
                      `file ${filename}, mime-type: ${mimeType} ` +
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
-      // TODO OBJ-101 - file type error - uncomment below should do it
-      // // render errors in the view
-      // if (e.status === 415) {
-      //   return await
-      //     displayError(req, res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
-      // }
+      if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
+        return await
+          displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+      }
       return uploadResponderStrategy.handleGenericError(res, e, next);
     }
     return uploadResponderStrategy.handleSuccess(req, res);
