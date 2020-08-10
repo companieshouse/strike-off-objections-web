@@ -11,7 +11,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
-      const objection: Objection = await getObjection(req.session as Session);
+      const objection: Objection = await getObjection(req.session);
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
         companyName,
         companyNumber,
