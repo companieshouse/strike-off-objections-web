@@ -15,7 +15,7 @@ import { OBJECTIONS_SESSION_NAME } from "../../../src/constants";
 import authenticationMiddleware from "../../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../../src/middleware/session.middleware";
-import { HttpStatusCodes, UploadErrorMessages } from "../../../src/model/error.messages";
+import { UploadErrorMessages } from "../../../src/model/error.messages";
 import ObjectionCompanyProfile from "../../../src/model/objection.company.profile";
 import * as pageURLs from "../../../src/model/page.urls";
 import {
@@ -374,7 +374,7 @@ describe ("document.document_upload.controller tests", () => {
       throw {
         data: ["error"],
         message: "error",
-        status: HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE,
+        status: 415,
       };
     });
 
@@ -396,7 +396,7 @@ describe ("document.document_upload.controller tests", () => {
       throw {
         data: ["error"],
         message: "error",
-        status: HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE,
+        status: 415,
       };
     });
 
