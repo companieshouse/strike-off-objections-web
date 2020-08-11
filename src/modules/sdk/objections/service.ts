@@ -125,6 +125,7 @@ export const deleteAttachment = async (companyNumber: string,
 export const downloadAttachment = async (downloadUri: string,
                                          httpResponse: Response,
                                          token: string) => {
+  // TODO OBJ-194 implementation
   return Promise.resolve();
 };
 
