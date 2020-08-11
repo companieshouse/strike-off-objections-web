@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { DOWNLOAD_PREFIX } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import logger from "../utils/logger";
 
@@ -9,7 +10,8 @@ import logger from "../utils/logger";
  * @param next
  */
 export const get = (req: Request, res: Response, next: NextFunction) => {
-  const url: string = req.originalUrl.replace("download/", "");
+  // replaces first match only
+  const url: string = req.originalUrl.replace(DOWNLOAD_PREFIX, "");
   logger.debug("Download landing page with download url = " + url);
   return res.render(Templates.DOWNLOAD_ATTACHMENT_LANDING_PAGE, {downloadUrl: url});
 };

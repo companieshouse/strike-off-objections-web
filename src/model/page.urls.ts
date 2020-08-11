@@ -14,8 +14,8 @@ export const DOCUMENT_UPLOAD: string = SEPARATOR + Templates.DOCUMENT_UPLOAD;
 export const DOCUMENT_UPLOAD_CONTINUE: string = SEPARATOR + "document-upload-continue"; // not a template
 export const REMOVE_DOCUMENT: string = SEPARATOR + Templates.REMOVE_DOCUMENT + "/:attachmentId";
 export const DOWNLOAD_ATTACHMENT: string =
-  "/company/:companyId/strike-off-objections/:requestId/attachments/*/download";
-export const DOWNLOAD_PREFIX: string = SEPARATOR + Templates.DOWNLOAD_ATTACHMENT_LANDING_PAGE;
+  "/company/:companyId/strike-off-objections/:requestId/attachments/:attachmentId/download";
+export const DOWNLOAD_PREFIX: string = SEPARATOR + "download";
 export const DOWNLOAD_ATTACHMENT_LANDING: string = DOWNLOAD_PREFIX + DOWNLOAD_ATTACHMENT;
 export const CHECK_YOUR_ANSWERS: string = SEPARATOR + Templates.CHECK_YOUR_ANSWERS;
 export const CONFIRMATION: string = SEPARATOR + Templates.CONFIRMATION;
