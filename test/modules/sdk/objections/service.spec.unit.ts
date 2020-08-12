@@ -1,6 +1,7 @@
 jest.mock("../../../../src/modules/sdk/objections/axios.client");
 
 import { AxiosRequestConfig, Method } from "axios";
+import { Response } from "express";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 import { Attachment, Objection } from "../../../../src/modules/sdk/objections";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "../../../../src/modules/sdk/objections/axios.client";
@@ -202,6 +203,13 @@ describe("objections SDK service unit tests", () => {
       `company/${COMPANY_NUMBER}/strike-off-objections/${OBJECTION_ID}`,
       HTTP_GET,
     );
+  });
+
+  it("should return undefined when downloading file", async () => {
+    const res = {} as Response;
+
+    const response = await objectionsSdk.downloadAttachment("/download", res, ACCESS_TOKEN);
+    expect(response).toStrictEqual(undefined);
   });
 });
 

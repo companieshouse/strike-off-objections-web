@@ -2,11 +2,12 @@ jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/services/objection.session.service");
 
 import { Session } from "ch-node-session-handler";
+import { Response } from "express";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
 import { Attachment, Objection } from "../../src/modules/sdk/objections";
-import { ObjectionStatus } from "../../src/modules/sdk/objections/types";
+import { ObjectionStatus } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
@@ -20,6 +21,7 @@ const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
 const mockRetrieveProfileFromSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+const mockDownloadAttachment = objectionsSdk.downloadAttachment as jest.Mock;
 
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
 const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
@@ -154,6 +156,14 @@ describe("objections API service unit tests", () => {
   it("should call sdk when deleting attachment", async () => {
     await objectionsService.deleteAttachment(session, ATTACHMENT_ID);
     expect(mockDeleteAttachment).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, NEW_OBJECTION_ID, ATTACHMENT_ID);
+  });
+
+  it("should call sdk when downloading attachment", async () => {
+    const downloadUri = "/download";
+    const res = {} as Response;
+    await objectionsService.downloadAttachment(downloadUri, session, res);
+
+    expect(mockDownloadAttachment).toBeCalledWith(downloadUri, res, ACCESS_TOKEN);
   });
 
   it("should return an objection when requested", async () => {

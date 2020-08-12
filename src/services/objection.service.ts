@@ -1,9 +1,10 @@
 import { Session } from "ch-node-session-handler";
+import { Response } from "express";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { Attachment, Objection } from "../modules/sdk/objections";
-import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections/types";
+import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections";
 import logger from "../utils/logger";
 import {
   retrieveAccessTokenFromSession,
@@ -91,6 +92,20 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
 
   logger.debug(`Deleting attachment ${attachmentId} for objection ${objectionId}`);
   return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+};
+
+/**
+ * Downloads file from the provided uri
+ * @param {string} downloadUri the uri of the file to download
+ * @param {Session} session the web session
+ * @param {Response} httpResponse the http response to stream the file directly to
+ */
+export const downloadAttachment = async (downloadUri: string, session: Session, httpResponse: Response) => {
+  const { token } = getValuesForApiCall(session);
+
+  logger.debug(`Downloading from ${downloadUri}`);
+
+  return await objectionsSdk.downloadAttachment(downloadUri, httpResponse, token);
 };
 
 /**
