@@ -40,12 +40,17 @@ const DOWNLOAD_FILE_URL: string = "/strike-off-objections/company/1234/strike-of
 
 describe("download attachment landing page tests", () => {
 
+  beforeEach(() => {
+    mockObjectionSessionMiddleware.mockClear();
+  });
+
   it("should show landing page", async () => {
     const response: request.Response = await request(app).get(DOWNLOAD_LANDING_PAGE_URL)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toBe(200);
+    expect(mockObjectionSessionMiddleware).not.toBeCalled();
     expect(response.text).toContain("Your document download will start soon");
   });
 
@@ -54,6 +59,7 @@ describe("download attachment landing page tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockObjectionSessionMiddleware).not.toBeCalled();
     expect(response.text).toContain("<meta http-equiv=\"refresh\" content=\"5;URL='" + DOWNLOAD_FILE_URL + "'\"/>");
   });
 
@@ -62,8 +68,8 @@ describe("download attachment landing page tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockObjectionSessionMiddleware).not.toBeCalled();
     expect(response.text).toContain("<a href=\"" + DOWNLOAD_FILE_URL + "\"");
     expect(response.text).not.toContain("download=\"");
   });
-
 });
