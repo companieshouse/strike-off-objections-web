@@ -4,6 +4,7 @@ import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as confirmationRoute from "../controllers/confirmation.controller";
 import * as documentUploadRoute from "../controllers/document_upload/document.upload.controller";
+import * as downloadAttachmentLandingRoute from "../controllers/download.attachment.landing.controller";
 import * as enterInformationRoute from "../controllers/enter.information.controller";
 import * as removeDocumentRoute from "../controllers/remove.document.controller";
 import * as pageURLs from "../model/page.urls";
@@ -36,6 +37,8 @@ router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueB
 
 router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
 router.post(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.post);
+
+router.get(pageURLs.DOWNLOAD_ATTACHMENT_LANDING, downloadAttachmentLandingRoute.get);
 
 router.get(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.get);
 router.post(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.post);
