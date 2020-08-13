@@ -13,4 +13,5 @@ export enum Templates {
   CONFIRMATION = "confirmation",
   INDEX = "index",
   ERROR = "error",
+  FILE_ERROR = "file-error",
 }
