@@ -47,3 +47,21 @@ export interface Objection {
     name: string;
   }>;
 }
+
+export const HEADER_CONTENT_DISPOSITION = "content-disposition";
+export const HEADER_CONTENT_LENGTH = "content-length";
+export const HEADER_CONTENT_TYPE = "content-type";
+
+/**
+ * Data structure containing the download
+ * @interface
+ */
+export interface DownloadData {
+  // TODO make data Streamable?
+  data: any;
+  headers: {
+    [HEADER_CONTENT_DISPOSITION]: string;
+    [HEADER_CONTENT_LENGTH]: string;
+    [HEADER_CONTENT_TYPE]: string;
+  };
+}

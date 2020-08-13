@@ -1,10 +1,23 @@
 jest.mock("../../../../src/modules/sdk/objections/axios.client");
 
-import { AxiosRequestConfig, Method } from "axios";
-import { Response } from "express";
+import { AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
-import { Attachment, Objection } from "../../../../src/modules/sdk/objections";
-import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "../../../../src/modules/sdk/objections/axios.client";
+import {
+  Attachment,
+  DownloadData,
+  HEADER_CONTENT_DISPOSITION,
+  HEADER_CONTENT_LENGTH,
+  HEADER_CONTENT_TYPE,
+  Objection,
+} from "../../../../src/modules/sdk/objections";
+import {
+  getBaseAxiosRequestConfig,
+  HTTP_DELETE,
+  HTTP_GET,
+  HTTP_PATCH,
+  HTTP_POST,
+  makeAPICall,
+} from "../../../../src/modules/sdk/objections/axios.client";
 
 const mockMakeAPICall = makeAPICall as jest.Mock;
 const mockGetBaseAxiosRequestConfig = getBaseAxiosRequestConfig as jest.Mock;
@@ -205,11 +218,38 @@ describe("objections SDK service unit tests", () => {
     );
   });
 
-  it("should return undefined when downloading file", async () => {
-    const res = {} as Response;
+  it("should return a DownloadData object with correct values when downloading file", async () => {
+    const dataBuffer = Buffer.alloc(5);
 
-    const response = await objectionsSdk.downloadAttachment("/download", res, ACCESS_TOKEN);
-    expect(response).toStrictEqual(undefined);
+    const data = {
+      data: dataBuffer,
+      headers: {
+        [HEADER_CONTENT_DISPOSITION]: "content stuff",
+        [HEADER_CONTENT_LENGTH]: "321313",
+        [HEADER_CONTENT_TYPE]: "application/pdf",
+      },
+    };
+
+    mockMakeAPICall.mockResolvedValueOnce(data as AxiosResponse);
+
+    const response = await objectionsSdk.downloadAttachment("/download/something", ACCESS_TOKEN);
+
+    expect(response).toStrictEqual(data as DownloadData);
+  });
+
+  it("should throw ApiError if downloading file fails", async () => {
+    const apiError: objectionsSdk.ApiError = {
+      data: {
+        errors: ["download failed"],
+      },
+      message: "Not Found",
+      status: 404,
+    };
+
+    mockMakeAPICall.mockRejectedValueOnce(apiError);
+
+    await expect(objectionsSdk.downloadAttachment("/download/something", ACCESS_TOKEN))
+      .rejects.toStrictEqual(apiError);
   });
 });
 

@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
-import { Response } from "express";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
+import { DownloadData } from "../modules/sdk/objections";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { Attachment, Objection } from "../modules/sdk/objections";
 import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections";
@@ -95,17 +95,18 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
 };
 
 /**
- * Downloads file from the provided uri
- * @param {string} downloadUri the uri of the file to download
+ * Downloads attachment from the provided api url
+ * @param {string} downloadApiUrl the url of the attachment to download through api
  * @param {Session} session the web session
- * @param {Response} httpResponse the http response to stream the file directly to
+ * returns {DownloadData} wrapper object containing the file data and file header info
+ * throws {ApiError} if the download failed
  */
-export const downloadAttachment = async (downloadUri: string, session: Session, httpResponse: Response) => {
+export const downloadAttachment = async (downloadApiUrl: string, session: Session): Promise<DownloadData> => {
   const { token } = getValuesForApiCall(session);
 
-  logger.debug(`Downloading from ${downloadUri}`);
+  logger.debug(`Downloading from ${downloadApiUrl}`);
 
-  return await objectionsSdk.downloadAttachment(downloadUri, httpResponse, token);
+  return await objectionsSdk.downloadAttachment(downloadApiUrl, token);
 };
 
 /**
