@@ -56,7 +56,7 @@ export const HEADER_CONTENT_TYPE = "content-type";
  * Data structure containing the download
  * @interface
  */
-export interface DownloadData {
+export interface Download {
   // TODO make data Streamable?
   data: any;
   headers: {

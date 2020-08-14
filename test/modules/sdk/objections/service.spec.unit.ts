@@ -4,7 +4,7 @@ import { AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 import {
   Attachment,
-  DownloadData,
+  Download,
   HEADER_CONTENT_DISPOSITION,
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
@@ -234,7 +234,7 @@ describe("objections SDK service unit tests", () => {
 
     const response = await objectionsSdk.downloadAttachment("/download/something", ACCESS_TOKEN);
 
-    expect(response).toStrictEqual(data as DownloadData);
+    expect(response).toStrictEqual(data as Download);
   });
 
   it("should throw ApiError if downloading file fails", async () => {

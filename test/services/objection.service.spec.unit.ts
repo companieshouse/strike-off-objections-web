@@ -45,12 +45,13 @@ const mockAttachment = {
 
 const mockObjection = {
   attachments: [
-    { id: "ATT001",
-        name: "attachment.jpg",
-      },
+    {
+      id: "ATT001",
+      name: "attachment.jpg",
+    },
     {
       id: "ATT002",
-        name: "document.pdf",
+      name: "document.pdf",
     }],
   id: "OBJ123",
   reason: "Owed some money",

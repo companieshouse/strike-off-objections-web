@@ -5,6 +5,15 @@ export enum UploadErrorMessages {
   FILE_TOO_LARGE = "File size must be smaller than",
 }
 
+export enum DownloadErrorMessages {
+  HEADING_UNAUTHORISED = "Unauthorised",
+  MESSAGE_UNAUTHORISED = "You are not authorised to download this file.",
+  HEADING_FORBIDDEN = "Forbidden",
+  MESSAGE_FORBIDDEN = "This file cannot be downloaded.",
+  HEADING_NOT_FOUND = "Not Found",
+  MESSAGE_NOT_FOUND = "The file path could not be found.",
+}
+
 export enum ErrorMessages {
   ERROR_500 = "An internal server error has occurred",
 }

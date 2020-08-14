@@ -5,9 +5,10 @@ import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import {
   Attachment,
-  DownloadData,
+  Download,
   HEADER_CONTENT_DISPOSITION,
-  HEADER_CONTENT_LENGTH, HEADER_CONTENT_TYPE,
+  HEADER_CONTENT_LENGTH,
+  HEADER_CONTENT_TYPE,
   Objection,
   ObjectionPatch,
 } from "./types";
@@ -130,13 +131,16 @@ export const deleteAttachment = async (companyNumber: string,
 
 /**
  * Download attachment from supplied url
+ *
  * @param {string} downloadApiUrl the url of the attachment to download through api
  * @param {string} token the security access token to use for the api call
- * returns {DownloadData} wrapper object containing the file data and file header info
- * throws {ApiError} if download fails
+ * @returns {Download} wrapper object containing the file data and file header info
+ * @throws {ApiError} if download fails
  */
 export const downloadAttachment = async (downloadApiUrl: string,
-                                         token: string): Promise<DownloadData> => {
+                                         token: string): Promise<Download> => {
+  logger.debug(`Downloading attachment from ${downloadApiUrl}`);
+
   const config: AxiosRequestConfig = {
     headers: {
       Authorization: "Bearer " + token,
@@ -158,7 +162,7 @@ export const downloadAttachment = async (downloadApiUrl: string,
       [HEADER_CONTENT_LENGTH]: axiosResponse.headers[HEADER_CONTENT_LENGTH],
       [HEADER_CONTENT_TYPE]: axiosResponse.headers[HEADER_CONTENT_TYPE],
     },
-  } as DownloadData;
+  } as Download;
 };
 
 export const getObjection = async (companyNumber: string,
