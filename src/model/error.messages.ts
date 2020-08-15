@@ -19,5 +19,8 @@ export enum ErrorMessages {
 }
 
 export enum HttpStatusCodes {
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
   UNSUPPORTED_MEDIA_TYPE = 415,
 }

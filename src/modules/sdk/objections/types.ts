@@ -1,3 +1,5 @@
+import { Readable } from "stream";
+
 /**
  * Api Error
  * @interface
@@ -57,8 +59,7 @@ export const HEADER_CONTENT_TYPE = "content-type";
  * @interface
  */
 export interface Download {
-  // TODO make data Streamable?
-  data: any;
+  data: Readable;
   headers: {
     [HEADER_CONTENT_DISPOSITION]: string;
     [HEADER_CONTENT_LENGTH]: string;

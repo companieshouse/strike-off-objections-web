@@ -1,6 +1,6 @@
 import { Session } from "ch-node-session-handler";
 import { Request, Response } from "express";
-import { DownloadErrorMessages } from "../model/error.messages";
+import { DownloadErrorMessages, HttpStatusCodes } from "../model/error.messages";
 import { Templates } from "../model/template.paths";
 import {
   Download,
@@ -61,7 +61,7 @@ const setResponseHeaders = (res: Response, downloadData: Download) => {
  * @param {string} contentDisposition
  * @returns {string} the contentDisposition string with filename prefix applied
  */
-export const prefixFilename = (contentDisposition: string ): string => {
+const prefixFilename = (contentDisposition: string ): string => {
   const FILENAME_ID = "filename=\"";
   return contentDisposition.replace(FILENAME_ID, FILENAME_ID + DOWNLOAD_FILENAME_PREFIX);
 };
@@ -72,16 +72,17 @@ export const prefixFilename = (contentDisposition: string ): string => {
  * @param {Response} res
  */
 const showErrorPage = (httpStatus: number, res: Response) => {
+  const { UNAUTHORIZED, FORBIDDEN, NOT_FOUND } = HttpStatusCodes;
   switch (httpStatus) {
-    case 401: {
+    case UNAUTHORIZED: {
       const { HEADING_UNAUTHORISED, MESSAGE_UNAUTHORISED } = DownloadErrorMessages;
       return renderFileError(res, HEADING_UNAUTHORISED, MESSAGE_UNAUTHORISED);
     }
-    case 403: {
+    case FORBIDDEN: {
       const { HEADING_FORBIDDEN, MESSAGE_FORBIDDEN } = DownloadErrorMessages;
       return renderFileError(res, HEADING_FORBIDDEN, MESSAGE_FORBIDDEN);
     }
-    case 404: {
+    case NOT_FOUND: {
       const { HEADING_NOT_FOUND, MESSAGE_NOT_FOUND } = DownloadErrorMessages;
       return renderFileError(res, HEADING_NOT_FOUND, MESSAGE_NOT_FOUND);
     }
