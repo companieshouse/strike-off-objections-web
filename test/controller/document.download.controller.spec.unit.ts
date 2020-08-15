@@ -39,7 +39,7 @@ const CONTENT_DISPOSITION_VALUE: string = "attachment; filename=\"test.pdf\"";
 const CONTENT_TYPE_VALUE: string = "application/pdf";
 const CONTENT_LENGTH_VALUE: string = "55621";
 
-describe("download attachment controller unit tests", () => {
+describe("document download controller unit tests", () => {
 
   it("should download a file with correct headers", async () => {
     const fileBytes = new Buffer([0x00, 0x01, 0x02]);

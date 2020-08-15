@@ -38,7 +38,7 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 const DOWNLOAD_LANDING_PAGE_URL: string = "/strike-off-objections/download/company/1234/strike-off-objections/5678/attachments/8888/download";
 const DOWNLOAD_FILE_URL: string = "/strike-off-objections/company/1234/strike-off-objections/5678/attachments/8888/download";
 
-describe("download attachment landing page tests", () => {
+describe("document download landing page tests", () => {
 
   beforeEach(() => {
     mockObjectionSessionMiddleware.mockClear();

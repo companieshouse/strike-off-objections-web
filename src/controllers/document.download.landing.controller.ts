@@ -13,5 +13,5 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
   // replaces first match only
   const url: string = req.originalUrl.replace(DOWNLOAD_PREFIX, "");
   logger.debug("Download landing page with download url = " + url);
-  return res.render(Templates.DOWNLOAD_ATTACHMENT_LANDING_PAGE, {downloadUrl: url});
+  return res.render(Templates.DOCUMENT_DOWNLOAD_LANDING_PAGE, {downloadUrl: url});
 };
