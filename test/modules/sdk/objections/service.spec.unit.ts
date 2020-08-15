@@ -1,6 +1,7 @@
 jest.mock("../../../../src/modules/sdk/objections/axios.client");
 
 import { AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { Readable } from "stream";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 import {
   Attachment,
@@ -218,11 +219,14 @@ describe("objections SDK service unit tests", () => {
     );
   });
 
-  it("should return a DownloadData object with correct values when downloading file", async () => {
-    const dataBuffer = Buffer.alloc(5);
+  it("should return a Download object with correct values when downloading file", async () => {
+    const fileBytes = new Buffer([0x00, 0x01, 0x02]);
+    const readable = new Readable();
+    readable.push(fileBytes);
+    readable.push(null);
 
-    const data = {
-      data: dataBuffer,
+    const fileDownload = {
+      data: readable,
       headers: {
         [HEADER_CONTENT_DISPOSITION]: "content stuff",
         [HEADER_CONTENT_LENGTH]: "321313",
@@ -230,11 +234,11 @@ describe("objections SDK service unit tests", () => {
       },
     };
 
-    mockMakeAPICall.mockResolvedValueOnce(data as AxiosResponse);
+    mockMakeAPICall.mockResolvedValueOnce(fileDownload as AxiosResponse);
 
     const response = await objectionsSdk.downloadAttachment("/download/something", ACCESS_TOKEN);
 
-    expect(response).toStrictEqual(data as Download);
+    expect(response).toStrictEqual(fileDownload as Download);
   });
 
   it("should throw ApiError if downloading file fails", async () => {

@@ -46,12 +46,12 @@ export const get = async (req: Request, res: Response) => {
  * Set the response headers for the download using the headers returned from the API that contain
  * file information
  * @param {Response} res the http response object
- * @param {Download} downloadData the download data returned from API
+ * @param {Download} download the download data returned from API
  */
-const setResponseHeaders = (res: Response, downloadData: Download) => {
-  res.setHeader(HEADER_CONTENT_DISPOSITION, prefixFilename(downloadData.headers[HEADER_CONTENT_DISPOSITION]));
-  res.setHeader(HEADER_CONTENT_TYPE, downloadData.headers[HEADER_CONTENT_TYPE]);
-  res.setHeader(HEADER_CONTENT_LENGTH, downloadData.headers[HEADER_CONTENT_LENGTH]);
+const setResponseHeaders = (res: Response, download: Download) => {
+  res.setHeader(HEADER_CONTENT_DISPOSITION, prefixFilename(download.headers[HEADER_CONTENT_DISPOSITION]));
+  res.setHeader(HEADER_CONTENT_TYPE, download.headers[HEADER_CONTENT_TYPE]);
+  res.setHeader(HEADER_CONTENT_LENGTH, download.headers[HEADER_CONTENT_LENGTH]);
 
   logger.debug("Returning response with headers " + JSON.stringify(res.getHeaders()));
 };
