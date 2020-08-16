@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { loggerInstance } from "ch-node-session-handler/lib/Logger";
 import logger from "../../../utils/logger";
 import { ApiError } from "./types";
 
