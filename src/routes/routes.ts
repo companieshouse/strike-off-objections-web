@@ -39,9 +39,9 @@ router.post(pageURLs.DOCUMENT_UPLOAD_CONTINUE, documentUploadRoute.postContinueB
 router.get(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.get);
 router.post(pageURLs.REMOVE_DOCUMENT, removeDocumentRoute.post);
 
-router.get(pageURLs.DOCUMENT_DOWNLOAD_ATTACHMENT, documentDownloadRoute.get);
+router.get(pageURLs.DOCUMENT_DOWNLOAD, documentDownloadRoute.get);
 
-router.get(pageURLs.DOCUMENT_DOWNLOAD_ATTACHMENT_LANDING, documentDownloadLandingRoute.get);
+router.get(pageURLs.DOCUMENT_DOWNLOAD_LANDING, documentDownloadLandingRoute.get);
 
 router.get(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.get);
 router.post(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.post);
