@@ -6,10 +6,6 @@ export enum UploadErrorMessages {
 }
 
 export enum DownloadErrorMessages {
-  HEADING_UNAUTHORISED = "Unauthorised",
-  MESSAGE_UNAUTHORISED = "You are not authorised to download this file.",
-  HEADING_FORBIDDEN = "Forbidden",
-  MESSAGE_FORBIDDEN = "This file cannot be downloaded.",
   HEADING_NOT_FOUND = "Not Found",
   MESSAGE_NOT_FOUND = "The file path could not be found.",
 }

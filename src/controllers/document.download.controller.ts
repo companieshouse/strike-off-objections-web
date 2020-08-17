@@ -74,14 +74,8 @@ const prefixFilename = (contentDisposition: string ): string => {
 const showErrorPage = (httpStatus: number, res: Response) => {
   const { UNAUTHORIZED, FORBIDDEN, NOT_FOUND } = HttpStatusCodes;
   switch (httpStatus) {
-    case UNAUTHORIZED: {
-      const { HEADING_UNAUTHORISED, MESSAGE_UNAUTHORISED } = DownloadErrorMessages;
-      return renderFileError(res, HEADING_UNAUTHORISED, MESSAGE_UNAUTHORISED);
-    }
-    case FORBIDDEN: {
-      const { HEADING_FORBIDDEN, MESSAGE_FORBIDDEN } = DownloadErrorMessages;
-      return renderFileError(res, HEADING_FORBIDDEN, MESSAGE_FORBIDDEN);
-    }
+    case UNAUTHORIZED:
+    case FORBIDDEN:
     case NOT_FOUND: {
       const { HEADING_NOT_FOUND, MESSAGE_NOT_FOUND } = DownloadErrorMessages;
       return renderFileError(res, HEADING_NOT_FOUND, MESSAGE_NOT_FOUND);
