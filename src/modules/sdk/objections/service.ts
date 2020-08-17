@@ -29,7 +29,7 @@ const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
  * @throws {ApiError}
  */
 export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
-  logger.info(`Creating a new objection for company number ${companyNumber}`);
+  logger.debug(`Creating a new objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
       HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
@@ -64,6 +64,8 @@ export const addAttachment = async (companyNumber: string,
                                     attachment: Buffer,
                                     fileName: string): Promise<string> => {
 
+  logger.debug(`Adding an attachment to objectionId ${objectionId}`);
+
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST,
     OBJECTIONS_API_ATTACHMENT_URL(companyNumber, objectionId),
@@ -88,6 +90,8 @@ export const getAttachments = async (companyNumber: string,
                                      token: string,
                                      objectionId: string): Promise<Attachment[]> => {
 
+  logger.debug(`Getting attachments for objectionId ${objectionId}`);
+
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_GET,
     OBJECTIONS_API_ATTACHMENT_URL(companyNumber, objectionId),
@@ -101,6 +105,8 @@ export const getAttachment = async (companyNumber: string,
                                     objectionId: string,
                                     attachmentId: string): Promise<Attachment> => {
 
+  logger.debug(`Getting attachment ${attachmentId} from objectionId ${objectionId}`);
+
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
       HTTP_GET,
       OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
@@ -113,6 +119,8 @@ export const deleteAttachment = async (companyNumber: string,
                                        token: string,
                                        objectionId: string,
                                        attachmentId: string): Promise<void> => {
+
+  logger.debug(`Deleting attachment ${attachmentId} from objectionId ${objectionId}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_DELETE,
@@ -132,6 +140,8 @@ export const downloadAttachment = async (downloadUri: string,
 export const getObjection = async (companyNumber: string,
                                    token: string,
                                    objectionId: string): Promise<Objection> => {
+
+  logger.debug(`Getting objection ${objectionId}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
       HTTP_GET,
