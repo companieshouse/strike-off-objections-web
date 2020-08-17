@@ -7,17 +7,17 @@ import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST
 import { Attachment, Objection, ObjectionPatch } from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
-    `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
+  `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
 
 const OBJECTIONS_API_PATCH_OR_GET_URL = (companyNumber: string, objectionId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
+  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
 
 const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
+  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
 const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
     (companyNumber: string, objectionId: string, attachmentId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
+      OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
 
 /**
  * Create a new objection for the given company.
@@ -32,7 +32,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
   logger.info(`Creating a new objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
+    HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
 
   return (await makeAPICall(axiosConfig)).data.id as string;
 };
@@ -47,22 +47,22 @@ export const createNewObjection = async (companyNumber: string, token: string): 
  *
  */
 export const patchObjection = async (
-    companyNumber: string, objectionId: string, token: string, patch: ObjectionPatch) => {
+  companyNumber: string, objectionId: string, token: string, patch: ObjectionPatch) => {
 
   logger.debug(`Patching an objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_PATCH, OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId), token);
+    HTTP_PATCH, OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId), token);
   axiosConfig.data = patch;
 
   await makeAPICall(axiosConfig);
 };
 
 export const addAttachment = async (companyNumber: string,
-                                    token: string,
-                                    objectionId: string,
-                                    attachment: Buffer,
-                                    fileName: string): Promise<string> => {
+  token: string,
+  objectionId: string,
+  attachment: Buffer,
+  fileName: string): Promise<string> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST,
@@ -85,8 +85,8 @@ export const addAttachment = async (companyNumber: string,
 };
 
 export const getAttachments = async (companyNumber: string,
-                                     token: string,
-                                     objectionId: string): Promise<Attachment[]> => {
+  token: string,
+  objectionId: string): Promise<Attachment[]> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_GET,
@@ -97,22 +97,22 @@ export const getAttachments = async (companyNumber: string,
 };
 
 export const getAttachment = async (companyNumber: string,
-                                    token: string,
-                                    objectionId: string,
-                                    attachmentId: string): Promise<Attachment> => {
+  token: string,
+  objectionId: string,
+  attachmentId: string): Promise<Attachment> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_GET,
-      OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
-      token);
+    HTTP_GET,
+    OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
+    token);
   const response = await makeAPICall(axiosConfig);
   return response.data as Attachment;
 };
 
 export const deleteAttachment = async (companyNumber: string,
-                                       token: string,
-                                       objectionId: string,
-                                       attachmentId: string): Promise<void> => {
+  token: string,
+  objectionId: string,
+  attachmentId: string): Promise<void> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_DELETE,
@@ -123,20 +123,20 @@ export const deleteAttachment = async (companyNumber: string,
 };
 
 export const downloadAttachment = async (downloadUri: string,
-                                         httpResponse: Response,
-                                         token: string) => {
+  httpResponse: Response,
+  token: string) => {
   // TODO OBJ-194 implementation
   return Promise.resolve();
 };
 
 export const getObjection = async (companyNumber: string,
-                                   token: string,
-                                   objectionId: string): Promise<Objection> => {
+  token: string,
+  objectionId: string): Promise<Objection> => {
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_GET,
-      OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
-      token);
+    HTTP_GET,
+    OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
+    token);
 
   const response = await makeAPICall(axiosConfig);
 

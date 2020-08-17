@@ -111,7 +111,7 @@ describe("ajax upload responder tests", () => {
   it("should call render error divs on user error", async () => {
     const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                           true, "user");
+      true, "user");
     const attachments: Attachment[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);
@@ -136,7 +136,7 @@ describe("ajax upload responder tests", () => {
 
     const ajaxResponder: UploadResponderStrategy = new AjaxUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                           true, "user");
+      true, "user");
     const attachments: Attachment[] = [];
 
     await ajaxResponder.handleGovUKError(res, errorData, attachments);

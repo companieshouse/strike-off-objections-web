@@ -62,8 +62,8 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Attachment[]} attachments list of uploaded attachments
    */
   public handleGovUKError = async (res: Response,
-                                   errorData: GovUkErrorData,
-                                   attachments: Attachment[]) => {
+    errorData: GovUkErrorData,
+    attachments: Attachment[]) => {
     const replacementDivs: object[] = [];
 
     try {
@@ -73,8 +73,8 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_ERROR_SUMMARY);
 
       await this.renderFragment(res,
-                                Templates.DOCUMENT_UPLOAD_FILE_PICKER,
-                                { attachments, documentUploadErr: errorData })
+        Templates.DOCUMENT_UPLOAD_FILE_PICKER,
+        { attachments, documentUploadErr: errorData })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
 
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);

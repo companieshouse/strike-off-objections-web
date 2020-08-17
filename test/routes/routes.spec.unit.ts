@@ -26,10 +26,10 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    req.session = {
-        data: {},
-    } as Session;
-    return next();
+  req.session = {
+    data: {},
+  } as Session;
+  return next();
 });
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
@@ -46,8 +46,8 @@ describe("Basic URL Tests", () => {
 
   it("should find start page with cookie", async () => {
     const response = await request(app)
-        .get("/strike-off-objections")
-        .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .get("/strike-off-objections")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
@@ -55,7 +55,7 @@ describe("Basic URL Tests", () => {
 
   it("should find start page without cookie", async () => {
     const response = await request(app)
-        .get("/strike-off-objections");
+      .get("/strike-off-objections");
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
@@ -115,14 +115,14 @@ describe("Basic URL Tests", () => {
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
-    address: {
-        line_1: "line1",
-        line_2: "line2",
-        postCode: "post code",
-    },
-    companyName: "Girls school trust",
-    companyNumber: "00006400",
-    companyStatus: "Active",
-    companyType: "limited",
-    incorporationDate: "26 June 1872",
+  address: {
+    line_1: "line1",
+    line_2: "line2",
+    postCode: "post code",
+  },
+  companyName: "Girls school trust",
+  companyNumber: "00006400",
+  companyStatus: "Active",
+  companyType: "limited",
+  incorporationDate: "26 June 1872",
 };

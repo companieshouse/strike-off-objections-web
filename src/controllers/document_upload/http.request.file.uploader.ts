@@ -40,8 +40,8 @@ export interface UploadFileCallbacks {
  * @param {UploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
  */
 export const uploadFile = (req: Request,
-                           maxFileSizeBytes: number,
-                           callbacks: UploadFileCallbacks) => {
+  maxFileSizeBytes: number,
+  callbacks: UploadFileCallbacks) => {
 
   const chunkArray: Buffer[] = [];
 
@@ -56,40 +56,40 @@ export const uploadFile = (req: Request,
 
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",
-            (_fieldName: string,
-             fileStream: Socket,
-             filename: string,
-             _encoding: string,
-             mimeType: string) => {
+    (_fieldName: string,
+      fileStream: Socket,
+      filename: string,
+      _encoding: string,
+      mimeType: string) => {
 
-    // File on data event - fired when a new chunk of data arrives into busboy
-    fileStream.on("data", (chunk: Buffer) => {
-      chunkArray.push(chunk);
-      logger.trace("Received " + chunk.length + " bytes for file " + filename);
-    });
+      // File on data event - fired when a new chunk of data arrives into busboy
+      fileStream.on("data", (chunk: Buffer) => {
+        chunkArray.push(chunk);
+        logger.trace("Received " + chunk.length + " bytes for file " + filename);
+      });
 
-    // File on limit event - fired when file size limit is reached
-    fileStream.on("limit", async () => {
-      fileStream.destroy();
-      return await callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
-    });
+      // File on limit event - fired when file size limit is reached
+      fileStream.on("limit", async () => {
+        fileStream.destroy();
+        return await callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
+      });
 
-    // File on end event - fired when file has finished - could be if file completed fully or ended
-    // prematurely (destroyed / cancelled)
-    fileStream.on("end", async () => {
+      // File on end event - fired when file has finished - could be if file completed fully or ended
+      // prematurely (destroyed / cancelled)
+      fileStream.on("end", async () => {
       // if file ended prematurely - do nothing
-      if (fileStream.destroyed) {
-        return;
-      }
-      const fileData: Buffer = Buffer.concat(chunkArray);
-      logger.debug("Total bytes received for file = " + fileData.length);
-      if (fileData.length === 0) {
-        return await callbacks.noFileDataReceivedCallback(filename);
-      }
+        if (fileStream.destroyed) {
+          return;
+        }
+        const fileData: Buffer = Buffer.concat(chunkArray);
+        logger.debug("Total bytes received for file = " + fileData.length);
+        if (fileData.length === 0) {
+          return await callbacks.noFileDataReceivedCallback(filename);
+        }
 
-      return await callbacks.uploadFinishedCallback(filename, fileData, mimeType);
-    }); // end fileStream.on("end") event
-  }); // end busboy.on("file") event
+        return await callbacks.uploadFinishedCallback(filename, fileData, mimeType);
+      }); // end fileStream.on("end") event
+    }); // end busboy.on("file") event
 
   // send the request to busboy and starts the upload
   req.pipe(busboy);

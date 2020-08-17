@@ -17,9 +17,9 @@ import { OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_REMOVE_DOCUMENT } from "../../sr
 import { deleteAttachment, getAttachment } from "../../src/services/objection.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const REMOVE_DOCUMENT_FORM_FIELD: string = "removeDocument";
-const ATTACHMENT_ID_FORM_FIELD: string = "attachmentId";
-const QUERY_ID: string = "?documentID=attachment1";
+const REMOVE_DOCUMENT_FORM_FIELD = "removeDocument";
+const ATTACHMENT_ID_FORM_FIELD = "attachmentId";
+const QUERY_ID = "?documentID=attachment1";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
 const TEXT_FILE_NAME = "text.txt";
 const dummySession: Session = {
@@ -27,9 +27,9 @@ const dummySession: Session = {
 } as Session;
 
 const dummyAttachment = {
-   id: ATTACHMENT_ID,
-   name: TEXT_FILE_NAME,
- };
+  id: ATTACHMENT_ID,
+  name: TEXT_FILE_NAME,
+};
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -112,7 +112,7 @@ describe("remove document url tests", () => {
       .send({
         [REMOVE_DOCUMENT_FORM_FIELD]: "yes",
         [ATTACHMENT_ID_FORM_FIELD]: ATTACHMENT_ID,
-        },
+      },
       )
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);

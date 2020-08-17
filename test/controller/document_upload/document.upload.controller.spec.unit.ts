@@ -334,8 +334,8 @@ describe ("document.document_upload.controller tests", () => {
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
     expect(mockAddAttachment).toBeCalledWith(dummySession,
-                                             buffer,
-                                             TEXT_FILE_NAME);
+      buffer,
+      TEXT_FILE_NAME);
   });
 
   it ("should return divs html when file uploaded successfully - AJAX", async () => {
@@ -364,8 +364,8 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[1].divHtml).toContain("Add another document");
 
     expect(mockAddAttachment).toBeCalledWith(dummySession,
-                                             buffer,
-                                             TEXT_FILE_NAME);
+      buffer,
+      TEXT_FILE_NAME);
   });
 
   it ("should render error message on 415 error", async (done) => {
@@ -379,10 +379,10 @@ describe ("document.document_upload.controller tests", () => {
     });
 
     const response = await request(app)
-        .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
-        .set("Referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`])
-        .attach("file-upload", buffer, TEXT_FILE_NAME);
+      .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
     expect(response.text).toContain(INVALID_MIME_TYPE);

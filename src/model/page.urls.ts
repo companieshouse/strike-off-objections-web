@@ -4,7 +4,7 @@ import { Templates } from "./template.paths";
  * Keep template names in template.paths.ts and reference them in here for URLs
  */
 
-const SEPARATOR: string = "/";
+const SEPARATOR = "/";
 
 export const STRIKE_OFF_OBJECTIONS: string = SEPARATOR + "strike-off-objections";
 export const COMPANY_NUMBER: string = SEPARATOR + Templates.COMPANY_NUMBER;
@@ -13,7 +13,7 @@ export const ENTER_INFORMATION: string = SEPARATOR + Templates.ENTER_INFORMATION
 export const DOCUMENT_UPLOAD: string = SEPARATOR + Templates.DOCUMENT_UPLOAD;
 export const DOCUMENT_UPLOAD_CONTINUE: string = SEPARATOR + "document-upload-continue"; // not a template
 export const REMOVE_DOCUMENT: string = SEPARATOR + Templates.REMOVE_DOCUMENT + "/:attachmentId";
-export const DOWNLOAD_ATTACHMENT: string =
+export const DOWNLOAD_ATTACHMENT =
   "/company/:companyId/strike-off-objections/:requestId/attachments/:attachmentId/download";
 export const DOWNLOAD_PREFIX: string = SEPARATOR + "download";
 export const DOWNLOAD_ATTACHMENT_LANDING: string = DOWNLOAD_PREFIX + DOWNLOAD_ATTACHMENT;

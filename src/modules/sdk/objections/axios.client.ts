@@ -16,7 +16,7 @@ export const HTTP_DELETE: Method = "delete";
  * @param {string} bearerToken token for API call
  */
 export const getBaseAxiosRequestConfig = (
-    httpMethod: Method, url: string, bearerToken: string): AxiosRequestConfig => {
+  httpMethod: Method, url: string, bearerToken: string): AxiosRequestConfig => {
   return {
     headers: {
       Accept: "application/json",

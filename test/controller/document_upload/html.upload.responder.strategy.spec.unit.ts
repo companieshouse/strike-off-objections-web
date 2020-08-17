@@ -50,7 +50,7 @@ describe("html upload responder tests", () => {
   it("should call render on user error", () => {
     const htmlResponder: HtmlUploadResponderStrategy = new HtmlUploadResponderStrategy();
     const errorData: GovUkErrorData = createGovUkErrorData("Oh Noes", "#upload",
-                                                           true, "user");
+      true, "user");
     const attachments: Attachment[] = [];
 
     htmlResponder.handleGovUKError(res, errorData, attachments);

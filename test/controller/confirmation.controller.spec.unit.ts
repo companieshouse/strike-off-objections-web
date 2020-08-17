@@ -26,7 +26,7 @@ const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
 const SESSION: Session = {
-    data: {},
+  data: {},
 } as Session;
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
@@ -44,8 +44,8 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
-const email: string = "mttest@test.co.uk";
-const OBJECTION_ID: string = "a1b2c3";
+const email = "mttest@test.co.uk";
+const OBJECTION_ID = "a1b2c3";
 
 describe("confirmation screen tests", () => {
   it("should land on confirmation screen with submitted message and correct details", async () => {

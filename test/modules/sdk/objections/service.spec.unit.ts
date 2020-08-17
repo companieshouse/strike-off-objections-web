@@ -99,12 +99,12 @@ describe("objections SDK service unit tests", () => {
       },
     });
 
-    const fileName: string = "fileName";
+    const fileName = "fileName";
     const BUFFER = Buffer.from("Buffer");
     const STREAMS_DATA_PARAMATER = "_streams";
     const attachmentId: string = await objectionsSdk.addAttachment(COMPANY_NUMBER,
-        ACCESS_TOKEN,
-        OBJECTION_ID,
+      ACCESS_TOKEN,
+      OBJECTION_ID,
       BUFFER,
       fileName,
     );
@@ -193,8 +193,8 @@ describe("objections SDK service unit tests", () => {
       });
 
     const returnedObjection: Objection = await objectionsSdk.getObjection(COMPANY_NUMBER,
-        ACCESS_TOKEN,
-        OBJECTION_ID);
+      ACCESS_TOKEN,
+      OBJECTION_ID);
 
     expect(returnedObjection).toStrictEqual(dummyObjection);
     expect(mockMakeAPICall).toBeCalled();
