@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
-import { Response } from "express";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
+import { Download } from "../modules/sdk/objections";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { Attachment, Objection } from "../modules/sdk/objections";
 import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections";
@@ -95,17 +95,19 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
 };
 
 /**
- * Downloads file from the provided uri
- * @param {string} downloadUri the uri of the file to download
+ * Downloads attachment from the provided api url
+ *
+ * @param {string} downloadUrl the url of the attachment to download through api
  * @param {Session} session the web session
- * @param {Response} httpResponse the http response to stream the file directly to
+ * @returns {Download} wrapper object containing the file data and file header info
+ * @throws {ApiError} if the download failed
  */
-export const downloadAttachment = async (downloadUri: string, session: Session, httpResponse: Response) => {
-  const { token } = getValuesForApiCall(session);
+export const downloadAttachment = async (downloadUrl: string, session: Session): Promise<Download> => {
+  const token: string = retrieveAccessTokenFromSession(session);
 
-  logger.info(`Downloading from ${downloadUri}`);
+  logger.info(`Downloading objection attachment from ${downloadUrl}`);
 
-  return await objectionsSdk.downloadAttachment(downloadUri, httpResponse, token);
+  return await objectionsSdk.downloadAttachment(downloadUrl, token);
 };
 
 /**
@@ -129,6 +131,7 @@ export const getObjection = async (session: Session): Promise<Objection> => {
  * @returns { string, string, string } { objectionId, companyNumber, token } the values for the api
  */
 const getValuesForApiCall = (session: Session) => {
+  logger.info("Getting session values for Api call");
   const companyProfileInSession: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
   const companyNumber: string = companyProfileInSession.companyNumber;
   const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
