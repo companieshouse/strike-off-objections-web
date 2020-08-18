@@ -22,7 +22,9 @@
             "error",
             2,
             {"FunctionExpression": {"parameters": "first"},
-             "CallExpression": {"arguments":  "first"}}
+             "CallExpression": {"arguments":  "first"},
+             "outerIIFEBody": 2,
+             "SwitchCase": 2}
         ],
         "eqeqeq": "error",
         "curly": "error",

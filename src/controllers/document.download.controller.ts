@@ -74,15 +74,15 @@ const prefixFilename = (contentDisposition: string ): string => {
 const showErrorPage = (httpStatus: number, res: Response) => {
   const { UNAUTHORIZED, FORBIDDEN, NOT_FOUND } = HttpStatusCodes;
   switch (httpStatus) {
-  case UNAUTHORIZED:
-  case FORBIDDEN:
-  case NOT_FOUND: {
-    const { HEADING_NOT_FOUND, MESSAGE_NOT_FOUND } = DownloadErrorMessages;
-    return renderFileError(res, HEADING_NOT_FOUND, MESSAGE_NOT_FOUND);
-  }
-  default: {
-    return res.render(Templates.ERROR);
-  }
+      case UNAUTHORIZED:
+      case FORBIDDEN:
+      case NOT_FOUND: {
+        const { HEADING_NOT_FOUND, MESSAGE_NOT_FOUND } = DownloadErrorMessages;
+        return renderFileError(res, HEADING_NOT_FOUND, MESSAGE_NOT_FOUND);
+      }
+      default: {
+        return res.render(Templates.ERROR);
+      }
   }
 };
 
