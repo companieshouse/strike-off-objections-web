@@ -1,10 +1,17 @@
-import { AxiosRequestConfig } from "axios";
-import { Response } from "express";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import FormData from "form-data";
 import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
-import { Attachment, Objection, ObjectionPatch } from "./types";
+import {
+  Attachment,
+  Download,
+  HEADER_CONTENT_DISPOSITION,
+  HEADER_CONTENT_LENGTH,
+  HEADER_CONTENT_TYPE,
+  Objection,
+  ObjectionPatch,
+} from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
     `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
@@ -122,11 +129,40 @@ export const deleteAttachment = async (companyNumber: string,
   return;
 };
 
-export const downloadAttachment = async (downloadUri: string,
-                                         httpResponse: Response,
-                                         token: string) => {
-  // TODO OBJ-194 implementation
-  return Promise.resolve();
+/**
+ * Download attachment from supplied url
+ *
+ * @param {string} downloadApiUrl the url of the attachment to download through api
+ * @param {string} token the security access token to use for the api call
+ * @returns {Download} wrapper object containing the file data and file header info
+ * @throws {ApiError} if download fails
+ */
+export const downloadAttachment = async (downloadApiUrl: string,
+                                         token: string): Promise<Download> => {
+  logger.debug(`Downloading attachment from ${downloadApiUrl}`);
+
+  const config: AxiosRequestConfig = {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    proxy: false,
+  };
+  config.method = HTTP_GET;
+  config.url = `${INTERNAL_API_URL}${downloadApiUrl}`;
+  config.responseType = "stream";
+
+  const axiosResponse: AxiosResponse = await makeAPICall(config);
+
+  logger.debug("download - axios response headers = " + JSON.stringify(axiosResponse.headers));
+
+  return {
+    data: axiosResponse.data,
+    headers: {
+      [HEADER_CONTENT_DISPOSITION]: axiosResponse.headers[HEADER_CONTENT_DISPOSITION],
+      [HEADER_CONTENT_LENGTH]: axiosResponse.headers[HEADER_CONTENT_LENGTH],
+      [HEADER_CONTENT_TYPE]: axiosResponse.headers[HEADER_CONTENT_TYPE],
+    },
+  } as Download;
 };
 
 export const getObjection = async (companyNumber: string,

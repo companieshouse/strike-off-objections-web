@@ -3,10 +3,16 @@ jest.mock("../../../../src/utils/logger");
 
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { ApiError } from "../../../../src/modules/sdk/objections";
-import { getBaseAxiosRequestConfig, HTTP_POST, makeAPICall, STATUS_NO_RESPONSE } from "../../../../src/modules/sdk/objections/axios.client";
+import {
+  getBaseAxiosRequestConfig,
+  HTTP_POST,
+  makeAPICall,
+  STATUS_NO_RESPONSE,
+} from "../../../../src/modules/sdk/objections/axios.client";
 import logger from "../../../../src/utils/logger";
 
 const mockAxiosRequest = axios.request as jest.Mock;
+const mockJSONStringify = JSON.stringify = jest.fn();
 
 const dummyAxiosResponse: AxiosResponse<any> = {
   config: {},
@@ -24,6 +30,7 @@ describe("axios client tests", () => {
 
   beforeEach(() => {
     mockAxiosRequest.mockClear();
+    mockJSONStringify.mockClear();
   });
 
   it("should return axios config with the correct fields", () => {
@@ -93,5 +100,17 @@ describe("axios client tests", () => {
 
     await expect(makeAPICall(config)).rejects.toStrictEqual(expectedError);
     expect(logger.error).toHaveBeenCalledWith(expect.stringContaining(ERROR_MSG_PREFIX));
+  });
+
+  it("should recover when logging out axios response throws an error", async () => {
+    const err = new Error("hello");
+    mockJSONStringify.mockImplementationOnce(() => { throw err; });
+
+    const config: AxiosRequestConfig = {};
+    dummyAxiosResponse.status = 200;
+    const response: AxiosResponse = await makeAPICall(config);
+
+    expect(logger.debug).toBeCalledWith(expect.stringContaining(err.message));
+    expect(response.status).toEqual(200);
   });
 });
