@@ -73,8 +73,8 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_ERROR_SUMMARY);
 
       await this.renderFragment(res,
-        Templates.DOCUMENT_UPLOAD_FILE_PICKER,
-        { attachments, documentUploadErr: errorData })
+                                Templates.DOCUMENT_UPLOAD_FILE_PICKER,
+                                { attachments, documentUploadErr: errorData })
         .then((html: string) => this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
 
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
@@ -100,14 +100,14 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
   private renderFragment = async (res: Response, view: string, options: object): Promise<string> => {
     return new Promise((resolve, reject) => {
       res.render(view,
-        options,
-        (err: Error, html: string) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(html);
-          }
-        });
+                 options,
+                 (err: Error, html: string) => {
+                   if (err) {
+                     reject(err);
+                   } else {
+                     resolve(html);
+                   }
+                 });
     });
   }
 }

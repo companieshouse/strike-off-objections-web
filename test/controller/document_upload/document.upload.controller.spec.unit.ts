@@ -330,8 +330,8 @@ describe ("document.document_upload.controller tests", () => {
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
     expect(mockAddAttachment).toBeCalledWith(dummySession,
-      buffer,
-      TEXT_FILE_NAME);
+                                             buffer,
+                                             TEXT_FILE_NAME);
   });
 
   it ("should return divs html when file uploaded successfully - AJAX", async () => {
@@ -360,8 +360,8 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[1].divHtml).toContain("Add another document");
 
     expect(mockAddAttachment).toBeCalledWith(dummySession,
-      buffer,
-      TEXT_FILE_NAME);
+                                             buffer,
+                                             TEXT_FILE_NAME);
   });
 
   it ("should render error message on 415 error", async (done) => {

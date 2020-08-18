@@ -74,32 +74,32 @@ describe("document download controller unit tests", () => {
     const status = 401;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-      "Not Found",
-      "The file path could not be found.");
+                          "Not Found",
+                          "The file path could not be found.");
   });
 
   it("should show correct error message to user when download from API returns status 403", async () => {
     const status = 403;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-      "Not Found",
-      "The file path could not be found.");
+                          "Not Found",
+                          "The file path could not be found.");
   });
 
   it("should show correct error message to user when download from API returns status 404", async () => {
     const status = 404;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-      "Not Found",
-      "The file path could not be found.");
+                          "Not Found",
+                          "The file path could not be found.");
   });
 
   it("should show generic error page to user when error thrown with no http status ", async () => {
     mockDownloadAttachment.mockRejectedValueOnce(new Error("Oops"));
 
     await testErrorScreen(500,
-      "Sorry, there is a problem with the service",
-      "Try again later.");
+                          "Sorry, there is a problem with the service",
+                          "Try again later.");
   });
 });
 

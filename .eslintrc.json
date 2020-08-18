@@ -18,7 +18,12 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": ["error", 2, {"FunctionExpression": {"parameters": "first"}}],
+        "indent": [
+            "error",
+            2,
+            {"FunctionExpression": {"parameters": "first"},
+             "CallExpression": {"arguments":  "first"}}
+        ],
         "eqeqeq": "error",
         "curly": "error",
         "require-await": "warn",

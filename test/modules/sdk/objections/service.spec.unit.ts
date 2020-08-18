@@ -117,10 +117,10 @@ describe("objections SDK service unit tests", () => {
     const BUFFER = Buffer.from("Buffer");
     const STREAMS_DATA_PARAMATER = "_streams";
     const attachmentId: string = await objectionsSdk.addAttachment(COMPANY_NUMBER,
-      ACCESS_TOKEN,
-      OBJECTION_ID,
-      BUFFER,
-      fileName,
+                                                                   ACCESS_TOKEN,
+                                                                   OBJECTION_ID,
+                                                                   BUFFER,
+                                                                   fileName,
     );
 
     expect(attachmentId).toBeDefined();
@@ -188,9 +188,9 @@ describe("objections SDK service unit tests", () => {
 
   it("should call objections API deleting single attachment", async () => {
     await objectionsSdk.deleteAttachment(COMPANY_NUMBER,
-      ACCESS_TOKEN,
-      OBJECTION_ID,
-      ATTACHMENT_ID);
+                                         ACCESS_TOKEN,
+                                         OBJECTION_ID,
+                                         ATTACHMENT_ID);
 
     expect(mockMakeAPICall).toBeCalled();
 
@@ -207,8 +207,8 @@ describe("objections SDK service unit tests", () => {
       });
 
     const returnedObjection: Objection = await objectionsSdk.getObjection(COMPANY_NUMBER,
-      ACCESS_TOKEN,
-      OBJECTION_ID);
+                                                                          ACCESS_TOKEN,
+                                                                          OBJECTION_ID);
 
     expect(returnedObjection).toStrictEqual(dummyObjection);
     expect(mockMakeAPICall).toBeCalled();

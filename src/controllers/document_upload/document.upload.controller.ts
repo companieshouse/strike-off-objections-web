@@ -35,10 +35,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   return res.render(Templates.DOCUMENT_UPLOAD,
-    {
-      attachments,
-      templateName: Templates.DOCUMENT_UPLOAD,
-    });
+                    {
+                      attachments,
+                      templateName: Templates.DOCUMENT_UPLOAD,
+                    });
 };
 
 /**

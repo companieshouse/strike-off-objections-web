@@ -17,7 +17,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const attachment: Attachment = await getAttachment(session, attachmentId);
     logger.debugRequest(req,
-      `Showing remove documents page for attachmentId ${attachmentId}, name: ${attachment.name}`);
+                        `Showing remove documents page for attachmentId ${attachmentId}, name: ${attachment.name}`);
 
     return res.render(Templates.REMOVE_DOCUMENT, {
       attachmentId,
