@@ -34,10 +34,10 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
   return next();
 });
 
-const PREFIXED_CONTENT_DISPOSITION_VALUE: string = "attachment; filename=\"CH_SO_OBJ_test.pdf\"";
-const CONTENT_DISPOSITION_VALUE: string = "attachment; filename=\"test.pdf\"";
-const CONTENT_TYPE_VALUE: string = "application/pdf";
-const CONTENT_LENGTH_VALUE: string = "55621";
+const PREFIXED_CONTENT_DISPOSITION_VALUE = "attachment; filename=\"CH_SO_OBJ_test.pdf\"";
+const CONTENT_DISPOSITION_VALUE = "attachment; filename=\"test.pdf\"";
+const CONTENT_TYPE_VALUE = "application/pdf";
+const CONTENT_LENGTH_VALUE = "55621";
 
 describe("document download controller unit tests", () => {
 
@@ -74,32 +74,32 @@ describe("document download controller unit tests", () => {
     const status = 401;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+      "Not Found",
+      "The file path could not be found.");
   });
 
   it("should show correct error message to user when download from API returns status 403", async () => {
     const status = 403;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+      "Not Found",
+      "The file path could not be found.");
   });
 
   it("should show correct error message to user when download from API returns status 404", async () => {
     const status = 404;
     mockDownloadAttachment.mockRejectedValueOnce({status} as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+      "Not Found",
+      "The file path could not be found.");
   });
 
   it("should show generic error page to user when error thrown with no http status ", async () => {
     mockDownloadAttachment.mockRejectedValueOnce(new Error("Oops"));
 
     await testErrorScreen(500,
-                          "Sorry, there is a problem with the service",
-                          "Try again later.");
+      "Sorry, there is a problem with the service",
+      "Try again later.");
   });
 });
 

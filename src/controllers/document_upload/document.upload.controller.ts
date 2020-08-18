@@ -103,9 +103,9 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
  * @returns {(filename: string, maxInBytes: number): void} the callback function
  */
 const getFileSizeLimitExceededCallback = (req: Request,
-  res: Response,
-  uploadResponderStrategy: UploadResponderStrategy,
-  attachments: Attachment[]):
+                                          res: Response,
+                                          uploadResponderStrategy: UploadResponderStrategy,
+                                          attachments: Attachment[]):
                                             (filename: string, maxInBytes: number) => Promise<void> => {
   return async (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
@@ -124,9 +124,9 @@ const getFileSizeLimitExceededCallback = (req: Request,
  * @returns {(filename: string): void} the callback function
  */
 const getNoFileDataReceivedCallback = (req: Request,
-  res: Response,
-  uploadResponderStrategy: UploadResponderStrategy,
-  attachments: Attachment[]): (filename: string) => Promise<void> => {
+                                       res: Response,
+                                       uploadResponderStrategy: UploadResponderStrategy,
+                                       attachments: Attachment[]): (filename: string) => Promise<void> => {
   return async (_filename: string) => {
     return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
@@ -142,10 +142,10 @@ const getNoFileDataReceivedCallback = (req: Request,
  * @returns {(filename: string, fileData: Buffer, mimeType: string): Promise<void>} the callback function
  */
 const getUploadFinishedCallback = (req: Request,
-  res: Response,
-  next: NextFunction,
-  uploadResponderStrategy: UploadResponderStrategy,
-  attachments: Attachment[]):
+                                   res: Response,
+                                   next: NextFunction,
+                                   uploadResponderStrategy: UploadResponderStrategy,
+                                   attachments: Attachment[]):
                                     (filename: string, fileData: Buffer, mimeType: string) => Promise<void> => {
   return async (filename: string, fileData: Buffer, mimeType: string) => {
     try {
@@ -175,9 +175,9 @@ const getUploadFinishedCallback = (req: Request,
  * @param {Attachment[]} attachments the list of attachments
  */
 const displayError = async (res: Response,
-  errorMessage: string,
-  uploadResponderStrategy: UploadResponderStrategy,
-  attachments: Attachment[]) => {
+                            errorMessage: string,
+                            uploadResponderStrategy: UploadResponderStrategy,
+                            attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
   return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);

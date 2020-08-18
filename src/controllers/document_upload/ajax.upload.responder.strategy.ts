@@ -62,8 +62,8 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Attachment[]} attachments list of uploaded attachments
    */
   public handleGovUKError = async (res: Response,
-    errorData: GovUkErrorData,
-    attachments: Attachment[]) => {
+                                   errorData: GovUkErrorData,
+                                   attachments: Attachment[]) => {
     const replacementDivs: object[] = [];
 
     try {

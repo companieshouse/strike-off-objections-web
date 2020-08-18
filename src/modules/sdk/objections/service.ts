@@ -66,10 +66,10 @@ export const patchObjection = async (
 };
 
 export const addAttachment = async (companyNumber: string,
-  token: string,
-  objectionId: string,
-  attachment: Buffer,
-  fileName: string): Promise<string> => {
+                                    token: string,
+                                    objectionId: string,
+                                    attachment: Buffer,
+                                    fileName: string): Promise<string> => {
 
   logger.debug(`Adding an attachment to objectionId ${objectionId}`);
 
@@ -94,8 +94,8 @@ export const addAttachment = async (companyNumber: string,
 };
 
 export const getAttachments = async (companyNumber: string,
-  token: string,
-  objectionId: string): Promise<Attachment[]> => {
+                                     token: string,
+                                     objectionId: string): Promise<Attachment[]> => {
 
   logger.debug(`Getting attachments for objectionId ${objectionId}`);
 
@@ -108,9 +108,9 @@ export const getAttachments = async (companyNumber: string,
 };
 
 export const getAttachment = async (companyNumber: string,
-  token: string,
-  objectionId: string,
-  attachmentId: string): Promise<Attachment> => {
+                                    token: string,
+                                    objectionId: string,
+                                    attachmentId: string): Promise<Attachment> => {
 
   logger.debug(`Getting attachment ${attachmentId} from objectionId ${objectionId}`);
 
@@ -123,9 +123,9 @@ export const getAttachment = async (companyNumber: string,
 };
 
 export const deleteAttachment = async (companyNumber: string,
-  token: string,
-  objectionId: string,
-  attachmentId: string): Promise<void> => {
+                                       token: string,
+                                       objectionId: string,
+                                       attachmentId: string): Promise<void> => {
 
   logger.debug(`Deleting attachment ${attachmentId} from objectionId ${objectionId}`);
 
@@ -174,8 +174,8 @@ export const downloadAttachment = async (downloadApiUrl: string,
 };
 
 export const getObjection = async (companyNumber: string,
-  token: string,
-  objectionId: string): Promise<Objection> => {
+                                   token: string,
+                                   objectionId: string): Promise<Objection> => {
 
   logger.debug(`Getting objection ${objectionId}`);
 

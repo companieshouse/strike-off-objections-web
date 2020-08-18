@@ -40,8 +40,8 @@ export interface UploadFileCallbacks {
  * @param {UploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
  */
 export const uploadFile = (req: Request,
-  maxFileSizeBytes: number,
-  callbacks: UploadFileCallbacks) => {
+                           maxFileSizeBytes: number,
+                           callbacks: UploadFileCallbacks) => {
 
   const chunkArray: Buffer[] = [];
 
@@ -57,10 +57,10 @@ export const uploadFile = (req: Request,
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",
     (_fieldName: string,
-      fileStream: Socket,
-      filename: string,
-      _encoding: string,
-      mimeType: string) => {
+     fileStream: Socket,
+     filename: string,
+     _encoding: string,
+     mimeType: string) => {
 
       // File on data event - fired when a new chunk of data arrives into busboy
       fileStream.on("data", (chunk: Buffer) => {
