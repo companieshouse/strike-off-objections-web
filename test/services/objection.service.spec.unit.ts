@@ -2,7 +2,6 @@ jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/services/objection.session.service");
 
 import { Session } from "ch-node-session-handler";
-import { Response } from "express";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
@@ -21,7 +20,7 @@ const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
 const mockRetrieveProfileFromSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
-const mockDownloadAttachment = objectionsSdk.downloadAttachment as jest.Mock;
+const mockSdkDownloadAttachment = objectionsSdk.downloadAttachment as jest.Mock;
 
 const mockGetAttachments = objectionsSdk.getAttachments as jest.Mock;
 const mockGetAttachment = objectionsSdk.getAttachment as jest.Mock;
@@ -158,12 +157,26 @@ describe("objections API service unit tests", () => {
     expect(mockDeleteAttachment).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, NEW_OBJECTION_ID, ATTACHMENT_ID);
   });
 
-  it("should call sdk when downloading attachment", async () => {
+  it("should call sdk with correct args when downloading attachment", async () => {
     const downloadUri = "/download";
-    const res = {} as Response;
-    await objectionsService.downloadAttachment(downloadUri, session, res);
+    await objectionsService.downloadAttachment(downloadUri, session);
 
-    expect(mockDownloadAttachment).toBeCalledWith(downloadUri, res, ACCESS_TOKEN);
+    expect(mockSdkDownloadAttachment).toBeCalledWith(downloadUri, ACCESS_TOKEN);
+  });
+
+  it("should throw ApiError if downloading file fails", async () => {
+    const apiError: objectionsSdk.ApiError = {
+      data: {
+        errors: ["download failed"],
+      },
+      message: "Not Found",
+      status: 404,
+    };
+
+    mockSdkDownloadAttachment.mockRejectedValueOnce(apiError);
+
+    await expect(objectionsService.downloadAttachment("/download/something", session))
+      .rejects.toStrictEqual(apiError);
   });
 
   it("should return an objection when requested", async () => {

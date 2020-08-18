@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
+import { loggerInstance } from "ch-node-session-handler/lib/Logger";
 import logger from "../../../utils/logger";
 import { ApiError } from "./types";
 
@@ -38,11 +39,17 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
   try {
     logger.debug(`Calling ${config.method} ${config.url}`);
     const axiosResponse: AxiosResponse = await axios.request<any>(config);
-    logger.debug(`data returned from axios api call : ${JSON.stringify(axiosResponse.data, null, 2)}`);
+    try {
+      logger.debug(`axios response from api call : ${JSON.stringify(axiosResponse, null, 2)}`);
+    } catch (logErr) {
+      // Downloads contain circular object references so can't be Json parsed causing error to be thrown
+      // we don't want the log to fill up with these errors for each download so just logger.debug it
+      logger.debug(`Unable to log axios response - ${logErr}`);
+    }
     return axiosResponse;
-  } catch (err) {
-    logger.error(`ERROR calling API ${JSON.stringify(err, null, 2)}`);
-    const axiosError = err as AxiosError;
+  } catch (apiErr) {
+    logger.error(`ERROR calling API ${apiErr}`);
+    const axiosError = apiErr as AxiosError;
     const { response, message } = axiosError;
     throw {
       data: response ? response.data.errors : [],
