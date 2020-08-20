@@ -110,7 +110,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
   return async (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
-    const errorMsg = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
+    const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
     return await displayError(res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
@@ -158,8 +158,7 @@ const getUploadFinishedCallback = (req: Request,
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
       if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
-        return await
-        displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+        return await displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
       return uploadResponderStrategy.handleGenericError(res, e, next);
     }
