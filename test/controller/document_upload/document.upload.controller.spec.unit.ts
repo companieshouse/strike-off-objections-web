@@ -26,8 +26,7 @@ import {
 import { addAttachment, getAttachments } from "../../../src/services/objection.service";
 import { COOKIE_NAME } from "../../../src/utils/properties";
 
-////////////////////////////////
-// Constants
+/* Constants */
 
 const COMPANY_NUMBER = "00006400";
 const EXPECTED_MAX_FILE_SIZE_MESSAGE = "File size must be smaller than 0 MB";
@@ -44,8 +43,7 @@ const CLASS_ERROR_SUMMARY = "govuk-error-summary";
 const CLASS_ERROR_MESSAGE = "govuk-error-message";
 const INVALID_MIME_TYPE = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG, PDF, DOCX or XLSX";
 
-////////////////////////////////
-// Dummy Objects
+/* Dummy Objects */
 
 const dummySession: Session = {
   data: {},
@@ -62,8 +60,7 @@ const dummyAttachments = [
   },
 ];
 
-////////////////////////////////
-// Mocks
+/* Mocks */
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -86,8 +83,7 @@ const mockAddAttachment = addAttachment as jest.Mock;
 
 const mockGetAttachments = getAttachments as jest.Mock;
 
-////////////////////////////////
-// Tests
+/* Tests */
 
 describe ("document.document_upload.controller tests", () => {
   beforeEach(() => {
@@ -379,10 +375,10 @@ describe ("document.document_upload.controller tests", () => {
     });
 
     const response = await request(app)
-        .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
-        .set("Referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`])
-        .attach("file-upload", buffer, TEXT_FILE_NAME);
+      .post(pageURLs.OBJECTIONS_DOCUMENT_UPLOAD)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .attach("file-upload", buffer, TEXT_FILE_NAME);
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
     expect(response.text).toContain(INVALID_MIME_TYPE);

@@ -31,9 +31,9 @@ describe("company profile service unit tests", () => {
   it("returns a 400 status code when company is not found", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(notFoundSDKResponse);
     try {
-        await getCompanyProfile("", ACCESS_TOKEN);
+      await getCompanyProfile("", ACCESS_TOKEN);
     } catch (e) {
-        expect(e.status).toEqual(400);
+      expect(e.status).toEqual(400);
     }
     expect.assertions(1);
   });
@@ -44,8 +44,8 @@ const dummySDKResponse: Resource<CompanyProfile> = {
   resource: {
     accounts: {
       nextAccounts: {
-          periodEndOn: "2019-10-10",
-          periodStartOn: "2019-01-01",
+        periodEndOn: "2019-10-10",
+        periodStartOn: "2019-01-01",
       },
       nextDue: "2020-05-31",
       overdue: false,
@@ -80,7 +80,7 @@ const dummySDKResponse: Resource<CompanyProfile> = {
 };
 
 const notFoundSDKResponse: any = {
-    httpStatusCode: 400,
+  httpStatusCode: 400,
 };
 
 const expectedProfile: ObjectionCompanyProfile = {

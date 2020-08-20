@@ -34,10 +34,10 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
   return next();
 });
 
-const PREFIXED_CONTENT_DISPOSITION_VALUE: string = "attachment; filename=\"CH_SO_OBJ_test.pdf\"";
-const CONTENT_DISPOSITION_VALUE: string = "attachment; filename=\"test.pdf\"";
-const CONTENT_TYPE_VALUE: string = "application/pdf";
-const CONTENT_LENGTH_VALUE: string = "55621";
+const PREFIXED_CONTENT_DISPOSITION_VALUE = "attachment; filename=\"CH_SO_OBJ_test.pdf\"";
+const CONTENT_DISPOSITION_VALUE = "attachment; filename=\"test.pdf\"";
+const CONTENT_TYPE_VALUE = "application/pdf";
+const CONTENT_LENGTH_VALUE = "55621";
 
 describe("document download controller unit tests", () => {
 

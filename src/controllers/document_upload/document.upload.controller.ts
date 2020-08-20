@@ -35,10 +35,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   return res.render(Templates.DOCUMENT_UPLOAD,
-    {
-      attachments,
-      templateName: Templates.DOCUMENT_UPLOAD,
-    });
+                    {
+                      attachments,
+                      templateName: Templates.DOCUMENT_UPLOAD,
+                    });
 };
 
 /**
@@ -158,8 +158,7 @@ const getUploadFinishedCallback = (req: Request,
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
       if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
-        return await
-          displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+        return await displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
       return uploadResponderStrategy.handleGenericError(res, e, next);
     }

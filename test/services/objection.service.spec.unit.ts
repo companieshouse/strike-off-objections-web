@@ -39,14 +39,13 @@ const mockAttachments = [
 ];
 
 const mockAttachment = {
-    id: "abc123",
-    name: "test.doc",
+  id: "abc123",
+  name: "test.doc",
 };
 
 const mockObjection = {
   attachments: [
-    {
-      id: "ATT001",
+    { id: "ATT001",
       name: "attachment.jpg",
     },
     {
@@ -113,7 +112,7 @@ describe("objections API service unit tests", () => {
     await objectionsService.submitObjection(session);
 
     expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN,
-        { status: ObjectionStatus.SUBMITTED });
+                                              { status: ObjectionStatus.SUBMITTED });
   });
 
   it("returns an id when a new attachment is added", async () => {
@@ -122,34 +121,34 @@ describe("objections API service unit tests", () => {
     const FILE_NAME = "test_file";
     const BUFFER = Buffer.from("Test buffer");
     const attachmentId: string = await objectionsService.addAttachment(session,
-        BUFFER,
-        FILE_NAME );
+                                                                       BUFFER,
+                                                                       FILE_NAME );
 
     expect(attachmentId).toBeDefined();
     expect(typeof attachmentId).toBe("string");
     expect(attachmentId).toStrictEqual(NEW_ATTACHMENT_ID);
 
     expect(mockAddAttachment).toBeCalledWith(dummyCompanyProfile.companyNumber,
-      ACCESS_TOKEN,
-      NEW_OBJECTION_ID,
-      BUFFER,
-      FILE_NAME);
+                                             ACCESS_TOKEN,
+                                             NEW_OBJECTION_ID,
+                                             BUFFER,
+                                             FILE_NAME);
   });
 
   it("should return list of attachment objects when getting attachments for an object", async () => {
     const attachmentsList: Attachment[] = await objectionsService.getAttachments(session);
     expect(mockGetAttachments).toBeCalledWith(dummyCompanyProfile.companyNumber,
-        ACCESS_TOKEN,
-        NEW_OBJECTION_ID);
+                                              ACCESS_TOKEN,
+                                              NEW_OBJECTION_ID);
     expect(attachmentsList).toEqual(mockAttachments);
   });
 
   it("should return single attachment object when getting an attachment for an object", async () => {
     const attachment: Attachment = await objectionsService.getAttachment(session, ATTACHMENT_ID);
     expect(mockGetAttachment).toBeCalledWith(dummyCompanyProfile.companyNumber,
-        ACCESS_TOKEN,
-        NEW_OBJECTION_ID,
-        ATTACHMENT_ID);
+                                             ACCESS_TOKEN,
+                                             NEW_OBJECTION_ID,
+                                             ATTACHMENT_ID);
     expect(attachment).toEqual(mockAttachment);
   });
 
@@ -183,8 +182,8 @@ describe("objections API service unit tests", () => {
   it("should return an objection when requested", async () => {
     const objection: Objection = await objectionsService.getObjection(session);
     expect(mockGetObjection).toBeCalledWith(dummyCompanyProfile.companyNumber,
-        ACCESS_TOKEN,
-        NEW_OBJECTION_ID);
+                                            ACCESS_TOKEN,
+                                            NEW_OBJECTION_ID);
     expect(objection).toEqual(mockObjection);
   });
 });

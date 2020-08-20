@@ -39,7 +39,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
  * @param {string} objectionReason reason why the user is objecting to strike-off
  */
 export const updateObjectionReason = async (
-    companyNumber: string, objectionId: string, token: string, objectionReason: string) => {
+  companyNumber: string, objectionId: string, token: string, objectionReason: string) => {
 
   logger.info(`Updating objection reason for objectionId ${objectionId}`);
 

@@ -6,8 +6,8 @@ import { Attachment } from "../modules/sdk/objections";
 import { deleteAttachment, getAttachment } from "../services/objection.service";
 import logger from "../utils/logger";
 
-const REMOVE_DOCUMENT_FORM_FIELD: string = "removeDocument";
-const ATTACHMENT_ID_FIELD: string = "attachmentId";
+const REMOVE_DOCUMENT_FORM_FIELD = "removeDocument";
+const ATTACHMENT_ID_FIELD = "attachmentId";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,10 +20,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
                         `Showing remove documents page for attachmentId ${attachmentId}, name: ${attachment.name}`);
 
     return res.render(Templates.REMOVE_DOCUMENT, {
-        attachmentId,
-        fileName: attachment.name,
-        templateName: Templates.REMOVE_DOCUMENT,
-      });
+      attachmentId,
+      fileName: attachment.name,
+      templateName: Templates.REMOVE_DOCUMENT,
+    });
   } catch (e) {
     logger.errorRequest(req, e.message);
     return next(e);

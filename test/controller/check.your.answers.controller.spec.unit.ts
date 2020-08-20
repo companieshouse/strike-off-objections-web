@@ -74,9 +74,9 @@ describe("check company tests", () => {
 
   it ("should forward to confirmation page and submit the objection on post", async () => {
     const res = await request(app)
-        .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
-        .set("referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
+      .set("referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockSubmitObjection).toBeCalledWith(dummySession);
 
