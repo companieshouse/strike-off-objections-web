@@ -138,7 +138,7 @@ const getNoFileDataReceivedCallback = (req: Request,
  * @param {Response} res http response
  * @param {NextFunction} next the next function in the middleware chain
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
- * @param {attachments} required to display invalid mime types error
+ * @param {attachments} attachments list of attachments needed to re-draw the screen
  * @returns {(filename: string, fileData: Buffer, mimeType: string): Promise<void>} the callback function
  */
 const getUploadFinishedCallback = (req: Request,
