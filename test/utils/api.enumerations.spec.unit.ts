@@ -22,7 +22,7 @@ describe("api enumeration tests", () => {
   });
 
   it("should return original key when there is no match for the company type key", () => {
-    const key: string = "key";
+    const key = "key";
     const readableCompanyType: string = lookupCompanyType(key);
     expect(readableCompanyType).toEqual(key);
   });
@@ -33,7 +33,7 @@ describe("api enumeration tests", () => {
   });
 
   it("should return original key when there is no match for the company status key", () => {
-    const key: string = "key";
+    const key = "key";
     const readableCompanyStatus: string = lookupCompanyStatus(key);
     expect(readableCompanyStatus).toEqual(key);
   });

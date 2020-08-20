@@ -21,13 +21,13 @@ import {
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const COMPANY_NUMBER: string = "00006400";
-const OBJECTION_ID: string = "123456";
+const COMPANY_NUMBER = "00006400";
+const OBJECTION_ID = "123456";
 const REASON = "Owed Money";
 
 const SESSION: Session = {
-        data: {},
-    } as Session;
+  data: {},
+} as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
@@ -40,8 +40,8 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    req.session = SESSION;
-    return next();
+  req.session = SESSION;
+  return next();
 });
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
@@ -58,70 +58,70 @@ const mockCreateNewObjection = createNewObjection as jest.Mock;
 
 describe("enter information tests", () => {
 
-    it("should call the API to create a new objection and then render the page", async () => {
+  it("should call the API to create a new objection and then render the page", async () => {
 
-        mockGetObjectionSessionValue.mockReset();
-        mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-        mockSetObjectionSessionValue.mockReset();
+    mockSetObjectionSessionValue.mockReset();
 
-        mockCreateNewObjection.mockReset();
-        mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
+    mockCreateNewObjection.mockReset();
+    mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
 
-        const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`]);
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-        expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
 
-        expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
+    expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
 
-        expect(mockCreateNewObjection).toHaveBeenCalledWith(COMPANY_NUMBER, undefined);
+    expect(mockCreateNewObjection).toHaveBeenCalledWith(COMPANY_NUMBER, undefined);
 
-        expect(response.status).toEqual(200);
-        expect(response.text).toContain("Tell us why");
-    });
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("Tell us why");
+  });
 
-    it("should redirect to the document-upload page on post", async () => {
-        const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
-          .set("Referer", "/")
-          .set("Cookie", [`${COOKIE_NAME}=123`]);
+  it("should redirect to the document-upload page on post", async () => {
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-        expect(response.status).toEqual(302);
-        expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
-    });
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
+  });
 
-    it("should call the API to update the objection with the reason", async () => {
+  it("should call the API to update the objection with the reason", async () => {
 
-        mockGetObjectionSessionValue.mockReset();
-        mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
-        mockRetrieveFromObjectionSession.mockReset();
-        mockRetrieveFromObjectionSession.mockImplementationOnce(() => OBJECTION_ID);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => OBJECTION_ID);
 
-        mockUpdateObjectionReason.mockReset();
+    mockUpdateObjectionReason.mockReset();
 
-        const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`])
-            .send({ information: REASON });
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({ information: REASON });
 
-        expect(mockUpdateObjectionReason).toHaveBeenCalledWith(COMPANY_NUMBER, OBJECTION_ID, undefined, REASON);
+    expect(mockUpdateObjectionReason).toHaveBeenCalledWith(COMPANY_NUMBER, OBJECTION_ID, undefined, REASON);
 
-        expect(response.status).toEqual(302);
-        expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
-    });
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
-    address: {
-        line_1: "line1",
-        line_2: "line2",
-        postCode: "post code",
-    },
-    companyName: "Girls school trust",
-    companyNumber: COMPANY_NUMBER,
-    companyStatus: "Active",
-    companyType: "limited",
-    incorporationDate: "26 June 1872",
+  address: {
+    line_1: "line1",
+    line_2: "line2",
+    postCode: "post code",
+  },
+  companyName: "Girls school trust",
+  companyNumber: COMPANY_NUMBER,
+  companyStatus: "Active",
+  companyType: "limited",
+  incorporationDate: "26 June 1872",
 };

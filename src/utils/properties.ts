@@ -5,7 +5,7 @@
  */
 
 const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
-  const isMandatory: boolean = !defaultValue;
+  const isMandatory = !defaultValue;
   const value: string = process.env[key] || "";
 
   if (!value && isMandatory) {

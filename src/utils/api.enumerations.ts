@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 
-const API_CONSTANTS_PATH: string = "api-enumerations/constants.yml";
+const API_CONSTANTS_PATH = "api-enumerations/constants.yml";
 
 const apiConstants = yaml.safeLoad(fs.readFileSync(API_CONSTANTS_PATH, "utf8"));
 

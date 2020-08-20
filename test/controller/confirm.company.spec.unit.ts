@@ -26,10 +26,10 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-    req.session = {
-        data: {},
-    } as Session;
-    return next();
+  req.session = {
+    data: {},
+  } as Session;
+  return next();
 });
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
@@ -46,40 +46,40 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 
 describe("check company tests", () => {
 
-    it("should render the page with company data from the session", async () => {
+  it("should render the page with company data from the session", async () => {
 
-        mockGetObjectionSessionValue.mockReset();
-        mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-        const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
-            .set("Referer", "/")
-            .set("Cookie", [`${COOKIE_NAME}=123`]);
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-        expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-        expect(response.status).toEqual(200);
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
 
-        // TODO "girl's" caused the html version of apostrophe to be returned
-        // something like eg &1233; - just check that apostrophe is rendered ok in browser
-        expect(response.text).toContain("Girls school trust");
-        expect(response.text).toContain("00006400");
-        expect(response.text).toContain("Active");
-        expect(response.text).toContain("26 June 1872");
-        expect(response.text).toContain("limited");
-        expect(response.text).toContain("line1");
-        expect(response.text).toContain("line2");
-        expect(response.text).toContain("post code");
-    });
+    // TODO "girl's" caused the html version of apostrophe to be returned
+    // something like eg &1233; - just check that apostrophe is rendered ok in browser
+    expect(response.text).toContain("Girls school trust");
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("Active");
+    expect(response.text).toContain("26 June 1872");
+    expect(response.text).toContain("limited");
+    expect(response.text).toContain("line1");
+    expect(response.text).toContain("line2");
+    expect(response.text).toContain("post code");
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
-    address: {
-        line_1: "line1",
-        line_2: "line2",
-        postCode: "post code",
-    },
-    companyName: "Girls school trust",
-    companyNumber: "00006400",
-    companyStatus: "Active",
-    companyType: "limited",
-    incorporationDate: "26 June 1872",
+  address: {
+    line_1: "line1",
+    line_2: "line2",
+    postCode: "post code",
+  },
+  companyName: "Girls school trust",
+  companyNumber: "00006400",
+  companyStatus: "Active",
+  companyType: "limited",
+  incorporationDate: "26 June 1872",
 };

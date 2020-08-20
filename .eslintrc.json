@@ -1,0 +1,56 @@
+{
+    "env": {
+        "es2020": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            2,
+            {"FunctionExpression": {"parameters": "first"},
+             "CallExpression": {"arguments":  "first"},
+             "outerIIFEBody": 2,
+             "SwitchCase": 2}
+        ],
+        "eqeqeq": "error",
+        "curly": "error",
+        "require-await": "warn",
+        "no-underscore-dangle": ["error", { "allowFunctionParams": true }],
+        "no-irregular-whitespace": "error",
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "key-spacing": ["error", { "afterColon": true }],
+        "no-trailing-spaces": "error",
+        "no-whitespace-before-property": "error",
+        "space-infix-ops": "error",
+        "keyword-spacing": ["error", { "before": true, "after": true }],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "arrow-spacing": "error",
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "markers": ["/", "*"]
+            }
+        ],
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/type-annotation-spacing": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/ban-types": "off"
+    }
+}

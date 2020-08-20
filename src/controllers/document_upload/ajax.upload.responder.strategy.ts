@@ -100,14 +100,14 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
   private renderFragment = async (res: Response, view: string, options: object): Promise<string> => {
     return new Promise((resolve, reject) => {
       res.render(view,
-        options,
-        (err: Error, html: string) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(html);
-          }
-        });
+                 options,
+                 (err: Error, html: string) => {
+                   if (err) {
+                     reject(err);
+                   } else {
+                     resolve(html);
+                   }
+                 });
     });
   }
 }

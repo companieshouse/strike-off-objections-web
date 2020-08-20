@@ -14,17 +14,17 @@ import {
 } from "./types";
 
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
-    `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
+  `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
 
 const OBJECTIONS_API_PATCH_OR_GET_URL = (companyNumber: string, objectionId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
+  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}`;
 
 const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
+  OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments`;
 
 const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
     (companyNumber: string, objectionId: string, attachmentId: string): string =>
-    OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
+      OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
 
 /**
  * Create a new objection for the given company.
@@ -39,7 +39,7 @@ export const createNewObjection = async (companyNumber: string, token: string): 
   logger.debug(`Creating a new objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
+    HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
 
   return (await makeAPICall(axiosConfig)).data.id as string;
 };
@@ -54,12 +54,12 @@ export const createNewObjection = async (companyNumber: string, token: string): 
  *
  */
 export const patchObjection = async (
-    companyNumber: string, objectionId: string, token: string, patch: ObjectionPatch) => {
+  companyNumber: string, objectionId: string, token: string, patch: ObjectionPatch) => {
 
   logger.debug(`Patching an objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_PATCH, OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId), token);
+    HTTP_PATCH, OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId), token);
   axiosConfig.data = patch;
 
   await makeAPICall(axiosConfig);
@@ -115,9 +115,9 @@ export const getAttachment = async (companyNumber: string,
   logger.debug(`Getting attachment ${attachmentId} from objectionId ${objectionId}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_GET,
-      OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
-      token);
+    HTTP_GET,
+    OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
+    token);
   const response = await makeAPICall(axiosConfig);
   return response.data as Attachment;
 };
@@ -180,9 +180,9 @@ export const getObjection = async (companyNumber: string,
   logger.debug(`Getting objection ${objectionId}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
-      HTTP_GET,
-      OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
-      token);
+    HTTP_GET,
+    OBJECTIONS_API_PATCH_OR_GET_URL(companyNumber, objectionId),
+    token);
 
   const response = await makeAPICall(axiosConfig);
 

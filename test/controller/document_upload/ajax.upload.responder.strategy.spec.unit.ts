@@ -75,7 +75,7 @@ describe("ajax upload responder tests", () => {
     expect(mockRenderFunc.mock.calls[0][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_LIST);
     expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_PICKER);
     expect(mockSendFunc).toBeCalledWith({
-      divs : [
+      divs: [
         { divHtml: "DUMMY HTML", divId: "fileListDiv" },
         { divHtml: "DUMMY HTML", divId: "fileUploadDiv" },
       ],
@@ -121,7 +121,7 @@ describe("ajax upload responder tests", () => {
     expect(mockRenderFunc.mock.calls[1][0]).toContain(Templates.DOCUMENT_UPLOAD_FILE_PICKER);
     expect(mockRenderFunc.mock.calls[1][1].documentUploadErr).toEqual(errorData);
     expect(mockSendFunc).toBeCalledWith({
-      divs : [
+      divs: [
         { divHtml: "DUMMY HTML", divId: "errorSummaryDiv" },
         { divHtml: "DUMMY HTML", divId: "fileUploadDiv" },
       ],
