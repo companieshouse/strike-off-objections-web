@@ -15,7 +15,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Request} req http request
    * @param {Response} res http response
    */
-  public handleSuccess = async (req: Request, res: Response) => {
+  public handleSuccess = (req: Request, res: Response) => {
     return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
   }
 

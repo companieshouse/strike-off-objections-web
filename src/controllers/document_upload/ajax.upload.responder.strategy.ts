@@ -37,7 +37,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
         .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      res.send({divs: replacementDivs});
+      return res.send({divs: replacementDivs});
     } catch (e) {
       this.handleGenericError(res, e);
     }
@@ -52,7 +52,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    */
   public handleGenericError = (res: Response, e: Error, _next?: NextFunction) => {
     logger.error(ErrorMessages.ERROR_500 + ": " + e);
-    res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
+    return res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
   }
 
   /**
@@ -79,7 +79,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
 
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      res.send({ divs: replacementDivs });
+      return res.send({ divs: replacementDivs });
     } catch (e) {
       this.handleGenericError(res, e);
     }
@@ -98,7 +98,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {object} options the data to pass into the template
    */
   private renderFragment = async (res: Response, view: string, options: object): Promise<string> => {
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       res.render(view,
                  options,
                  (err: Error, html: string) => {
