@@ -24,7 +24,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Request} req http request
    * @param {Response} res http response
    */
-  public handleSuccess = async (req: Request, res: Response) => {
+  public handleSuccess = async (req: Request, res: Response): Promise<void> => {
     const session: Session = req.session as Session;
     const replacementDivs: object[] = [];
     try {
@@ -37,9 +37,9 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
         .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      return res.send({divs: replacementDivs});
+      res.send({divs: replacementDivs});
     } catch (e) {
-      this.handleGenericError(res, e);
+      await this.handleGenericError(res, e);
     }
   }
 
@@ -50,9 +50,10 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Error} e the error
    * @param {NextFunction} _next the next middleware function
    */
-  public handleGenericError = (res: Response, e: Error, _next?: NextFunction) => {
+  public handleGenericError = (res: Response, e: Error, _next?: NextFunction): Promise<void> => {
     logger.error(ErrorMessages.ERROR_500 + ": " + e);
-    return res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
+    res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
+    return Promise.resolve();
   }
 
   /**
@@ -63,7 +64,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    */
   public handleGovUKError = async (res: Response,
                                    errorData: GovUkErrorData,
-                                   attachments: Attachment[]) => {
+                                   attachments: Attachment[]): Promise<void> => {
     const replacementDivs: object[] = [];
 
     try {
@@ -79,9 +80,9 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
 
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      return res.send({ divs: replacementDivs });
+      res.send({ divs: replacementDivs });
     } catch (e) {
-      this.handleGenericError(res, e);
+      await this.handleGenericError(res, e);
     }
   }
 
@@ -97,8 +98,8 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
    * @param {string} view the name of the template
    * @param {object} options the data to pass into the template
    */
-  private renderFragment = async (res: Response, view: string, options: object): Promise<string> => {
-    return await new Promise((resolve, reject) => {
+  private renderFragment = (res: Response, view: string, options: object): Promise<string> => {
+    return new Promise((resolve, reject) => {
       res.render(view,
                  options,
                  (err: Error, html: string) => {

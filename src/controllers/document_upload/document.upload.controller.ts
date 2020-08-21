@@ -179,7 +179,7 @@ const displayError = async (res: Response,
                             attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
-  await uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
+  return await uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };
 
 /**
