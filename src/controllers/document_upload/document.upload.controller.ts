@@ -84,11 +84,11 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
     attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
-    return uploadResponderStrategy.handleGenericError(res, e, next);
+    return await uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
   if (attachments && attachments.length === 0) {
-    return displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    return await displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
 
   res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
@@ -158,11 +158,11 @@ const getUploadFinishedCallback = (req: Request,
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
       if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
-        return displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+        return await displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
-      return uploadResponderStrategy.handleGenericError(res, e, next);
+      return await uploadResponderStrategy.handleGenericError(res, e, next);
     }
-    return uploadResponderStrategy.handleSuccess(req, res);
+    return await uploadResponderStrategy.handleSuccess(req, res);
   };
 };
 
