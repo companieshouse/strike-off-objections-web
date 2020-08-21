@@ -3,26 +3,24 @@ import { authMiddleware } from "web-security-node";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
-const authMiddlewareConfig = {
-  accountWebUrl: "",
-  returnUrl: "",
-};
-
 const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  setAuthenticationToReturnTo(OBJECTIONS_COMPANY_NUMBER);
+  const authMiddlewareConfig = getAuthMiddlewareConfig();
 
   if (isADownloadUrl(req.originalUrl)) {
-    setAuthenticationToReturnTo(req.originalUrl);
+    authMiddlewareConfig.returnUrl = req.originalUrl;
   }
   return authMiddleware(authMiddlewareConfig)(req, res, next);
 };
 
-const isADownloadUrl = (url: string): boolean => {
-  return url.endsWith(pageURLs.DOWNLOAD);
+const getAuthMiddlewareConfig = () => {
+  return {
+    accountWebUrl: "",
+    returnUrl: OBJECTIONS_COMPANY_NUMBER,
+  };
 };
 
-const setAuthenticationToReturnTo = (url: string) => {
-  authMiddlewareConfig.returnUrl = url;
+const isADownloadUrl = (url: string): boolean => {
+  return url.endsWith(pageURLs.DOWNLOAD);
 };
 
 export default authenticationMiddleware;
