@@ -1,6 +1,5 @@
 import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { promisify } from "util";
 import { HttpStatusCodes, UploadErrorMessages } from "../../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../../model/govuk.error.data";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../model/page.urls";
@@ -62,8 +61,8 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
   }
 
   const uploadCallbacks: UploadFileCallbacks = {
-    fileSizeLimitExceededCallback: promisify(getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments)),
-    noFileDataReceivedCallback: promisify(getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments)),
+    fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
+    noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
     uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy, attachments),
   };
   const maxFileSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
@@ -107,12 +106,12 @@ const getFileSizeLimitExceededCallback = (req: Request,
                                           res: Response,
                                           uploadResponderStrategy: UploadResponderStrategy,
                                           attachments: Attachment[]):
-                                            (filename: string, maxInBytes: number) => void => {
-  return (filename: string, maxInBytes: number) => {
+                                            (filename: string, maxInBytes: number) => Promise<void> => {
+  return async (filename: string, maxInBytes: number) => {
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
-    return displayError(res, errorMsg, uploadResponderStrategy, attachments);
+    return await displayError(res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
 
@@ -127,9 +126,9 @@ const getFileSizeLimitExceededCallback = (req: Request,
 const getNoFileDataReceivedCallback = (req: Request,
                                        res: Response,
                                        uploadResponderStrategy: UploadResponderStrategy,
-                                       attachments: Attachment[]): (filename: string) => void => {
-  return (_filename: string) => {
-    return displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
+                                       attachments: Attachment[]): (filename: string) => Promise<void> => {
+  return async (_filename: string) => {
+    return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
 };
 
@@ -174,13 +173,13 @@ const getUploadFinishedCallback = (req: Request,
  * @param {UploadResponderStrategy} uploadResponderStrategy the strategy for responding to requests
  * @param {Attachment[]} attachments the list of attachments
  */
-const displayError = (res: Response,
-                      errorMessage: string,
-                      uploadResponderStrategy: UploadResponderStrategy,
-                      attachments: Attachment[]) => {
+const displayError = async (res: Response,
+                            errorMessage: string,
+                            uploadResponderStrategy: UploadResponderStrategy,
+                            attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
-  return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
+  await uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };
 
 /**
