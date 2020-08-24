@@ -8,7 +8,7 @@ import {
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
 
-  const companyName: string = retrieveCompanyProfileFromObjectionSession(session).companyName;
+  const { companyName } = retrieveCompanyProfileFromObjectionSession(session)
 
   return res.render(Templates.NOTICE_EXPIRED, {
     companyName,
