@@ -84,11 +84,11 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
     attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
-    return uploadResponderStrategy.handleGenericError(res, e, next);
+    return await uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
   if (attachments && attachments.length === 0) {
-    return displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    return await displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
 
   res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
@@ -160,9 +160,9 @@ const getUploadFinishedCallback = (req: Request,
       if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
         return await displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
-      return uploadResponderStrategy.handleGenericError(res, e, next);
+      return await uploadResponderStrategy.handleGenericError(res, e, next);
     }
-    return uploadResponderStrategy.handleSuccess(req, res);
+    return await uploadResponderStrategy.handleSuccess(req, res);
   };
 };
 
@@ -179,13 +179,13 @@ const displayError = async (res: Response,
                             attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
-  return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
+  return await uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };
 
 /**
  * Gets max file size in MB rounded down to nearest whole number
  * @param {number} maxSizeInBytes the max size allowed in bytes
- * @returns number max size in MB
+ * @returns {number} max size in MB
  */
 const getMaxFileSizeInMB = (maxSizeInBytes: number): number => {
   return Math.floor(maxSizeInBytes / (1024 * 1024));

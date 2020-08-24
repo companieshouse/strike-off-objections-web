@@ -7,7 +7,7 @@
 {% block backLink %}
   {{ govukBackLink({
     text: "Back",
-    href: "/document-upload"
+    href: "/strike-off-objections/document-upload"
   }) }}
 {% endblock %}
 
@@ -15,7 +15,7 @@
   <ul class="govuk-list govuk-list--bullet">
   {% for attachment in objection.attachments | reverse %}
     <li>
-      <a href="#"" class="govuk-link">{{ attachment.name }}</a>
+      <a href="#" class="govuk-link">{{ attachment.name }}</a>
     </li>
   {% endfor %}
   </ul>
