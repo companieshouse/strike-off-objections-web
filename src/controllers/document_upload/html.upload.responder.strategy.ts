@@ -15,8 +15,8 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Request} req http request
    * @param {Response} res http response
    */
-  public handleSuccess = async (req: Request, res: Response) => {
-    return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
+  public handleSuccess = (req: Request, res: Response): Promise<void> => {
+    return Promise.resolve(res.redirect(OBJECTIONS_DOCUMENT_UPLOAD));
   }
 
   /**
@@ -25,10 +25,11 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Error} e the error
    * @param {NextFunction} next the next middleware function
    */
-  public handleGenericError = (res: Response, e: Error, next?: NextFunction) => {
+  public handleGenericError = (res: Response, e: Error, next?: NextFunction): Promise<void> => {
     if (next) {
-      return next(e);
+      return Promise.resolve(next(e));
     }
+    return Promise.resolve();
   }
 
   /**
@@ -37,12 +38,14 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {GovUkErrorData} errorData the error information to display
    * @param {Attachment[]} attachments the list of uploaded attachments
    */
-  public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: Attachment[]) => {
-    return res.render(Templates.DOCUMENT_UPLOAD, {
-      attachments,
-      documentUploadErr: errorData,
-      errorList: [errorData],
-      templateName: Templates.DOCUMENT_UPLOAD,
-    });
+  public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: Attachment[]): Promise<void> => {
+    return Promise.resolve(
+      res.render(Templates.DOCUMENT_UPLOAD, {
+        attachments,
+        documentUploadErr: errorData,
+        errorList: [errorData],
+        templateName: Templates.DOCUMENT_UPLOAD,
+      })
+    );
   }
 }
