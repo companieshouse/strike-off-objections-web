@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Notice expired
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        The strike off notice has expired for the company
+      </h1>
+      <p class="govuk-body-l">{{ companyName }}
+        has been struck off the register and you can no longer apply to make an objection.</p>
+      <p>
+        <a href="https://www.gov.uk/government/organisations/companies-house/about/access-and-opening">Contact us</a>
+        if you think this information is wrong.</p>
+      <p>
+        <a href="https://www.gov.uk/guidance/company-restoration-guide">Read the Company Restoration Guide</a>
+          to find out more about restoring a company name to the register.</p>
+
+      <p>If this is the wrong company, start the
+        <a href="/company-number">Apply to object to a company being struck off</a>
+        service again.</p>
+
+      <p>
+        <a href="https://www.research.net/r/applytoobject-feedback">What did you think of this service?</a>
+          (takes 2 minutes)</p>
+    </div>
+  </div>
+{% endblock %}

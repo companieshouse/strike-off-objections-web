@@ -7,6 +7,7 @@ import * as documentDownloadRoute from "../controllers/document.download.control
 import * as documentDownloadLandingRoute from "../controllers/document.download.landing.controller";
 import * as documentUploadRoute from "../controllers/document_upload/document.upload.controller";
 import * as enterInformationRoute from "../controllers/enter.information.controller";
+import * as noticeExpiredRoute from "../controllers/notice.expired.controller";
 import * as removeDocumentRoute from "../controllers/remove.document.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
@@ -28,6 +29,8 @@ router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute.post);
 
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute.get);
+
+router.get(pageURLs.NOTICE_EXPIRED, noticeExpiredRoute.get);
 
 router.get(pageURLs.ENTER_INFORMATION, enterInformationRoute.get);
 router.post(pageURLs.ENTER_INFORMATION, enterInformationRoute.post);
