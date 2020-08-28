@@ -65,6 +65,10 @@ describe("enter information tests", () => {
   });
 
   it("should redirect to the document-upload page on post", async () => {
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+
     const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
