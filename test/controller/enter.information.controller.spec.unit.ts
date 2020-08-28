@@ -30,7 +30,6 @@ const SESSION: Session = {
 } as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
-const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 
 const mockUpdateObjectionReason = updateObjectionReason as jest.Mock;
@@ -54,29 +53,12 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
-const mockCreateNewObjection = createNewObjection as jest.Mock;
-
 describe("enter information tests", () => {
 
-  it("should call the API to create a new objection and then render the page", async () => {
-
-    mockGetObjectionSessionValue.mockReset();
-    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
-
-    mockSetObjectionSessionValue.mockReset();
-
-    mockCreateNewObjection.mockReset();
-    mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
-
+  it("should render the page", async () => {
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-
-    expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
-
-    expect(mockCreateNewObjection).toHaveBeenCalledWith(COMPANY_NUMBER, undefined);
 
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Tell us why");

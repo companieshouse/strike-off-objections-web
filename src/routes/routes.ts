@@ -29,6 +29,7 @@ router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute.post);
 
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute.get);
+router.post(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute.post);
 
 router.get(pageURLs.NOTICE_EXPIRED, noticeExpiredRoute.get);
 
