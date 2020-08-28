@@ -2,6 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
@@ -13,7 +14,10 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
+import {
+  OBJECTIONS_CONFIRM_COMPANY,
+  OBJECTIONS_ENTER_INFORMATION
+} from "../../src/model/page.urls";
 import { createNewObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
@@ -22,7 +26,6 @@ import {
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const OBJECTION_ID = "123456";
-
 const SESSION: Session = {
   data: {},
 } as Session;
@@ -34,9 +37,7 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = {
-    data: {},
-  } as Session;
+  req.session = SESSION
   return next();
 });
 
@@ -57,7 +58,7 @@ const mockCreateNewObjection = createNewObjection as jest.Mock;
 
 // TODO test scenario when an error is logged - check that this is happening correctly
 
-describe("check company tests", () => {
+describe("confirm company tests", () => {
 
   it("should render the page with company data from the session", async () => {
 
@@ -98,14 +99,11 @@ describe("check company tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
-
     expect(mockCreateNewObjection).toHaveBeenCalledWith(dummyCompanyProfile.companyNumber, undefined);
-
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("Tell us why");
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_ENTER_INFORMATION);
   });
 });
 

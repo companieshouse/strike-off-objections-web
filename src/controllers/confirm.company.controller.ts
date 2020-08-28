@@ -38,16 +38,14 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session
-  if (session) {
-    try {
-      const token: string = retrieveAccessTokenFromSession(session);
-      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-      const objectionId = await createNewObjection(company.companyNumber, token);
-      addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
-      return res.redirect(OBJECTIONS_ENTER_INFORMATION);
-    } catch (e) {
-        return next(e);
-      }
+  try {
+    const token: string = retrieveAccessTokenFromSession(session);
+    const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+    const objectionId = await createNewObjection(company.companyNumber, token);
+    addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
+    return res.redirect(OBJECTIONS_ENTER_INFORMATION);
+  } catch (e) {
+    return next(e);
   }
 };
 
