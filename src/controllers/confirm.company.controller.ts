@@ -2,8 +2,9 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
-import { OBJECTIONS_ENTER_INFORMATION } from "../model/page.urls";
+import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
+import { ApiError, ObjectionStatus } from "../modules/sdk/objections";
 import { createNewObjection } from "../services/objection.service";
 import {
   addToObjectionSession,
@@ -11,6 +12,11 @@ import {
   retrieveCompanyProfileFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
+
+const INELIGIBLE_PAGES = {
+  [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
+  [ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION]: OBJECTIONS_NO_STRIKE_OFF,
+}
 
 /**
  * GET controller for check company details screen
@@ -45,7 +51,15 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
-    return next(e);
+    if (e.status === 400) {
+      return res.redirect(ineligibleCheck(e))
+    } else {
+      return next(e)
+    }
   }
 };
+
+const ineligibleCheck = (apiError: ApiError): string => {
+  return INELIGIBLE_PAGES[apiError.data.status];
+}
 
