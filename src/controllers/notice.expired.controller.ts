@@ -1,11 +1,11 @@
 import { Session } from "ch-node-session-handler";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { Templates } from "../model/template.paths";
 import {
   retrieveCompanyProfileFromObjectionSession,
 } from "../services/objection.session.service";
 
-export const get = (req: Request, res: Response, next: NextFunction) => {
+export const get = (req: Request, res: Response) => {
   const session: Session = req.session as Session;
 
   const { companyName } = retrieveCompanyProfileFromObjectionSession(session)
