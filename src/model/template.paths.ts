@@ -2,6 +2,7 @@ export enum Templates {
   COMPANY_NUMBER = "company-number",
   CONFIRM_COMPANY = "confirm-company",
   NOTICE_EXPIRED = "notice-expired",
+  NO_STRIKE_OFF = "no-strike-off",
   ENTER_INFORMATION = "enter-information",
   SERVICE_OFFLINE = "service-offline",
   DOCUMENT_UPLOAD = "document-upload",

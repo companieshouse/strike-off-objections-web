@@ -10,8 +10,8 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 
   const { companyName } = retrieveCompanyProfileFromObjectionSession(session)
 
-  return res.render(Templates.NOTICE_EXPIRED, {
+  return res.render(Templates.NO_STRIKE_OFF, {
     companyName,
-    templateName: Templates.NOTICE_EXPIRED,
+    templateName: Templates.NO_STRIKE_OFF,
   });
 };
