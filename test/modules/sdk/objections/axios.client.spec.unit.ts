@@ -14,7 +14,7 @@ import logger from "../../../../src/utils/logger";
 const mockAxiosRequest = axios.request as jest.Mock;
 const mockJSONStringify = JSON.stringify = jest.fn();
 
-const dummyAxiosResponse: AxiosResponse<any> = {
+const dummyAxiosResponse: AxiosResponse = {
   config: {},
   data: {},
   headers: "header",
@@ -63,7 +63,7 @@ describe("axios client tests", () => {
       message: errorMessage,
       response: {
         data: {
-          errors: [dataError],
+          errors: [dataError]
         },
         status: statusCode,
       },
@@ -72,7 +72,9 @@ describe("axios client tests", () => {
     mockAxiosRequest.mockRejectedValueOnce(axiosError);
 
     const expectedError: ApiError = {
-      data: [dataError],
+      data: {
+        errors: [dataError]
+      },
       message: errorMessage,
       status: statusCode,
     };

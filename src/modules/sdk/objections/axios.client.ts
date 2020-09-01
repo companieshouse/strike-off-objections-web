@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from "axios";
-import { loggerInstance } from "ch-node-session-handler/lib/Logger";
 import logger from "../../../utils/logger";
 import { ApiError } from "./types";
 
@@ -48,11 +47,11 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
     }
     return axiosResponse;
   } catch (apiErr) {
-    logger.error(`ERROR calling API ${apiErr}`);
+    logger.error(`ERROR calling API ${config.url} - ${apiErr}`);
     const axiosError = apiErr as AxiosError;
     const { response, message } = axiosError;
     throw {
-      data: response ? response.data.errors : [],
+      data: response ? response.data : [],
       message,
       status: response ? response.status : STATUS_NO_RESPONSE,
     } as ApiError;
