@@ -52,10 +52,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
     if (e.status === 400 && e.data.status) {
-      return res.redirect(getIneligiblePage(e))
-    } else {
-      return next(e)
+      const returnTo = getIneligiblePage(e);
+      if (returnTo) {
+        return res.redirect(returnTo);
+      }
     }
+    return next(e)
   }
 };
 
