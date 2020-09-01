@@ -51,15 +51,15 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
-    if (e.status === 400) {
-      return res.redirect(ineligibleCheck(e))
+    if (e.status === 400 && e.data.status) {
+      return res.redirect(getIneligiblePage(e))
     } else {
       return next(e)
     }
   }
 };
 
-const ineligibleCheck = (apiError: ApiError): string => {
+const getIneligiblePage = (apiError: ApiError): string => {
   return INELIGIBLE_PAGES[apiError.data.status];
 }
 
