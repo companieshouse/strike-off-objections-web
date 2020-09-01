@@ -120,6 +120,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/The strike off notice has expired for the company/);
   });
 
+  it("should find the no strike off page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/no-strike-off");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/There is no strike off notice for the company/);
+  });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
