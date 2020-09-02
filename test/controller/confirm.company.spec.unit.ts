@@ -16,7 +16,9 @@ import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CONFIRM_COMPANY,
-  OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED
+  OBJECTIONS_ENTER_INFORMATION,
+  OBJECTIONS_NO_STRIKE_OFF,
+  OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
 import { ApiError } from "../../src/modules/sdk/objections";
 import { createNewObjection } from "../../src/services/objection.service";
