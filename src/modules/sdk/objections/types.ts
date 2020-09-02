@@ -16,11 +16,11 @@ export interface ApiError {
  */
 export enum ObjectionStatus {
   // Note use of String enums to ensure that correct status values are mapped to/from API calls
-  OPEN = "OPEN",
-  SUBMITTED = "SUBMITTED",
-  PROCESSED = "PROCESSED",
   INELIGIBLE_COMPANY_STRUCK_OFF = "INELIGIBLE_COMPANY_STRUCK_OFF",
   INELIGIBLE_NO_DISSOLUTION_ACTION = "INELIGIBLE_NO_DISSOLUTION_ACTION",
+  OPEN = "OPEN",
+  PROCESSED = "PROCESSED",
+  SUBMITTED = "SUBMITTED",
 }
 
 /**

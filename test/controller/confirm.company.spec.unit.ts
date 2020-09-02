@@ -162,6 +162,36 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NO_STRIKE_OFF);
   });
+
+  it("should render the generic error page when an api error occurs with an unknown status", async () => {
+
+    const apiError: ApiError = {
+      data: {
+        status: "UNKNOWN"
+      },
+      message: "There is an error",
+      status: 500,
+    };
+
+    const ERROR_500 = "Sorry, there is a problem with the service";
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockSetObjectionSessionValue.mockReset();
+
+    mockCreateNewObjection.mockReset();
+    mockCreateNewObjection.mockImplementation(() => {
+      throw apiError
+    });
+
+    const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain(ERROR_500);
+  });
 });
 
 
