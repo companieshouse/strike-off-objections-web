@@ -4,7 +4,6 @@ import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import {
-  ApiError,
   Attachment,
   Download,
   HEADER_CONTENT_DISPOSITION,
