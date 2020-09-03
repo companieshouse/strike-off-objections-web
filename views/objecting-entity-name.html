@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+Your full name
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    href: "/strike-off-objections",
+    text: "Back"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+
+        {{ govukInput({
+          label: {
+            text: "What is your full name?",
+            isPageHeading: true,
+            classes: "govuk-label--xl"
+          },
+          hint: {
+            text: "Enter your own details even if you are making an application to object on behalf of someone else."
+          },
+          id: "full-name",
+          name: "full-name",
+          errorMessage: objectingEntityNameErrorMessage
+        }) }}
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "divulge-info",
+          name: "divulge-info",
+          fieldset: {
+            legend: {
+              text: "Can we share your name and email address with the company if they request that information?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          errorMessage: divulgeDetailsErrorMessage,
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+            "data-event-id": "continue-button",
+            id: "submit"
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

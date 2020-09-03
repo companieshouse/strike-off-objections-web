@@ -1,4 +1,5 @@
 export enum Templates {
+  OBJECTING_ENTITY_NAME = "objecting-entity-name",
   COMPANY_NUMBER = "company-number",
   CONFIRM_COMPANY = "confirm-company",
   NOTICE_EXPIRED = "notice-expired",

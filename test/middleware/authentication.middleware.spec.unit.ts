@@ -3,7 +3,10 @@ jest.mock("web-security-node");
 import { NextFunction, Request, Response } from "express";
 import { authMiddleware } from "web-security-node";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import { OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
+import {
+  OBJECTIONS_ENTER_INFORMATION,
+  OBJECTIONS_OBJECTING_ENTITY_NAME
+} from "../../src/model/page.urls";
 
 const DOWNLOAD_LANDING_PAGE_URL =
   "/strike-off-objections/download/company/1234/strike-off-objections/5678/attachments/8888/download";
@@ -52,13 +55,13 @@ describe("authentication middleware tests", () => {
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
   });
 
-  it("should set return url to Company Number page", () => {
+  it("should set return url to objecting entity name page", () => {
     dummyReq.originalUrl = OBJECTIONS_ENTER_INFORMATION;
     authenticationMiddleware(dummyReq, dummyRes, dummyNext);
 
     const expectedConfig = {
       accountWebUrl: "",
-      returnUrl: OBJECTIONS_COMPANY_NUMBER,
+      returnUrl: OBJECTIONS_OBJECTING_ENTITY_NAME,
     };
 
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
