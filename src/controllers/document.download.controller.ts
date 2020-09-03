@@ -11,6 +11,7 @@ import {
 import { downloadAttachment } from "../services/objection.service";
 import logger from "../utils/logger";
 import { DOWNLOAD_FILENAME_PREFIX } from "../utils/properties";
+import { inspect } from "util";
 
 /**
  * Handle GET request - do the download
@@ -35,7 +36,8 @@ export const get = async (req: Request, res: Response) => {
     return download.data.pipe(res);
 
   } catch (e) {
-    logger.errorRequest(req, `download.attachment.controller - ${JSON.stringify(e)}`);
+    // e can be circular so using inspect instead of stringify
+    logger.errorRequest(req, `download.attachment.controller - ${inspect(e)}`);
     const status: number = (e.status > 0) ? e.status : 500;
     res.status(status);
     return showErrorPage(status, res);
