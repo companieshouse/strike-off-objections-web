@@ -155,21 +155,12 @@ export const downloadAttachment = async (downloadApiUrl: string,
       Authorization: "Bearer " + token,
     },
     proxy: false,
-    validateStatus: (status) => {
-      return ((status >= 200 && status < 300) || status === 401);
-    },
   };
   config.method = HTTP_GET;
   config.url = `${INTERNAL_API_URL}${downloadApiUrl}`;
   config.responseType = "stream";
 
   const axiosResponse: AxiosResponse = await makeAPICall(config);
-
-  if (axiosResponse.status === 401) {
-    throw {
-      status : 401
-    } as ApiError
-  }
 
   logger.debug("download - axios response headers = " + JSON.stringify(axiosResponse.headers));
 
