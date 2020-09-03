@@ -36,6 +36,7 @@ export const get = async (req: Request, res: Response) => {
     return download.data.pipe(res);
 
   } catch (e) {
+    // e can be circular so using inspect instead of stringify
     logger.errorRequest(req, `download.attachment.controller - ${inspect(e)}`);
     const status: number = (e.status > 0) ? e.status : 500;
     res.status(status);
