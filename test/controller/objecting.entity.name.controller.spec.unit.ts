@@ -13,7 +13,6 @@ import objectionSessionMiddleware from "../../src/middleware/objection.session.m
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import {
   OBJECTIONS_COMPANY_NUMBER,
-  OBJECTIONS_CONFIRM_COMPANY,
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
