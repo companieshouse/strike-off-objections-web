@@ -61,6 +61,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
   });
 
+  it("should find the objecting entity name page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/objecting-entity-name");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/What is your full name/);
+  });
+
   it("should find the company number page", async () => {
     const response = await request(app)
       .get("/strike-off-objections/company-number");

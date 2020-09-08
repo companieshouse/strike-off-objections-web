@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { authMiddleware } from "web-security-node";
-import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
+import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
 const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +15,7 @@ const authenticationMiddleware = (req: Request, res: Response, next: NextFunctio
 const getAuthMiddlewareConfig = () => {
   return {
     accountWebUrl: "",
-    returnUrl: OBJECTIONS_COMPANY_NUMBER,
+    returnUrl: OBJECTIONS_OBJECTING_ENTITY_NAME,
   };
 };
 

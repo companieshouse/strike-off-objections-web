@@ -7,6 +7,7 @@ import { Templates } from "./template.paths";
 const SEPARATOR = "/";
 
 export const STRIKE_OFF_OBJECTIONS: string = SEPARATOR + "strike-off-objections";
+export const OBJECTING_ENTITY_NAME: string = SEPARATOR + "objecting-entity-name";
 export const COMPANY_NUMBER: string = SEPARATOR + Templates.COMPANY_NUMBER;
 export const CONFIRM_COMPANY: string = SEPARATOR + Templates.CONFIRM_COMPANY;
 export const NOTICE_EXPIRED: string = SEPARATOR + Templates.NOTICE_EXPIRED;
@@ -27,6 +28,7 @@ export const ERROR: string = SEPARATOR + Templates.ERROR;
 /**
  * URLs for redirects will need to start with the application name
  */
+export const OBJECTIONS_OBJECTING_ENTITY_NAME: string = STRIKE_OFF_OBJECTIONS + OBJECTING_ENTITY_NAME;
 export const OBJECTIONS_COMPANY_NUMBER: string = STRIKE_OFF_OBJECTIONS + COMPANY_NUMBER;
 export const OBJECTIONS_CONFIRM_COMPANY: string = STRIKE_OFF_OBJECTIONS + CONFIRM_COMPANY;
 export const OBJECTIONS_NOTICE_EXPIRED: string = STRIKE_OFF_OBJECTIONS + NOTICE_EXPIRED;

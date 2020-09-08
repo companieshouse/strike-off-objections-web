@@ -9,6 +9,7 @@ import * as documentUploadRoute from "../controllers/document_upload/document.up
 import * as enterInformationRoute from "../controllers/enter.information.controller";
 import * as noticeExpiredRoute from "../controllers/notice.expired.controller";
 import * as noStrikeOffRoute from "../controllers/no.strike.off.controller";
+import * as objectingEntityNameRoute from "../controllers/objecting.entity.name.controller";
 import * as removeDocumentRoute from "../controllers/remove.document.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
@@ -25,6 +26,9 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 };
 
 router.get("/", renderTemplate(Templates.INDEX));
+
+router.get(pageURLs.OBJECTING_ENTITY_NAME, renderTemplate(Templates.OBJECTING_ENTITY_NAME));
+router.post(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.post);
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
 router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute.post);
