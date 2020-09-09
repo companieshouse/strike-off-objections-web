@@ -4,12 +4,12 @@ import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { ApiError, ObjectionStatus } from "../modules/sdk/objections";
+import {ApiError, ObjectionCreate, ObjectionStatus} from "../modules/sdk/objections";
 import { createNewObjection } from "../services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
-  retrieveCompanyProfileFromObjectionSession
+  retrieveCompanyProfileFromObjectionSession, retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 
@@ -47,7 +47,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token: string = retrieveAccessTokenFromSession(session);
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-    const objectionId = await createNewObjection(company.companyNumber, token);
+    const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
+    const objectionId = await createNewObjection(company.companyNumber, token, objectionCreate);
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {

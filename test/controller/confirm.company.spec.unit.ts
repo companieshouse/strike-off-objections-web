@@ -20,11 +20,11 @@ import {
   OBJECTIONS_NO_STRIKE_OFF,
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
-import { ApiError } from "../../src/modules/sdk/objections";
+import {ApiError, ObjectionCreate} from "../../src/modules/sdk/objections";
 import { createNewObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
-  retrieveCompanyProfileFromObjectionSession,
+  retrieveCompanyProfileFromObjectionSession, retrieveObjectionCreateFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -34,6 +34,7 @@ const SESSION: Session = {
 } as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -97,13 +98,16 @@ describe("confirm company tests", () => {
     mockCreateNewObjection.mockReset();
     mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
 
+    mockGetObjectCreate.mockReset();
+    mockGetObjectCreate.mockImplementation(() =>  dummyObjectionCreate );
+
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
-    expect(mockCreateNewObjection).toHaveBeenCalledWith(dummyCompanyProfile.companyNumber, undefined);
+    expect(mockCreateNewObjection).toHaveBeenCalledWith(dummyCompanyProfile.companyNumber, undefined, dummyObjectionCreate);
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_ENTER_INFORMATION);
@@ -208,4 +212,9 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
+};
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
 };

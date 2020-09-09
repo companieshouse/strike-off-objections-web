@@ -1,7 +1,12 @@
+import {
+  retrieveObjectionCreateFromObjectionSession
+} from "../../src/services/objection.session.service";
+
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/middleware/objection.session.middleware");
+jest.mock("../../src/services/objection.session.service");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -16,6 +21,9 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
+import {ObjectionCreate} from "../../src/modules/sdk/objections";
+
+const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -40,12 +48,19 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 
 describe("objecting entity name tests", () => {
 
+  mockGetObjectCreate.mockReset();
+  mockGetObjectCreate.mockImplementation(() => { dummyObjectionCreate });
+
   it("should render the company number page when posting", async () => {
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
   });
 });
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
+};

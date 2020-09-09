@@ -24,6 +24,15 @@ export enum ObjectionStatus {
 }
 
 /**
+ * Data structure for creating an Objection
+ * @interface
+ */
+export interface ObjectionCreate {
+  fullName: string;
+  shareIdentity: boolean;
+}
+
+/**
  * Data structure for patching an Objection
  * @interface
  */
