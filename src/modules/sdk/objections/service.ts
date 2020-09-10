@@ -9,7 +9,8 @@ import {
   HEADER_CONTENT_DISPOSITION,
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
-  Objection, ObjectionCreate,
+  Objection,
+  ObjectionCreate,
   ObjectionPatch,
 } from "./types";
 
