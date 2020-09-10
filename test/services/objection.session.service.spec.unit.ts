@@ -1,12 +1,12 @@
 import { Session } from "ch-node-session-handler";
 import {
-  addObjectionCreateToObjectionSession,
+  addObjectionCreateToObjectionSession, deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveObjectionCreateFromObjectionSession,
   retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
 import { ObjectionCreate } from "../../src/modules/sdk/objections";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import {OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE} from "../../src/constants";
 
 const accessTokenValue = "tokenABC123";
 const testEmail = "demo@ch.gov.uk";
@@ -92,7 +92,7 @@ describe ("objections session service tests", () => {
 
   it("should retrieve objection create when present", () => {
     const session: Session = new Session();
-    session.data.extra_data[OBJECTIONS_SESSION_NAME] = { SESSION_OBJECTION_CREATE: {} };
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
     addObjectionCreateToObjectionSession(session, { fullName: "Joe Bloggs",
       shareIdentity: false });
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
@@ -110,9 +110,20 @@ describe ("objections session service tests", () => {
 
   it("should throw error when objection create is absent", () => {
     const session: Session = new Session();
-    session.data.extra_data[OBJECTIONS_SESSION_NAME] = { SESSION_OBJECTION_CREATE: {}};
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
     expect(() => {
       retrieveObjectionCreateFromObjectionSession(session);
-    }).toThrow();
+    }).toThrow("Error retrieving user details for creating objection from objection session");
+  });
+
+  it("should delete objection create", () => {
+    const session: Session = new Session();
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
+    const objectionCreate: ObjectionCreate = { fullName: "Joe Bloggs",
+      shareIdentity: false };
+    addObjectionCreateToObjectionSession(session, objectionCreate);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBe(objectionCreate);
+    deleteObjectionCreateFromObjectionSession(session);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBeUndefined();
   });
 });

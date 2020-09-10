@@ -45,11 +45,14 @@ export const retrieveAccessTokenFromSession = (session: Session): string => {
 
 export const retrieveObjectionCreateFromObjectionSession = (session: Session): ObjectionCreate => {
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
-  const objectionCreate: ObjectionCreate | undefined = objectionsExtraData.objection_create;
-  if (objectionCreate) {
-    return objectionCreate;
+  if (objectionsExtraData) {
+    const objectionCreate: ObjectionCreate | undefined = objectionsExtraData.objection_create;
+    if (objectionCreate) {
+      return objectionCreate;
+    }
+    throw new Error("Error retrieving user details for creating objection from objection session");
   }
-  throw new Error("Error retrieving user details for creating objection from objection session");
+  throw new Error("No Objection session to retrieve create objection from");
 }
 
 export const retrieveCompanyProfileFromObjectionSession = (session: Session): ObjectionCompanyProfile => {
@@ -69,6 +72,15 @@ export const addObjectionCreateToObjectionSession = (session: Session, objection
   }
 
   throw new Error("No Objection session extra data to add objection create to");
+};
+
+export const deleteObjectionCreateFromObjectionSession = (session: Session): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
+  if (objectionsExtraData) {
+    delete objectionsExtraData[SESSION_OBJECTION_CREATE];
+    return;
+  }
+  throw new Error("Error deleting objection create");
 };
 
 export const addCompanyProfileToObjectionSession = (session: Session, company: ObjectionCompanyProfile): void => {

@@ -7,7 +7,7 @@ import { Templates } from "../model/template.paths";
 import {ApiError, ObjectionCreate, ObjectionStatus} from "../modules/sdk/objections";
 import { createNewObjection } from "../services/objection.service";
 import {
-  addToObjectionSession,
+  addToObjectionSession, deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession, retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
@@ -48,6 +48,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const token: string = retrieveAccessTokenFromSession(session);
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
+    deleteObjectionCreateFromObjectionSession(session);
     const objectionId = await createNewObjection(company.companyNumber, token, objectionCreate);
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
