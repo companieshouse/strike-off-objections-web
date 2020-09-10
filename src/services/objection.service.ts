@@ -17,14 +17,15 @@ import {
  *
  * @param {string} companyNumber the company number
  * @param {string} token the bearer security token to use to call the api
+ * @param {ObjectionCreate} createWithData the user data passed in the body of the request
  *
  * @returns {string} the id of the newly created objection
  * @throws {ApiError}
  */
-export const createNewObjection = async (companyNumber: string, token: string, create: ObjectionCreate): Promise<string> => {
+export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<string> => {
   logger.info(`Creating objection for company number ${companyNumber}`);
 
-  const objectionId: string = await objectionsSdk.createNewObjection(companyNumber, token, create);
+  const objectionId: string = await objectionsSdk.createNewObjection(companyNumber, token, createWithData);
 
   logger.info(`Id of newly created objection is ${objectionId}`);
   return objectionId;

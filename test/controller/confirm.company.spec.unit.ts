@@ -26,6 +26,7 @@ import {
   addToObjectionSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession,
+  deleteObjectionCreateFromObjectionSession
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -36,6 +37,7 @@ const SESSION: Session = {
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock
+const mockDeleteObjectCreate = deleteObjectionCreateFromObjectionSession as jest.Mock
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -102,11 +104,14 @@ describe("confirm company tests", () => {
     mockGetObjectCreate.mockReset();
     mockGetObjectCreate.mockImplementation(() =>  dummyObjectionCreate );
 
+    mockDeleteObjectCreate.mockReset();
+
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
     expect(mockCreateNewObjection).toHaveBeenCalledWith(dummyCompanyProfile.companyNumber, undefined, dummyObjectionCreate);
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
@@ -199,6 +204,28 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
+});
+
+it("should call delete on objection create data from session if objection creation fails", async () => {
+  const apiError: ApiError = {
+    data: {
+      status: "UNKNOWN"
+    },
+    message: "There is an error",
+    status: 500,
+  };
+  mockDeleteObjectCreate.mockReset();
+
+  mockCreateNewObjection.mockReset();
+  mockCreateNewObjection.mockImplementation(() => {
+    throw apiError
+  });
+
+  const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+  expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
 });
 
 

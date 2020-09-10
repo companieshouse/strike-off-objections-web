@@ -10,10 +10,10 @@ import { Session } from "ch-node-session-handler";
  * @param res
  * @param next
  */
-export const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const post = (req: Request, res: Response, next: NextFunction) => {
   const shareIdentityString: string = req.body.shareIdentity;
   const fullNameValue: string = req.body.fullName;
-  const shareIdentityValue: boolean = (shareIdentityString === "yes") ? true :  false;
+  const shareIdentityValue: boolean = shareIdentityString === "yes";
   const objectionCreate: ObjectionCreate = { shareIdentity: shareIdentityValue, fullName: fullNameValue };
 
   const session: Session | undefined  = req.session;
@@ -21,6 +21,7 @@ export const post = async (req: Request, res: Response, next: NextFunction): Pro
     addObjectionCreateToObjectionSession(session, objectionCreate);
     return res.redirect(OBJECTIONS_COMPANY_NUMBER);
   } else {
-    throw new Error("Session not present");
+    const error: Error = new Error("Session not present");
+    next(error);
   }
 };

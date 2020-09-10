@@ -50,11 +50,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const token: string = retrieveAccessTokenFromSession(session);
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
-    deleteObjectionCreateFromObjectionSession(session);
     const objectionId = await createNewObjection(company.companyNumber, token, objectionCreate);
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
+    deleteObjectionCreateFromObjectionSession(session);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
+    deleteObjectionCreateFromObjectionSession(session);
     if (e.status === 400 && e.data.status) {
       const ineligiblePage = getIneligiblePage(e);
       if (ineligiblePage) {
