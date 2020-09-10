@@ -50,7 +50,6 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
 
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 
-
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
@@ -129,6 +128,7 @@ describe("confirm company tests", () => {
       status: 400,
     };
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -143,6 +143,7 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
   });
@@ -157,6 +158,7 @@ describe("confirm company tests", () => {
       status: 400,
     };
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -171,6 +173,7 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NO_STRIKE_OFF);
   });
@@ -187,6 +190,7 @@ describe("confirm company tests", () => {
 
     const ERROR_500 = "Sorry, there is a problem with the service";
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -201,33 +205,11 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
 });
-
-it("should call delete on objection create data from session if objection creation fails", async () => {
-  const apiError: ApiError = {
-    data: {
-      status: "UNKNOWN"
-    },
-    message: "There is an error",
-    status: 500,
-  };
-  mockDeleteObjectCreate.mockReset();
-
-  mockCreateNewObjection.mockReset();
-  mockCreateNewObjection.mockImplementation(() => {
-    throw apiError
-  });
-
-  const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
-    .set("Referer", "/")
-    .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-  expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
-});
-
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
   address: {
