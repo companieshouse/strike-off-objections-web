@@ -20,11 +20,12 @@ import {
   OBJECTIONS_NO_STRIKE_OFF,
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
-import {ApiError, ObjectionCreate} from "../../src/modules/sdk/objections";
+import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { createNewObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
-  retrieveCompanyProfileFromObjectionSession, retrieveObjectionCreateFromObjectionSession,
+  retrieveCompanyProfileFromObjectionSession,
+  retrieveObjectionCreateFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 

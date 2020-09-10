@@ -1,7 +1,7 @@
 import { Session } from "ch-node-session-handler";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
-import {Download, ObjectionCreate} from "../modules/sdk/objections";
+import { Download, ObjectionCreate } from "../modules/sdk/objections";
 import * as objectionsSdk from "../modules/sdk/objections";
 import { Attachment, Objection } from "../modules/sdk/objections";
 import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections";

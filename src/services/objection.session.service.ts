@@ -4,7 +4,7 @@ import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey"
 import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
 import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
 import { IAccessToken, ISignInInfo, IUserProfile } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
-import {OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE} from "../constants";
+import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 import { ObjectionCreate } from "../modules/sdk/objections";
@@ -50,7 +50,7 @@ export const retrieveObjectionCreateFromObjectionSession = (session: Session): O
     if (objectionCreate) {
       return objectionCreate;
     }
-    throw new Error("Error retrieving user details for creating objection from objection session");
+    throw new Error("Error: No ObjectionCreate present in ObjectionSession");
   }
   throw new Error("No Objection session to retrieve create objection from");
 }

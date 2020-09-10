@@ -7,9 +7,11 @@ import { Templates } from "../model/template.paths";
 import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
 import { createNewObjection } from "../services/objection.service";
 import {
-  addToObjectionSession, deleteObjectionCreateFromObjectionSession,
+  addToObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
-  retrieveCompanyProfileFromObjectionSession, retrieveObjectionCreateFromObjectionSession
+  retrieveCompanyProfileFromObjectionSession,
+  retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 

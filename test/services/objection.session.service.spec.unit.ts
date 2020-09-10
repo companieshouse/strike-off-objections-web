@@ -112,7 +112,7 @@ describe ("objections session service tests", () => {
     session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
     expect(() => {
       retrieveObjectionCreateFromObjectionSession(session);
-    }).toThrow("Error retrieving user details for creating objection from objection session");
+    }).toThrow("Error: No ObjectionCreate present in ObjectionSession");
   });
 
   it("should delete objection create", () => {
