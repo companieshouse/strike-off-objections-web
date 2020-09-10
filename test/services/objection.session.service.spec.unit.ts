@@ -93,8 +93,7 @@ describe ("objections session service tests", () => {
   it("should retrieve objection create when present", () => {
     const session: Session = new Session();
     session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
-    addObjectionCreateToObjectionSession(session, { fullName: "Joe Bloggs",
-      shareIdentity: false });
+    addObjectionCreateToObjectionSession(session, dummyObjectionCreate);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
     expect(objectionCreate).not.toBeUndefined();
     expect(objectionCreate.fullName).toEqual("Joe Bloggs");
@@ -119,11 +118,15 @@ describe ("objections session service tests", () => {
   it("should delete objection create", () => {
     const session: Session = new Session();
     session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
-    const objectionCreate: ObjectionCreate = { fullName: "Joe Bloggs",
-      shareIdentity: false };
-    addObjectionCreateToObjectionSession(session, objectionCreate);
-    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBe(objectionCreate);
+    addObjectionCreateToObjectionSession(session, dummyObjectionCreate);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBe(dummyObjectionCreate);
     deleteObjectionCreateFromObjectionSession(session);
     expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBeUndefined();
   });
 });
+
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
+};
