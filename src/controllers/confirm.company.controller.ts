@@ -4,7 +4,7 @@ import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import {ApiError, ObjectionCreate, ObjectionStatus} from "../modules/sdk/objections";
+import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
 import { createNewObjection } from "../services/objection.service";
 import {
   addToObjectionSession, deleteObjectionCreateFromObjectionSession,

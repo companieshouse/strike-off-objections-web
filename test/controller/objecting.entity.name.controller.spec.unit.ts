@@ -21,7 +21,7 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import {ObjectionCreate} from "../../src/modules/sdk/objections";
+import { ObjectionCreate } from "../../src/modules/sdk/objections";
 
 const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock
 

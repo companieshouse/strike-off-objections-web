@@ -7,7 +7,7 @@ import { IAccessToken, ISignInInfo, IUserProfile } from "ch-node-session-handler
 import {OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE} from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";
-import {ObjectionCreate} from "../modules/sdk/objections";
+import { ObjectionCreate } from "../modules/sdk/objections";
 
 export const retrieveUserEmailFromSession = (session: Session): string => {
   const signInInfo: ISignInInfo | undefined = session.get(SessionKey.SignInInfo);

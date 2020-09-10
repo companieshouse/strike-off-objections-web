@@ -10,7 +10,7 @@ import {
 } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import {Attachment, Objection, ObjectionCreate} from "../../src/modules/sdk/objections";
+import { Attachment, Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { ObjectionStatus } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {

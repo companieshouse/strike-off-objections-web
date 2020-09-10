@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
-import {addObjectionCreateToObjectionSession} from "../services/objection.session.service";
-import {ObjectionCreate} from "../modules/sdk/objections";
-import {Session} from "ch-node-session-handler";
+import { addObjectionCreateToObjectionSession } from "../services/objection.session.service";
+import { ObjectionCreate } from "../modules/sdk/objections";
+import { Session } from "ch-node-session-handler";
 
 /**
  * POST controller for objecting entity name screen
