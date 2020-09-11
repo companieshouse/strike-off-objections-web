@@ -1,8 +1,12 @@
 import { Session } from "ch-node-session-handler";
 import {
+  addObjectionCreateToObjectionSession, deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
+  retrieveObjectionCreateFromObjectionSession,
   retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
+import { ObjectionCreate } from "../../src/modules/sdk/objections";
+import {OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE} from "../../src/constants";
 
 const accessTokenValue = "tokenABC123";
 const testEmail = "demo@ch.gov.uk";
@@ -85,4 +89,44 @@ describe ("objections session service tests", () => {
       retrieveAccessTokenFromSession(session);
     }).toThrow();
   });
+
+  it("should retrieve objection create when present", () => {
+    const session: Session = new Session();
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
+    addObjectionCreateToObjectionSession(session, dummyObjectionCreate);
+    const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
+    expect(objectionCreate).not.toBeUndefined();
+    expect(objectionCreate.fullName).toEqual("Joe Bloggs");
+    expect(objectionCreate.shareIdentity).toEqual(false);
+  });
+
+  it("should not retrieve objection create when objection session is not present", () => {
+    const session: Session = new Session();
+    expect(() => {
+      retrieveObjectionCreateFromObjectionSession(session);
+    }).toThrow();
+  });
+
+  it("should throw error when objection create is absent", () => {
+    const session: Session = new Session();
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
+    expect(() => {
+      retrieveObjectionCreateFromObjectionSession(session);
+    }).toThrow("Error: No ObjectionCreate present in ObjectionSession");
+  });
+
+  it("should delete objection create", () => {
+    const session: Session = new Session();
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
+    addObjectionCreateToObjectionSession(session, dummyObjectionCreate);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBe(dummyObjectionCreate);
+    deleteObjectionCreateFromObjectionSession(session);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBeUndefined();
+  });
 });
+
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
+};
