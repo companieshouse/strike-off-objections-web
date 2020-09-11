@@ -10,6 +10,7 @@ import {
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
   Objection,
+  ObjectionCreate,
 } from "../../../../src/modules/sdk/objections";
 import {
   getBaseAxiosRequestConfig,
@@ -59,7 +60,7 @@ describe("objections SDK service unit tests", () => {
         id: NEW_OBJECTION_ID,
       },
     });
-    const objectionId: string = await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
+    const objectionId: string = await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
 
     expect(objectionId).toBeDefined();
     expect(typeof objectionId).toBe("string");
@@ -84,7 +85,7 @@ describe("objections SDK service unit tests", () => {
 
     mockMakeAPICall.mockRejectedValueOnce(apiError);
 
-    await expect(objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN))
+    await expect(objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate))
       .rejects.toStrictEqual(apiError);
   });
 
@@ -267,3 +268,9 @@ const testCorrectApiValuesAreUsed = (expectedUrlEnding: string, expectedHttpMeth
   expect(httpMethod).toStrictEqual(expectedHttpMethod);
   expect(token).toStrictEqual(ACCESS_TOKEN);
 };
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
+};
+
