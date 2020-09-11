@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
   Your full name
 {% endblock %}
 
@@ -13,7 +16,20 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: ERROR_SUMMARY_TITLE,
+          errorList: errorList
+        }) }}
+      {% endif %}
       <form method="post">
+        {% if errorList.length > 0 %}
+          {% set objectingEntityNameErr = {
+            text: objectingEntityNameErr.text
+          } %}
+        {% else %}
+          {% set objectingEntityNameErr = false %}
+        {% endif %}
 
         {{ govukInput({
           label: {
@@ -24,15 +40,15 @@
           hint: {
             text: "Enter your own details even if you are making an application to object on behalf of someone else."
           },
-          id: "full-name",
-          name: "full-name",
-          errorMessage: objectingEntityNameErrorMessage
+          id: "fullName",
+          name: "fullName",
+          errorMessage: objectingEntityNameErr
         }) }}
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
-          idPrefix: "divulge-info",
-          name: "divulge-info",
+          idPrefix: "divulgeInfo",
+          name: "divulgeInfo",
           fieldset: {
             legend: {
               text: "Can we share your name and email address with the company if they request that information?",
@@ -40,7 +56,7 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
-          errorMessage: divulgeDetailsErrorMessage,
+          errorMessage: objectingEntityNameErr,
           items: [
             {
               value: "yes",
