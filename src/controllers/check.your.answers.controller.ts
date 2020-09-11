@@ -12,10 +12,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
       const objection: Objection = await getObjection(req.session);
+      const shareIdentity: string = (objection["created_by"].shareIdentity === true)? "Yes" : "No";
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
         companyName,
         companyNumber,
         objection,
+        shareIdentity,
         templateName: Templates.CHECK_YOUR_ANSWERS,
       });
     } catch (e) {
