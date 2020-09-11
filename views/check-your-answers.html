@@ -29,6 +29,57 @@
       </h1>
 
       <h2 class="govuk-heading-m">
+        Your details
+      </h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Email address"
+            },
+            value: {
+              text: objection.created_by.email
+            }
+          },
+          {
+            key: {
+              text: "Full name"
+            },
+            value: {
+              text: objection.created_by.fullName
+            },
+            actions: {
+              items: [
+                {
+                  href: "/objecting-entity-name/?id=1",
+                  text: "Change",
+                  visuallyHiddenText: "change name"
+                }
+              ]
+            }
+          },
+          {
+            key: {
+              text: "Share identity if company requests it?"
+            },
+            value: {
+              text: objection.created_by.shareIdentity
+            },
+            actions: {
+              items: [
+                {
+                  href: "/objecting-entity-name/?id=1",
+                  text: "Change",
+                  visuallyHiddenText: "change information shared"
+                }
+              ]
+            }
+          }
+        ]
+      })}}
+
+      <h2 class="govuk-heading-m">
         Company details
       </h2>
 
