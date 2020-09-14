@@ -61,6 +61,12 @@ export interface Objection {
   }>;
 }
 
+export interface CreatedBy {
+  fullName: string,
+  shareIdentity: boolean
+}
+
+
 export const HEADER_CONTENT_DISPOSITION = "content-disposition";
 export const HEADER_CONTENT_LENGTH = "content-length";
 export const HEADER_CONTENT_TYPE = "content-type";
