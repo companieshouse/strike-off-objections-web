@@ -24,7 +24,7 @@ describe("Availability tests", () => {
     const response = await request(app)
       .get("/strike-off-objections");
     expect(response.text).not.toMatch(/Sorry, the service is unavailable/);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
+    expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
   });
 
   it("should show the service offline page when offline flag is true, cookie present", async () => {
@@ -51,7 +51,7 @@ describe("Availability tests", () => {
       .get("/strike-off-objections")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(response.text).not.toMatch(/Sorry, the service is unavailable/);
-    expect(response.text).toMatch(/Use this service to tell us why a limited company should not be removed from the Companies House register./);
+    expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
   });
 
   it("should show the service offline page for non start page", async () => {
