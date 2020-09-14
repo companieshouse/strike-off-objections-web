@@ -48,7 +48,7 @@
         {{ govukRadios({
           classes: "govuk-radios--inline",
           idPrefix: "divulgeInfo",
-          name: "divulgeInfo",
+          name: "shareIdentity",
           fieldset: {
             legend: {
               text: "Can we share your name and email address with the company if they request that information?",
@@ -56,7 +56,7 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
-          errorMessage: divulgeInfoErr,
+          errorMessage: shareIdentityErr,
           items: [
             {
               value: "yes",

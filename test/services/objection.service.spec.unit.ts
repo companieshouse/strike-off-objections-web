@@ -2,22 +2,28 @@ jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/services/objection.session.service");
 
 import { Session } from "ch-node-session-handler";
-import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../../src/constants";
+import {
+  OBJECTIONS_SESSION_NAME,
+  SESSION_COMPANY_PROFILE,
+  SESSION_OBJECTION_CREATE,
+  SESSION_OBJECTION_ID
+} from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
-import { Attachment, Objection } from "../../src/modules/sdk/objections";
+import { Attachment, Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { ObjectionStatus } from "../../src/modules/sdk/objections";
 import * as objectionsService from "../../src/services/objection.service";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveFromObjectionSession,
+  retrieveFromObjectionSession, retrieveObjectionCreateFromObjectionSession,
 } from "../../src/services/objection.session.service";
 
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
 const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
 const mockRetrieveProfileFromSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockRetrieveObjectionCreateFromSession = retrieveObjectionCreateFromObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 const mockSdkDownloadAttachment = objectionsSdk.downloadAttachment as jest.Mock;
@@ -79,6 +85,9 @@ describe("objections API service unit tests", () => {
     mockRetrieveProfileFromSession.mockImplementationOnce(() => {
       return dummyCompanyProfile as ObjectionCompanyProfile;
     });
+    mockRetrieveObjectionCreateFromSession.mockImplementationOnce(() => {
+      return dummyObjectionCreate as ObjectionCreate;
+    });
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => {
       return NEW_OBJECTION_ID as string;
     });
@@ -88,6 +97,7 @@ describe("objections API service unit tests", () => {
 
     session.data[OBJECTIONS_SESSION_NAME] = {
       [SESSION_COMPANY_PROFILE]: dummyCompanyProfile,
+      [SESSION_OBJECTION_CREATE]: dummyObjectionCreate,
       [SESSION_OBJECTION_ID]: NEW_OBJECTION_ID,
     };
   });
@@ -95,11 +105,20 @@ describe("objections API service unit tests", () => {
   it("returns an id when a new objection is created", async () => {
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
-    const objectionId: string = await objectionsService.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN);
+    const objectionId: string = await objectionsService.createNewObjection(
+      COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
 
     expect(objectionId).toBeDefined();
     expect(typeof objectionId).toBe("string");
     expect(objectionId).toStrictEqual(NEW_OBJECTION_ID);
+  });
+
+  it("objections SDK is called with objection create when creating an objection reason", async () => {
+    mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
+
+    const objectionId: string = await objectionsService.createNewObjection(
+      COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
+    expect(mockCreateNewObjection).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
   });
 
   it("objections SDK is called when updating an objection reason", async () => {
@@ -199,4 +218,9 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
+};
+
+const dummyObjectionCreate: ObjectionCreate = {
+  fullName: "Joe Bloggs",
+  shareIdentity: false,
 };

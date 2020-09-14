@@ -3,6 +3,9 @@ import { check, ValidationError, validationResult } from "express-validator/chec
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
+import { addObjectionCreateToObjectionSession } from "../services/objection.session.service";
+import { ObjectionCreate } from "../modules/sdk/objections";
+import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
 
 const FULL_NAME_FIELD: string = "fullName";
@@ -41,6 +44,18 @@ export const processForm = [...validators, async (req: Request, res: Response, n
       templateName: Templates.OBJECTING_ENTITY_NAME,
     });
   } else {
-    return res.redirect(OBJECTIONS_COMPANY_NUMBER)
+    const shareIdentityString: string = req.body.shareIdentity;
+    const fullNameValue: string = req.body.fullName;
+    const shareIdentityValue: boolean = shareIdentityString === "yes";
+    const objectionCreate: ObjectionCreate = { shareIdentity: shareIdentityValue, fullName: fullNameValue };
+
+    const session: Session | undefined  = req.session;
+    if (session) {
+      addObjectionCreateToObjectionSession(session, objectionCreate);
+      return res.redirect(OBJECTIONS_COMPANY_NUMBER);
+    } else {
+      const error: Error = new Error("Session not present");
+      next(error);
+    }
   }
 }];

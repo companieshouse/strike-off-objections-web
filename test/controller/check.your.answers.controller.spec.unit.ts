@@ -53,11 +53,11 @@ const mockSubmitObjection = submitObjection as jest.Mock;
 
 describe("check company tests", () => {
 
-  it("should render the page with company data from the session", async () => {
+  it("should render the page with company data from the session with share id yes", async () => {
 
     mockGetObjectionSessionValue.mockReset().mockReturnValue(dummyCompanyProfile);
 
-    mockGetObjection.mockReset().mockResolvedValue(dummyObjection);
+    mockGetObjection.mockReset().mockResolvedValue(dummyObjectionShare);
 
     const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
       .set("Referer", "/")
@@ -70,6 +70,29 @@ describe("check company tests", () => {
     expect(response.text).toContain("Owed some money");
     expect(response.text).toContain("attachment.jpg");
     expect(response.text).toContain("document.pdf");
+    expect(response.text).toContain("Joe Bloggs");
+    expect(response.text).toContain("Yes");
+  });
+
+  it("should render the page with company data from the session with share id no", async () => {
+
+    mockGetObjectionSessionValue.mockReset().mockReturnValue(dummyCompanyProfile);
+
+    mockGetObjection.mockReset().mockResolvedValue(dummyObjectionDoNotShare);
+
+    const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("Girls school trust");
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("Owed some money");
+    expect(response.text).toContain("attachment.jpg");
+    expect(response.text).toContain("document.pdf");
+    expect(response.text).toContain("No Bloggs");
+    expect(response.text).toContain("No");
   });
 
   it ("should forward to confirmation page and submit the objection on post", async () => {
@@ -98,7 +121,7 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   incorporationDate: "26 June 1872",
 };
 
-const dummyObjection: Objection = {
+const dummyObjectionShare: Objection = {
   attachments: [
     {
       name: "attachment.jpg",
@@ -106,5 +129,24 @@ const dummyObjection: Objection = {
     {
       name: "document.pdf",
     }],
+  created_by: {
+    fullName: "Joe Bloggs",
+    shareIdentity: true
+  },
+  reason: "Owed some money",
+};
+
+const dummyObjectionDoNotShare: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  created_by: {
+    fullName: "No Bloggs",
+    shareIdentity: false
+  },
   reason: "Owed some money",
 };

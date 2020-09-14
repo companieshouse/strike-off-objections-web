@@ -24,6 +24,15 @@ export enum ObjectionStatus {
 }
 
 /**
+ * Data structure for creating an Objection
+ * @interface
+ */
+export interface ObjectionCreate {
+  fullName: string;
+  shareIdentity: boolean;
+}
+
+/**
  * Data structure for patching an Objection
  * @interface
  */
@@ -47,10 +56,17 @@ export interface Attachment {
  */
 export interface Objection {
   reason: string;
+  created_by: CreatedBy,
   attachments: Array<{
     name: string;
   }>;
 }
+
+export interface CreatedBy {
+  fullName: string,
+  shareIdentity: boolean
+}
+
 
 export const HEADER_CONTENT_DISPOSITION = "content-disposition";
 export const HEADER_CONTENT_LENGTH = "content-length";

@@ -10,6 +10,7 @@ import {
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
   Objection,
+  ObjectionCreate,
   ObjectionPatch,
 } from "./types";
 
@@ -31,16 +32,17 @@ const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
  *
  * @param {string} companyNumber the company number
  * @param {string} token the bearer security token to use to call the api
+ * @param {ObjectionCreate} createWithData the user data passed in the body of the request
  *
  * @returns {string} the id of the newly created objection
  * @throws {ApiError}
  */
-export const createNewObjection = async (companyNumber: string, token: string): Promise<string> => {
+export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<string> => {
   logger.debug(`Creating a new objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
-
+  axiosConfig.data = createWithData;
   return (await makeAPICall(axiosConfig)).data.id as string;
 };
 
