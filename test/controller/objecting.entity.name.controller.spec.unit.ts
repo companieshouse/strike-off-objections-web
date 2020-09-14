@@ -17,6 +17,10 @@ import {
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
+const FULL_NAME = "Bob Lawblaw";
+const ENTER_FULL_NAME = "Enter your full name";
+const SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information";
+
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
@@ -40,12 +44,56 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 
 describe("objecting entity name tests", () => {
 
-  it("should render the company number page when posting", async () => {
-    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+  it("should render the company number page when posting with entered details", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        divulgeInfo: "yes"
+      });
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
+  });
+
+  it("should receive error messages when no information is provided", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).toContain(SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when no name is provided but a divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        divulgeInfo: "yes"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when name is provided but no divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).not.toContain(ENTER_FULL_NAME);
+    expect(response.text).toContain(SELECT_TO_DIVULGE);
   });
 });
