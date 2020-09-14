@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { check, ValidationError, validationResult } from "express-validator/check";
+import { check, ValidationError, validationResult } from "express-validator";
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
@@ -9,7 +9,7 @@ import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
 
 const FULL_NAME_FIELD: string = "fullName";
-const DIVULGE_INFO_FIELD: string = "divulgeInfo";
+const DIVULGE_INFO_FIELD: string = "shareIdentity";
 
 const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_FULL_NAME),
@@ -21,7 +21,7 @@ export const processForm = [...validators, async (req: Request, res: Response, n
   const errorListData: GovUkErrorData[] = [];
   if (!errors.isEmpty()) {
     let objectingEntityNameErr: GovUkErrorData | undefined;
-    let divulgeInfoErr: GovUkErrorData | undefined;
+    let shareIdentityErr: GovUkErrorData | undefined;
 
     errors.array({ onlyFirstError: true })
       .forEach((valErr: ValidationError) => {
@@ -31,22 +31,21 @@ export const processForm = [...validators, async (req: Request, res: Response, n
               objectingEntityNameErr = govUkErrorData;
               break;
             case DIVULGE_INFO_FIELD:
-              divulgeInfoErr = govUkErrorData;
+              shareIdentityErr = govUkErrorData;
               break;
         }
 
         errorListData.push(govUkErrorData);
       });
     return res.render(Templates.OBJECTING_ENTITY_NAME, {
-      divulgeInfoErr,
+      shareIdentityErr,
       errorList: errorListData,
       objectingEntityNameErr,
       templateName: Templates.OBJECTING_ENTITY_NAME,
     });
   } else {
-    const shareIdentityString: string = req.body.shareIdentity;
     const fullNameValue: string = req.body.fullName;
-    const shareIdentityValue: boolean = shareIdentityString === "yes";
+    const shareIdentityValue: boolean = req.body.shareIdentity === "yes";
     const objectionCreate: ObjectionCreate = { shareIdentity: shareIdentityValue, fullName: fullNameValue };
 
     const session: Session | undefined  = req.session;

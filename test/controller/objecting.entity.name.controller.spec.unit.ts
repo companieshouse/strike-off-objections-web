@@ -53,7 +53,6 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 describe("objecting entity name tests", () => {
 
   it("should render the company number page when posting with entered details", async () => {
-    mockAddObjectCreate.mockReset();
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
@@ -105,26 +104,19 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(SELECT_TO_DIVULGE);
   });
 
-  it("should render error page if objection create is undefined", async () => {
-    mockAddObjectCreate.mockReset();
-    mockAddObjectCreate.mockImplementation(() => {
-      throw new Error("Error object create test");
-    });
-    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-    expect(response.status).toEqual(500);
-    expect(response.text).toContain(ERROR_500);
-  });
-
   it("should render error page if session is not present", async () => {
-    mockObjectionSessionMiddleware.mockReset();
-    mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
       return next();
     });
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: "yes"
+      });
+
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
