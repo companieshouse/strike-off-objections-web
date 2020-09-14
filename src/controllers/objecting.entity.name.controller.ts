@@ -16,6 +16,12 @@ const validators = [
   check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
+/**
+ * ProcessForm validates input and processes form
+ * @param req
+ * @param res
+ * @param next
+ */
 export const processForm = [...validators, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const errors = validationResult(req);
   const errorListData: GovUkErrorData[] = [];
