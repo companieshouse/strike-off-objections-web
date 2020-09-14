@@ -2,7 +2,7 @@ import { Session } from "ch-node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { OBJECTIONS_CONFIRMATION } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import {CreatedBy, Objection} from "../modules/sdk/objections";
+import { CreatedBy, Objection } from "../modules/sdk/objections";
 import { getObjection, submitObjection } from "../services/objection.service";
 import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
 import logger from "../utils/logger";
