@@ -14,7 +14,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       let shareIdentity: string = "No";
       const objection: Objection = await getObjection(req.session);
       if (objection) {
-        const createdBy: CreatedBy = objection["created_by"];
+        const createdBy: CreatedBy = objection.created_by;
         if (createdBy) {
           shareIdentity = (createdBy.shareIdentity === true) ? "Yes" : "No";
         }
