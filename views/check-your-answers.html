@@ -29,6 +29,39 @@
       </h1>
 
       <h2 class="govuk-heading-m">
+        Your details
+      </h2>
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Email address"
+            },
+            value: {
+              text: objection.created_by.email
+            }
+          },
+          {
+            key: {
+              text: "Full name"
+            },
+            value: {
+              text: objection.created_by.fullName
+            }
+          },
+          {
+            key: {
+              text: "Share identity if company requests it?"
+            },
+            value: {
+              text: shareIdentity
+            }
+          }
+        ]
+      })}}
+
+      <h2 class="govuk-heading-m">
         Company details
       </h2>
 
