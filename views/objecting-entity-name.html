@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
   Your full name
 {% endblock %}
 
@@ -13,7 +16,20 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: ERROR_SUMMARY_TITLE,
+          errorList: errorList
+        }) }}
+      {% endif %}
       <form method="post">
+        {% if errorList.length > 0 %}
+          {% set objectingEntityNameErr = {
+            text: objectingEntityNameErr.text
+          } %}
+        {% else %}
+          {% set objectingEntityNameErr = false %}
+        {% endif %}
 
         {{ govukInput({
           label: {
@@ -24,14 +40,14 @@
           hint: {
             text: "Enter your own details even if you are making an application to object on behalf of someone else."
           },
-          id: "full-name",
+          id: "fullName",
           name: "fullName",
-          errorMessage: objectingEntityNameErrorMessage
+          errorMessage: objectingEntityNameErr
         }) }}
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
-          idPrefix: "divulge-info",
+          idPrefix: "divulgeInfo",
           name: "shareIdentity",
           fieldset: {
             legend: {
@@ -40,7 +56,7 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
-          errorMessage: divulgeDetailsErrorMessage,
+          errorMessage: shareIdentityErr,
           items: [
             {
               value: "yes",

@@ -8,6 +8,7 @@ import authenticationMiddleware from "./middleware/authentication.middleware";
 import objectionSessionMiddleware from "./middleware/objection.session.middleware";
 import serviceAvailabilityMiddleware from "./middleware/service.availability.middleware";
 import sessionMiddleware from "./middleware/session.middleware";
+import { ErrorMessages } from "./model/error.messages";
 import * as pageURLs from "./model/page.urls";
 import router from "./routes/routes";
 import logger from "./utils/logger";
@@ -24,6 +25,7 @@ const env = nunjucks.configure([
   express: app,
 });
 env.addGlobal("CDN_URL", process.env.CDN_HOST);
+env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
 
 app.enable("trust proxy");
 app.use(express.json());

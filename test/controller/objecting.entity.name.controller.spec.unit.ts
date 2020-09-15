@@ -21,9 +21,13 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { ObjectionCreate } from "../../src/modules/sdk/objections";
 
 const mockAddObjectCreate = addObjectionCreateToObjectionSession as jest.Mock
+
+const FULL_NAME = "Bob Lawblaw";
+const ENTER_FULL_NAME = "Enter your full name";
+const SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information";
+const ERROR_500 = "Sorry, there is a problem with the service";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -46,42 +50,74 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
-const ERROR_500 = "Sorry, there is a problem with the service";
-
 describe("objecting entity name tests", () => {
-  mockAddObjectCreate.mockReset();
-  it("should render the company number page when posting", async () => {
+
+  it("should render the company number page when posting with entered details", async () => {
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: "yes"
+      });
+
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
   });
 
-  it("should render error page if objection create is undefined", async () => {
-    mockAddObjectCreate.mockReset();
-    mockAddObjectCreate.mockImplementation(() => { throw new Error("Error object create test"); });
-    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+  it("should receive error messages when no information is provided", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-    expect(response.status).toEqual(500);
-    expect(response.text).toContain(ERROR_500);
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).toContain(SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when no name is provided but a divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        shareIdentity: "yes"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when name is provided but no divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).not.toContain(ENTER_FULL_NAME);
+    expect(response.text).toContain(SELECT_TO_DIVULGE);
   });
 
   it("should render error page if session is not present", async () => {
-    mockObjectionSessionMiddleware.mockReset();
-    mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
       return next();
     });
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: "yes"
+      });
+
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
 });
-
-const dummyObjectionCreate: ObjectionCreate = {
-  fullName: "Joe Bloggs",
-  shareIdentity: false,
-};
