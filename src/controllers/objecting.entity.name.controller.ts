@@ -25,7 +25,7 @@ const validators = [
 export const post = [...validators, (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return showErrorsOnScreen(errors, res);
+    return showErrorsOnScreen(errors, req, res);
   }
   const fullNameValue: string = req.body.fullName;
   const shareIdentityValue: boolean = req.body.shareIdentity === "yes";
@@ -40,7 +40,7 @@ export const post = [...validators, (req: Request, res: Response, next: NextFunc
   }
 }];
 
-const showErrorsOnScreen = (errors: Result, res: Response) => {
+const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
   const errorListData: GovUkErrorData[] = [];
   let objectingEntityNameErr: GovUkErrorData | undefined = undefined;
   let shareIdentityErr: GovUkErrorData | undefined = undefined;
@@ -57,7 +57,12 @@ const showErrorsOnScreen = (errors: Result, res: Response) => {
       }
       errorListData.push(govUkErrorData);
     });
+
+  const fullNameValue: string = req.body.fullName
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
+    fullNameValue,
+    isYesChecked: req.body.shareIdentity === "yes",
+    isNoChecked: req.body.shareIdentity === "no",
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
