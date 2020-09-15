@@ -58,7 +58,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
       errorListData.push(govUkErrorData);
     });
 
-  const fullNameValue: string = req.body.fullName
+  const fullNameValue: string = req.body.fullName;
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,
     isYesChecked: req.body.shareIdentity === "yes",
