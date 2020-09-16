@@ -89,6 +89,7 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ENTER_FULL_NAME);
     expect(response.text).not.toContain(SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
+    expect(response.text).not.toContain("value=\"no\" checked");
   });
 
   it("should receive error message when no name is provided but a no divulge option is selected", async () => {
@@ -104,6 +105,7 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ENTER_FULL_NAME);
     expect(response.text).not.toContain(SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
+    expect(response.text).not.toContain("value=\"yes\" checked");
   });
 
   it("should receive error message when name is provided but no divulge option is selected", async () => {
