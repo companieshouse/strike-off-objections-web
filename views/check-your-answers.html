@@ -48,6 +48,15 @@
             },
             value: {
               text: objection.created_by.fullName
+            },
+            actions: {
+              items: [
+                {
+                  href: "/objecting-entity-name/?id=1",
+                  text: "Change",
+                  visuallyHiddenText: "change name"
+                }
+              ]
             }
           },
           {
@@ -56,6 +65,15 @@
             },
             value: {
               text: shareIdentity
+            },
+            actions: {
+              items: [
+                {
+                  href: "/objecting-entity-name/?id=1",
+                  text: "Change",
+                  visuallyHiddenText: "change information shared"
+                }
+              ]
             }
           }
         ]
@@ -98,6 +116,15 @@
             },
             value: {
               text: objection.reason
+            },
+            actions: {
+              items: [
+                {
+                  href: "/enter-information" + loop.index0,
+                  text: "Change",
+                  visuallyHiddenText: "change objection information"
+                }
+              ]
             }
           },
           {
@@ -106,6 +133,15 @@
             },
             value: {
               html: documentList
+            },
+            actions: {
+              items: [
+                {
+                  href: "/upload" + loop.index0,
+                  text: "Change",
+                  visuallyHiddenText: "change uploaded documents"
+                }
+              ]
             }
           }
         ]
