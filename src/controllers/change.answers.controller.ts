@@ -4,7 +4,7 @@ import {Session} from "ch-node-session-handler";
 import {STRIKE_OFF_OBJECTIONS} from "../model/page.urls";
 import {CHANGE_ANSWER_KEY} from "../constants";
 
-export const get = async (req: Request, res: Response, next: NextFunction) => {
+export const get = (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined = req.session as Session;
   if (session) {
     const query: string | undefined = req.query["changePage"] as string;
