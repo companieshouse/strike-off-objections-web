@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import * as changeAnswersRoute from "../controllers/change.answers.controller";
 import * as checkYourAnswersRoute from "../controllers/check.your.answers.controller";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
@@ -60,5 +61,7 @@ router.post(pageURLs.CHECK_YOUR_ANSWERS, checkYourAnswersRoute.post);
 router.get(pageURLs.CONFIRMATION, confirmationRoute.get);
 
 router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
+
+router.get(pageURLs.CHANGE_ANSWERS, changeAnswersRoute.get);
 
 export default router;

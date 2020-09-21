@@ -48,6 +48,15 @@
             },
             value: {
               text: objection.created_by.fullName
+            },
+            actions: {
+              items: [
+                {
+                  href: "/strike-off-objections/change-answers?changePage=objecting-entity-name",
+                  text: "Change",
+                  visuallyHiddenText: "change name"
+                }
+              ]
             }
           },
           {
@@ -98,6 +107,15 @@
             },
             value: {
               text: objection.reason
+            },
+            actions: {
+              items: [
+                {
+                  href: "/strike-off-objections/change-answers?changePage=enter-information",
+                  text: "Change",
+                  visuallyHiddenText: "change objection information"
+                }
+              ]
             }
           },
           {
@@ -106,6 +124,15 @@
             },
             value: {
               html: documentList
+            },
+            actions: {
+              items: [
+                {
+                  href: "/strike-off-objections/change-answers?changePage=document-upload",
+                  text: "Change",
+                  visuallyHiddenText: "change uploaded documents"
+                }
+              ]
             }
           }
         ]
