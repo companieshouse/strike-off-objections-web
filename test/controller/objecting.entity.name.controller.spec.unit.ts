@@ -1,5 +1,5 @@
 import {
-  addObjectionCreateToObjectionSession,
+  addObjectionCreateToObjectionSession, retrieveFromObjectionSession, retrieveObjectionSessionFromSession,
 } from "../../src/services/objection.session.service";
 
 jest.mock("ioredis");
@@ -7,6 +7,7 @@ jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/services/objection.service");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -21,8 +22,10 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
+import { Objection } from "../../src/modules/sdk/objections";
+import { getObjection } from "../../src/services/objection.service";
 
-const mockAddObjectCreate = addObjectionCreateToObjectionSession as jest.Mock
+
 
 const FULL_NAME = "Bob Lawblaw";
 const ENTER_FULL_NAME = "Enter your full name";
@@ -33,24 +36,106 @@ const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = {
-    data: {},
-  } as Session;
-  return next();
-});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
-mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  if (req.session) {
-    req.session.data[OBJECTIONS_SESSION_NAME] = {};
-    return next();
-  }
 
-  return next(new Error("No session on request"));
-});
+const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
+
+const mockRetrieveObjectionSessionFromSession = retrieveObjectionSessionFromSession as jest.Mock;
+
+const mockGetObjection = getObjection as jest.Mock;
 
 describe("objecting entity name tests", () => {
+
+  beforeEach(() => {
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = {
+        data: {},
+      } as Session;
+      return next();
+    });
+    mockObjectionSessionMiddleware.mockReset();
+    mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      if (req.session) {
+        req.session.data[OBJECTIONS_SESSION_NAME] = {};
+        return next();
+      }
+
+      return next(new Error("No session on request"));
+    });
+  });
+
+  it("should render empty objecting entity name page if no change answer flag is set in session", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("What is your full name");
+    expect(response.text).not.toContain(FULL_NAME);
+  });
+
+  it("should render empty objecting entity name page if change answer flag is set to false", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("What is your full name");
+    expect(response.text).not.toContain(FULL_NAME);
+  });
+
+  it("should render full objecting entity name page if change answer flag is set to true", async() => {
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockGetObjection.mockReset().mockResolvedValue(mockObjection);
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("What is your full name");
+    expect(response.text).toContain(FULL_NAME);
+  });
+
+  it("should throw exception when objection not found even when change answer flag is set to true", async() => {
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockGetObjection.mockReset().mockResolvedValue(undefined);
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(response.status).toEqual(500);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+  });
+
+  it("should reroute to error page if session is not present", async() => {
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      return next();
+    });
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(response.status).toEqual(500);
+  });
 
   it("should render the company number page when posting with entered details", async () => {
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -140,3 +225,18 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ERROR_500);
   });
 });
+
+const mockObjection: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  created_by: {
+    fullName: FULL_NAME,
+    shareIdentity: false
+  },
+  reason: "Owed some money",
+}

@@ -12,7 +12,7 @@ import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
 import { getObjection } from "../services/objection.service";
 import logger from "../utils/logger";
-import {CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE} from "../constants";
+import { CHANGE_ANSWER_KEY } from "../constants";
 
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
@@ -43,6 +43,14 @@ const getExistingPageData = async (session: Session, res: Response, next: NextFu
   }
 }
 
+const isChangeAnswerFlagPresentSetAndSetToTrue = (session: Session): boolean => {
+  const changeAnswer: boolean = retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY);
+  if (changeAnswer) {
+    return changeAnswer === true;
+  }
+  return false;
+};
+
 /**
  * GET checks for change flag and renders page
  * @param req
@@ -52,9 +60,7 @@ const getExistingPageData = async (session: Session, res: Response, next: NextFu
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined = req.session as Session;
   if (session) {
-    if (retrieveObjectionSessionFromSession(session) &&
-        retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
-
+    if (isChangeAnswerFlagPresentSetAndSetToTrue(session)) {
       // TODO OBJ-287 handle this more formally.
       delete retrieveObjectionSessionFromSession(session)[CHANGE_ANSWER_KEY];
 
