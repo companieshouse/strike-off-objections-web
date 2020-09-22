@@ -93,7 +93,7 @@ describe("Basic URL Tests", () => {
       .get("/strike-off-objections/enter-information");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Tell us why you're objecting to the company being struck off/);
+    expect(response.text).toMatch(/Tell us why you&#39;re objecting to the company being struck off/);
   });
 
   it("should find the document upload page", async () => {

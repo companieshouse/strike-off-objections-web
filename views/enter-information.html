@@ -39,17 +39,20 @@
         {% endif %}
 
         {{ govukTextarea({
-          label: {
-            html: titleHTML,
-            isPageHeading: true,
-            value: information
-          },
-
           name: "information",
           id: "information",
+          classes: "govuk-body",
+          hint: {
+            text: "Include any information that supports your objection application. You can upload documents on the next screen."
+          },
           errorMessage: informationError,
-          rows: '8'
-
+          rows: '8',
+          label: {
+            text: "Tell us why you're objecting to the company being struck off",
+            isPageHeading: true,
+            classes: 'govuk-label--xl',
+            value: information
+          }
         }) }}
 
         {{ govukButton({
