@@ -98,6 +98,30 @@ describe("enter information tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
   });
+
+  it("should render error page if updating objection reason produces error", async () => {
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => OBJECTION_ID);
+
+    mockUpdateObjectionReason.mockReset();
+    mockUpdateObjectionReason.mockImplementationOnce(() => {
+      throw new Error("Test error");
+    });
+
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({ information: REASON });
+
+    expect(mockUpdateObjectionReason).toHaveBeenCalledWith(COMPANY_NUMBER, OBJECTION_ID, undefined, REASON);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
