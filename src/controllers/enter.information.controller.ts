@@ -26,7 +26,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
   const reason: string = req.body.information;
 
-  await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+  try {
+    await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+  } catch (e) {
+    return next(e);
+  }
 
   return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
 };

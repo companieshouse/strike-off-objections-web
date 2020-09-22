@@ -94,6 +94,18 @@ describe("remove document url tests", () => {
     expect(res.text).toContain("Sorry, there is a problem with the service");
   });
 
+  it ("should return error page when api call throws error without rejecting promise", async () => {
+    mockGetAttachment.mockImplementationOnce(() => {
+      throw new Error("Test error");
+    });
+    const res = await request(app)
+      .get(OBJECTIONS_REMOVE_DOCUMENT + QUERY_ID)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    expect(res.status).toEqual(500);
+    expect(res.text).toContain("Sorry, there is a problem with the service");
+  });
+
   it("should redirect to document upload page if No submitted", async () => {
     const res = await request(app)
       .post(OBJECTIONS_REMOVE_DOCUMENT)

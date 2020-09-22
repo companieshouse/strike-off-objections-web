@@ -37,7 +37,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const attachmentId: string = req.body[ATTACHMENT_ID_FIELD];
     if (attachmentId) {
       logger.debugRequest(req, `Removing document with attachmentId ${attachmentId}`);
-      await deleteAttachment(session, attachmentId);
+
+      try {
+        await deleteAttachment(session, attachmentId);
+      } catch (e) {
+        return next(e);
+      }
+
       return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
     } else {
       return next(new Error("No attachment id found in form body"));
