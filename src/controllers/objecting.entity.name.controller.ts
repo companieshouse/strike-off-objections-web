@@ -30,8 +30,8 @@ const getSessionPageDataIfPresent = (session: Session, res: Response) => {
   if (objectionCreate) {
     existingName = objectionCreate.fullName;
     const existingSharedIdentity = objectionCreate.shareIdentity;
-    yesChecked = existingSharedIdentity === true;
-    noChecked = existingSharedIdentity !== true;
+    yesChecked = existingSharedIdentity;
+    noChecked = !existingSharedIdentity;
   }
 
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
@@ -47,7 +47,7 @@ const getExistingPageData = async (session: Session, res: Response, next: NextFu
     const objection: Objection = await getObjection(session) as Objection;
     const existingName: string = objection.created_by.fullName;
     const existingShareIdentity: boolean = objection.created_by.shareIdentity;
-    if (existingName && existingShareIdentity) {
+    if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
