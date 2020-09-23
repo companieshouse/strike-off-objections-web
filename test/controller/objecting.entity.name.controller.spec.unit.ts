@@ -145,7 +145,6 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(200);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
-    expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
     expect(response.text).toContain("What is your full name");
     expect(response.text).toContain(FULL_NAME);
@@ -164,7 +163,6 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(500);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
-    expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 
