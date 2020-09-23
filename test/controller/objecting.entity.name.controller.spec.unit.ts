@@ -12,7 +12,7 @@ import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import {OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE} from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
