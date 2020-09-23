@@ -1,7 +1,3 @@
-import {
-  addObjectionCreateToObjectionSession, retrieveFromObjectionSession, retrieveObjectionSessionFromSession,
-} from "../../src/services/objection.session.service";
-
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
@@ -9,11 +5,14 @@ jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 
+import {
+  retrieveFromObjectionSession, retrieveObjectionSessionFromSession,
+} from "../../src/services/objection.session.service";
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import {OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE} from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
@@ -22,10 +21,8 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { Objection } from "../../src/modules/sdk/objections";
+import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { getObjection } from "../../src/services/objection.service";
-
-
 
 const FULL_NAME = "Bob Lawblaw";
 const ENTER_FULL_NAME = "Enter your full name";
@@ -59,6 +56,7 @@ describe("objecting entity name tests", () => {
     mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
       if (req.session) {
         req.session.data[OBJECTIONS_SESSION_NAME] = {};
+        req.session.data[SESSION_OBJECTION_CREATE] = mockObjectionCreate;
         return next();
       }
 
@@ -69,10 +67,12 @@ describe("objecting entity name tests", () => {
   it("should render empty objecting entity name page if no change answer flag is set in session", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -83,10 +83,12 @@ describe("objecting entity name tests", () => {
   it("should render empty objecting entity name page if change answer flag is set to false", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -99,14 +101,16 @@ describe("objecting entity name tests", () => {
     mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
-    mockGetObjection.mockReset().mockResolvedValue(mockObjection);
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(200);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
     expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
     expect(response.text).toContain("What is your full name");
     expect(response.text).toContain(FULL_NAME);
   });
@@ -116,10 +120,12 @@ describe("objecting entity name tests", () => {
     mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
-    mockGetObjection.mockReset().mockResolvedValue(undefined);
+    mockGetObjection.mockReset().mockResolvedValueOnce(undefined);
+
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
+
     expect(response.status).toEqual(500);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
     expect(mockRetrieveObjectionSessionFromSession).toHaveBeenCalledTimes(1);
@@ -240,3 +246,8 @@ const mockObjection: Objection = {
   },
   reason: "Owed some money",
 }
+
+const mockObjectionCreate: ObjectionCreate = {
+  fullName: FULL_NAME,
+  shareIdentity: false,
+};
