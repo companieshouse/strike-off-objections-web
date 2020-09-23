@@ -3,10 +3,16 @@ import { check, Result, ValidationError, validationResult } from "express-valida
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
-import { addObjectionCreateToObjectionSession } from "../services/objection.session.service";
-import { ObjectionCreate } from "../modules/sdk/objections";
+import {
+  addObjectionCreateToObjectionSession, retrieveFromObjectionSession,
+  retrieveObjectionSessionFromSession
+} from "../services/objection.session.service";
+import { Objection, ObjectionCreate } from "../modules/sdk/objections";
 import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
+import { getObjection } from "../services/objection.service";
+import logger from "../utils/logger";
+import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE } from "../constants";
 
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
@@ -15,6 +21,65 @@ const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_FULL_NAME),
   check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
+
+const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
+  let existingName;
+  let yesChecked: boolean = false;
+  let noChecked: boolean = false;
+  const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
+  if (objectionCreate) {
+    existingName = objectionCreate.fullName;
+    const existingSharedIdentity = objectionCreate.shareIdentity;
+    yesChecked = existingSharedIdentity;
+    noChecked = !existingSharedIdentity;
+  }
+
+  return res.render(Templates.OBJECTING_ENTITY_NAME, {
+    fullNameValue: existingName,
+    isYesChecked: yesChecked,
+    isNoChecked: noChecked,
+    templateName: Templates.OBJECTING_ENTITY_NAME,
+  });
+}
+
+const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
+  try {
+    const objection: Objection = await getObjection(session);
+    const existingName: string = objection.created_by.fullName;
+    const existingShareIdentity: boolean = objection.created_by.shareIdentity;
+    if (existingName && existingShareIdentity !== undefined) {
+      return res.render(Templates.OBJECTING_ENTITY_NAME, {
+        fullNameValue: existingName,
+        isYesChecked: existingShareIdentity,
+        isNoChecked: !existingShareIdentity,
+        templateName: Templates.OBJECTING_ENTITY_NAME,
+      });
+    } else {
+      return next(new Error("Existing data not present"));
+    }
+  } catch (e) {
+    logger.error(e.message);
+    return next(e);
+  }
+}
+
+/**
+ * GET checks for change flag and renders page
+ * @param req
+ * @param res
+ * @param next
+ */
+export const get = async (req: Request, res: Response, next: NextFunction) => {
+  const session: Session | undefined = req.session as Session;
+  if (session) {
+    if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
+      return await showPageWithMongoData(session, res, next);
+    } else {
+      return showPageWithSessionDataIfPresent(session, res);
+    }
+    return next(new Error("No Session present"));
+  }
+}
 
 /**
  * POST validates input and processes form

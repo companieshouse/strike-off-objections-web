@@ -28,7 +28,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 
 router.get("/", renderTemplate(Templates.INDEX));
 
-router.get(pageURLs.OBJECTING_ENTITY_NAME, renderTemplate(Templates.OBJECTING_ENTITY_NAME));
+router.get(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.get);
 router.post(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.post);
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
