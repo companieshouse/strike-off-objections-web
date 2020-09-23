@@ -9,7 +9,7 @@ import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
@@ -72,6 +72,7 @@ describe("check company tests", () => {
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(dummySession, CHANGE_ANSWER_KEY);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
@@ -94,6 +95,7 @@ describe("check company tests", () => {
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(dummySession, CHANGE_ANSWER_KEY);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
