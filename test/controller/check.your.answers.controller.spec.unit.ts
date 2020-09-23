@@ -18,6 +18,7 @@ import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../sr
 import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection, submitObjection } from "../../src/services/objection.service";
 import {
+  deleteFromObjectionSession,
   retrieveCompanyProfileFromObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -51,7 +52,13 @@ const mockGetObjection = getObjection as jest.Mock;
 
 const mockSubmitObjection = submitObjection as jest.Mock;
 
+const mockDeleteFromObjectionsSession = deleteFromObjectionSession as jest.Mock;
+
 describe("check company tests", () => {
+
+  beforeEach(() => {
+    mockDeleteFromObjectionsSession.mockReset();
+  });
 
   it("should render the page with company data from the session with share id yes", async () => {
 
@@ -64,6 +71,7 @@ describe("check company tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
@@ -85,6 +93,7 @@ describe("check company tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");

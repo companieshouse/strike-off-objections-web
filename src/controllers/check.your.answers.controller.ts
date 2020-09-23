@@ -4,19 +4,24 @@ import { OBJECTIONS_CONFIRMATION } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { CreatedBy, Objection } from "../modules/sdk/objections";
 import { getObjection, submitObjection } from "../services/objection.service";
-import { retrieveCompanyProfileFromObjectionSession } from "../services/objection.session.service";
+import {
+  deleteFromObjectionSession,
+  retrieveCompanyProfileFromObjectionSession
+} from "../services/objection.session.service";
 import logger from "../utils/logger";
+import { CHANGE_ANSWER_KEY } from "../constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
+      deleteFromObjectionSession(req.session, CHANGE_ANSWER_KEY);
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
       let shareIdentity: string = "No";
       const objection: Objection = await getObjection(req.session);
       if (objection) {
         const createdBy: CreatedBy = objection.created_by;
         if (createdBy) {
-          shareIdentity = (createdBy.shareIdentity === true) ? "Yes" : "No";
+          shareIdentity = createdBy.shareIdentity ? "Yes" : "No";
         }
       }
       return res.render(Templates.CHECK_YOUR_ANSWERS, {
