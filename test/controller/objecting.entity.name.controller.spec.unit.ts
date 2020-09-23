@@ -64,8 +64,9 @@ describe("objecting entity name tests", () => {
     });
   });
 
-  it("should render empty objecting entity name page if no change answer flag is set in session", async() => {
+  it("should render empty objecting entity name page if no change answer flag is set in session, session object create empty", async() => {
     mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
 
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -80,9 +81,10 @@ describe("objecting entity name tests", () => {
     expect(response.text).not.toContain(FULL_NAME);
   });
 
-  it("should render empty objecting entity name page if change answer flag is set to false", async() => {
+  it("should render empty objecting entity name page if change answer flag is set to false, session object create empty", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
 
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
@@ -96,11 +98,45 @@ describe("objecting entity name tests", () => {
     expect(response.text).not.toContain(FULL_NAME);
   });
 
+  it("should render empty objecting entity name page if no change answer flag is set in session, session object create present", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("What is your full name");
+    expect(response.text).toContain(FULL_NAME);
+  });
+
+  it("should render empty objecting entity name page if change answer flag is set to false, session object create present", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("What is your full name");
+    expect(response.text).toContain(FULL_NAME);
+  });
+
   it("should render full objecting entity name page if change answer flag is set to true", async() => {
-    mockRetrieveObjectionSessionFromSession.mockReset();
-    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
 
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -116,10 +152,10 @@ describe("objecting entity name tests", () => {
   });
 
   it("should throw exception when objection not found even when change answer flag is set to true", async() => {
-    mockRetrieveObjectionSessionFromSession.mockReset();
-    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockGetObjection.mockReset().mockResolvedValueOnce(undefined);
 
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
