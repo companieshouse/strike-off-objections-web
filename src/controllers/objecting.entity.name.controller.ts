@@ -22,7 +22,7 @@ const validators = [
   check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
-const getSessionPageDataIfPresent = (session: Session, res: Response) => {
+const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let existingName;
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
@@ -42,9 +42,9 @@ const getSessionPageDataIfPresent = (session: Session, res: Response) => {
   });
 }
 
-const getExistingPageData = async (session: Session, res: Response, next: NextFunction) => {
+const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
   try {
-    const objection: Objection = await getObjection(session) as Objection;
+    const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.fullName;
     const existingShareIdentity: boolean = objection.created_by.shareIdentity;
     if (existingName && existingShareIdentity !== undefined) {
@@ -75,9 +75,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
       // TODO OBJ-287 handle this more formally.
       delete retrieveObjectionSessionFromSession(session)[CHANGE_ANSWER_KEY];
-      return await getExistingPageData(session, res, next);
+      return await showPageWithMongoData(session, res, next);
     } else {
-      return getSessionPageDataIfPresent(session, res);
+      return showPageWithSessionDataIfPresent(session, res);
     }
     return next(new Error("No Session present"));
   }
