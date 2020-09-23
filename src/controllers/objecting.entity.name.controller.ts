@@ -73,8 +73,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined = req.session as Session;
   if (session) {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
-      // TODO OBJ-287 handle this more formally.
-      delete retrieveObjectionSessionFromSession(session)[CHANGE_ANSWER_KEY];
       return await showPageWithMongoData(session, res, next);
     } else {
       return showPageWithSessionDataIfPresent(session, res);
