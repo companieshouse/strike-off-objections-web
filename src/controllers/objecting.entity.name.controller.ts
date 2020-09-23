@@ -12,7 +12,7 @@ import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
 import { getObjection } from "../services/objection.service";
 import logger from "../utils/logger";
-import {CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE} from "../constants";
+import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE } from "../constants";
 
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
