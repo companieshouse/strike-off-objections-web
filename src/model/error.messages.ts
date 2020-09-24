@@ -23,3 +23,10 @@ export enum HttpStatusCodes {
   NOT_FOUND = 404,
   UNSUPPORTED_MEDIA_TYPE = 415,
 }
+
+export enum CompanySearchErrorMessages {
+  INVALID_COMPANY_NUMBER = "Invalid company number",
+  COMPANY_NUMBER_TOO_LONG = "Company number too long",
+  NO_COMPANY_NUMBER_SUPPLIED = "You must enter a company number",
+  COMPANY_NOT_FOUND = "No results found for that company number",
+}

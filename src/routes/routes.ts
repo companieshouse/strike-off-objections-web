@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import * as changeAnswersRoute from "../controllers/change.answers.controller";
 import * as checkYourAnswersRoute from "../controllers/check.your.answers.controller";
-import * as companyNumberRoute from "../controllers/company.number.controller";
+import companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as confirmationRoute from "../controllers/confirmation.controller";
 import * as documentDownloadRoute from "../controllers/document.download.controller";
@@ -32,7 +32,7 @@ router.get(pageURLs.OBJECTING_ENTITY_NAME, renderTemplate(Templates.OBJECTING_EN
 router.post(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.post);
 
 router.get(pageURLs.COMPANY_NUMBER, renderTemplate(Templates.COMPANY_NUMBER));
-router.post(pageURLs.COMPANY_NUMBER, companyNumberRoute.post);
+router.post(pageURLs.COMPANY_NUMBER, ...companyNumberRoute);
 
 router.get(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute.get);
 router.post(pageURLs.CONFIRM_COMPANY, confirmCompanyRoute.post);
