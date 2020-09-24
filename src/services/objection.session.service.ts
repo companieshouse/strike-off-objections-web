@@ -107,6 +107,15 @@ export const retrieveFromObjectionSession = (session: Session, key: string): any
   return objectionsExtraData[key];
 };
 
+export const deleteFromObjectionSession = (session: Session, key: string): void => {
+  const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
+  if (objectionsExtraData) {
+    delete objectionsExtraData[key];
+    return;
+  }
+  throw new Error(`No Objection Session to delete ${key} from`);
+}
+
 export const addToObjectionSession = (session: Session, key: string, v: any): void => {
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   objectionsExtraData[key] = v;
