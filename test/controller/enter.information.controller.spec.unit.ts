@@ -9,7 +9,7 @@ import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
@@ -23,7 +23,8 @@ import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionReason } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
-  retrieveFromObjectionSession, retrieveObjectionSessionFromSession,
+  retrieveFromObjectionSession,
+  retrieveObjectionSessionFromSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -64,25 +65,6 @@ const mockRetrieveObjectionSessionFromSession = retrieveObjectionSessionFromSess
 const mockGetObjection = getObjection as jest.Mock;
 
 describe("enter information tests", () => {
-
-  // beforeEach(() => {
-  //   mockSessionMiddleware.mockReset();
-  //   mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  //     req.session = {
-  //       data: {},
-  //     } as Session;
-  //     return next();
-  //   });
-  //   mockObjectionSessionMiddleware.mockReset();
-  //   mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  //     if (req.session) {
-  //       req.session.data[OBJECTIONS_SESSION_NAME] = {};
-  //       return next();
-  //     }
-  //
-  //     return next(new Error("No session on request"));
-  //   });
-  // });
 
   it("should render the page", async () => {
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
