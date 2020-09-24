@@ -24,7 +24,7 @@ import {
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
-import {getObjection, updateObjectionUserDetails} from "../../src/services/objection.service";
+import { getObjection, updateObjectionUserDetails } from "../../src/services/objection.service";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
@@ -180,7 +180,7 @@ describe("objecting entity name tests", () => {
     expect(response.status).toEqual(500);
   });
 
-  it("should render the company number page when posting with entered details no change answers", async () => {
+  it("should render company number page when posting entered details, change answer flag not present", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveObjectionSessionFromSession.mockReset();
 
@@ -199,7 +199,7 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
 
-  it("should render the company number page when posting with entered details change answers false", async () => {
+  it("should render company number page when posting entered details, change answers flag is false", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
     mockRetrieveObjectionSessionFromSession.mockReset();
@@ -294,7 +294,7 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ERROR_500);
   });
 
-  it("should navigate to check you answers and send details to mongo when check answers", async () => {
+  it("should navigate to check your answers when posting entered details, change answers flag is true", async () => {
     mockRetrieveAccessToken.mockReset();
     mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
     mockRetrieveCompanyProfileFromSession.mockReset();
