@@ -37,6 +37,8 @@ export interface ObjectionCreate {
  * @interface
  */
 export interface ObjectionPatch {
+  fullName?: string;
+  shareIdentity?: boolean;
   reason?: string;
   status?: ObjectionStatus;
 }
