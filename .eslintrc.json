@@ -22,7 +22,12 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-inferrable-types": "off",
-        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_"
+            }
+        ],
         "@typescript-eslint/type-annotation-spacing": "error",
         "arrow-spacing": "error",
         "brace-style": [
@@ -76,6 +81,7 @@
                 "allowFunctionParams": true
             }
         ],
+        "no-unused-vars": "off",
         "no-whitespace-before-property": "error",
         "object-curly-spacing": [
             2,
