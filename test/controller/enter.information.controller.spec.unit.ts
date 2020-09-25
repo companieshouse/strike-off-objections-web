@@ -126,6 +126,22 @@ describe("enter information tests", () => {
     expect(response.text).toContain("Sorry, there is a problem with the service");
   });
 
+  it("should throw an error when no objection is present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(undefined);
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+
   it("should redirect to the check-your-answers page on post with change key set to true", async () => {
     mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       req.session = SESSION;
