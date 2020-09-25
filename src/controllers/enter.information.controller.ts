@@ -11,7 +11,7 @@ import {
   retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 
-export const get = async (req: Request, res: Response, next: NextFunction) => {
+export const get = (req: Request, res: Response) => {
   return res.render(Templates.ENTER_INFORMATION, {
     templateName: Templates.ENTER_INFORMATION,
   });
