@@ -42,6 +42,7 @@ const SELECT_TO_DIVULGE = "Select if we can share your name and email address wi
 const ERROR_500 = "Sorry, there is a problem with the service";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
+const ERROR_SCREEN_MESSAGE = "Sorry, there is a problem with the service";
 
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
@@ -153,7 +154,7 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(FULL_NAME);
   });
 
-  it("should throw exception when objection not found even when change answer flag is set to true", async() => {
+  it("should throw exception when objection not found when change answer flag is set to true", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
@@ -169,6 +170,25 @@ describe("objecting entity name tests", () => {
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 
+  it("should catch and throw exception when get objection throws error", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
+    mockGetObjection.mockReset().mockImplementation(() => {
+      throw Error("Test");
+    });
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toThrow(Error("Test"));
+  });
+
   it("should reroute to error page if session is not present", async() => {
     mockSessionMiddleware.mockReset();
     mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -178,6 +198,7 @@ describe("objecting entity name tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
     expect(response.status).toEqual(500);
+    expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
   });
 
   it("should render company number page when posting entered details, change answer flag not present", async () => {
@@ -317,6 +338,34 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
+  });
+
+  it("should catch and throw exception when updateObjectionUserDetails throws an error", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveCompanyProfileFromSession.mockReset();
+    mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockUpdateObjectionUserDetails.mockReset();
+    mockUpdateObjectionUserDetails.mockImplementation(() => {
+      throw new Error("Test")
+    });
+
+    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: "yes"
+      });
+
+    expect(response.status).toEqual(500);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
+    expect(mockUpdateObjectionUserDetails).toThrow(Error("Test"));
   });
 });
 

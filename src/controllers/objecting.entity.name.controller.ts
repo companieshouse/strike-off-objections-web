@@ -12,7 +12,7 @@ import {
 import { Objection, ObjectionCreate } from "../modules/sdk/objections";
 import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
-import {getObjection, updateObjectionReason, updateObjectionUserDetails} from "../services/objection.service";
+import { getObjection, updateObjectionUserDetails } from "../services/objection.service";
 import logger from "../utils/logger";
 import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE, SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
@@ -85,15 +85,15 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const updateMongoWithChangedUserDetails = async (session: Session,
-                                                 objectionCreate: ObjectionCreate,
-                                                 next: NextFunction) => {
+                                                 objectionCreate: ObjectionCreate) => {
   try {
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
     const token: string = retrieveAccessTokenFromSession(session);
-    return await updateObjectionUserDetails(company.companyNumber, objectionId, token, objectionCreate);
+    await updateObjectionUserDetails(company.companyNumber, objectionId, token, objectionCreate);
   } catch (e) {
-    return next(e);
+    logger.error(e.message);
+    throw e;
   }
 }
 
@@ -114,14 +114,19 @@ export const post = [...validators, async (req: Request, res: Response, next: Ne
   const session: Session | undefined  = req.session;
   if (session) {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
-      await updateMongoWithChangedUserDetails(session, objectionCreate, next);
+      try {
+        await updateMongoWithChangedUserDetails(session, objectionCreate);
+      } catch (e) {
+        logger.error(e.message);
+        return next(e);
+      }
       return res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
     }
     addObjectionCreateToObjectionSession(session, objectionCreate);
     return res.redirect(OBJECTIONS_COMPANY_NUMBER);
   } else {
     const error: Error = new Error("Session not present");
-    next(error);
+    return next(error);
   }
 }];
 
