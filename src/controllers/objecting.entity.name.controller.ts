@@ -4,8 +4,8 @@ import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
 import {
-  addObjectionCreateToObjectionSession, retrieveFromObjectionSession,
-  retrieveObjectionSessionFromSession
+  addObjectionCreateToObjectionSession,
+  retrieveFromObjectionSession
 } from "../services/objection.session.service";
 import { Objection, ObjectionCreate } from "../modules/sdk/objections";
 import { Session } from "ch-node-session-handler";
