@@ -11,9 +11,15 @@ import {
   retrieveCompanyProfileFromObjectionSession,
   retrieveFromObjectionSession,
 } from "../services/objection.session.service";
+import logger from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  await renderPageWithSessionDataIfPresent(req, res, next)
+  try {
+    await renderPageWithSessionDataIfPresent(req, res, next);
+  } catch (e) {
+    logger.error(e.message)
+    next(e)
+  }
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,7 +46,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const renderPageWithSessionDataIfPresent = async (req: Request, res: Response, next: NextFunction) => {
-  const objection: Objection = await getObjection(req.session as Session)
+  const objection: Objection = await getObjectionFromSession(req);
   let existingInformation;
   if (objection && objection.reason) {
     existingInformation = objection.reason;
@@ -56,3 +62,14 @@ const renderPageWithSessionDataIfPresent = async (req: Request, res: Response, n
     });
   }
 };
+
+const getObjectionFromSession = async (req: Request) => {
+  if (!req.session) {
+    throw new Error("No session present");
+  }
+  const objection: Objection = await getObjection(req.session)
+  if (!objection) {
+    throw new Error("No objection found in session");
+  }
+  return objection;
+}

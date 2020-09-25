@@ -67,6 +67,9 @@ const mockGetObjection = getObjection as jest.Mock;
 describe("enter information tests", () => {
 
   it("should render the page", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -95,8 +98,6 @@ describe("enter information tests", () => {
 
   it("should render the page with existing information when present", async () => {
     mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveObjectionSessionFromSession.mockReset();
-    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
 
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
@@ -109,12 +110,33 @@ describe("enter information tests", () => {
     expect(response.text).toContain(REASON);
   });
 
+  it("should throw an error when no session is present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = undefined;
+      return next();
+    });
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+
   it("should redirect to the check-your-answers page on post with change key set to true", async () => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
     mockGetObjectionSessionValue.mockReset();
     mockRetrieveObjectionSessionFromSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce("objectionId");
+    mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce("objectionId");
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
 
     const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
@@ -128,7 +150,10 @@ describe("enter information tests", () => {
   });
 
   it("should call the API to update the objection with the reason", async () => {
-
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
@@ -149,7 +174,10 @@ describe("enter information tests", () => {
   });
 
   it("should render error page if updating objection reason produces error", async () => {
-
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
