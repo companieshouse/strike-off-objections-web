@@ -12,15 +12,15 @@ jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.service");
 
 import request from "supertest";
-import {COOKIE_NAME} from "../../src/utils/properties";
-import {OBJECTIONS_CHANGE_ANSWERS, OBJECTIONS_CHECK_YOUR_ANSWERS} from "../../src/model/page.urls";
+import { COOKIE_NAME } from "../../src/utils/properties";
+import { OBJECTIONS_CHANGE_ANSWERS, OBJECTIONS_CHECK_YOUR_ANSWERS } from "../../src/model/page.urls";
 import app from "../../src/app";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import sessionMiddleware from "../../src/middleware/session.middleware";
-import {Session} from "ch-node-session-handler/lib/session/model/Session";
+import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
-import {CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID} from "../../src/constants";
+import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID } from "../../src/constants";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 
 const OBJECTION_ID = "123456";

@@ -15,7 +15,7 @@ import logger from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await renderPageWithSessionDataIfPresent(req, res, next);
+    await renderPageWithSessionDataIfPresent(req, res);
   } catch (e) {
     logger.error(e.message)
     next(e)
@@ -45,7 +45,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const renderPageWithSessionDataIfPresent = async (req: Request, res: Response, next: NextFunction) => {
+const renderPageWithSessionDataIfPresent = async (req: Request, res: Response) => {
   const objection: Objection = await getObjectionFromSession(req);
   let existingInformation;
   if (objection && objection.reason) {

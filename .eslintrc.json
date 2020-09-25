@@ -18,39 +18,80 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/type-annotation-spacing": "error",
+        "arrow-spacing": "error",
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "curly": "error",
+        "eqeqeq": "error",
         "indent": [
             "error",
             2,
-            {"FunctionExpression": {"parameters": "first"},
-             "CallExpression": {"arguments":  "first"},
-             "outerIIFEBody": 2,
-             "SwitchCase": 2}
+            {
+                "FunctionExpression": {
+                    "parameters": "first"
+                },
+                "CallExpression": {
+                    "arguments": "first"
+                },
+                "outerIIFEBody": 2,
+                "SwitchCase": 2
+            }
         ],
-        "eqeqeq": "error",
-        "curly": "error",
-        "require-await": "warn",
-        "no-underscore-dangle": ["error", { "allowFunctionParams": true }],
+        "key-spacing": [
+            "error",
+            {
+                "afterColon": true
+            }
+        ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
         "no-irregular-whitespace": "error",
-        "comma-spacing": ["error", { "before": false, "after": true }],
-        "key-spacing": ["error", { "afterColon": true }],
         "no-trailing-spaces": "error",
+        "no-underscore-dangle": [
+            "error",
+            {
+                "allowFunctionParams": true
+            }
+        ],
         "no-whitespace-before-property": "error",
+        "object-curly-spacing": [
+            2,
+            "always"
+        ],
+        "require-await": "warn",
         "space-infix-ops": "error",
-        "keyword-spacing": ["error", { "before": true, "after": true }],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
-        "arrow-spacing": "error",
         "spaced-comment": [
             "error",
             "always",
             {
-                "markers": ["/", "*"]
+                "markers": [
+                    "/",
+                    "*"
+                ]
             }
-        ],
-        "@typescript-eslint/no-inferrable-types": "off",
-        "@typescript-eslint/type-annotation-spacing": "error",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/ban-types": "off"
+        ]
     }
 }

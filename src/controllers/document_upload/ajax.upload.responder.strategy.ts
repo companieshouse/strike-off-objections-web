@@ -37,7 +37,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
         .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      res.send({divs: replacementDivs});
+      res.send({ divs: replacementDivs });
     } catch (e) {
       await this.handleGenericError(res, e);
     }

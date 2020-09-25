@@ -65,7 +65,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: ""});
+      .send({ companyNumber: "" });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
@@ -80,7 +80,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "    "});
+      .send({ companyNumber: "    " });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
@@ -95,7 +95,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "asdfg!!@"});
+      .send({ companyNumber: "asdfg!!@" });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
@@ -110,7 +110,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "000064000"});
+      .send({ companyNumber: "000064000" });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
@@ -132,7 +132,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "00012345"});
+      .send({ companyNumber: "00012345" });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();
@@ -156,7 +156,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "00012345"});
+      .send({ companyNumber: "00012345" });
 
     expect(response.status).toEqual(500);
     expect(response).not.toBeUndefined();
@@ -196,7 +196,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "AB012345"});
+      .send({ companyNumber: "AB012345" });
 
     expect(response.status).toEqual(302);
     expect(response).not.toBeUndefined();
@@ -211,7 +211,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "A0123456"});
+      .send({ companyNumber: "A0123456" });
 
     expect(response.status).toEqual(302);
     expect(response).not.toBeUndefined();
@@ -240,7 +240,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "6400"});
+      .send({ companyNumber: "6400" });
 
     expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
     expect(response.status).toEqual(302);
@@ -267,7 +267,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "A123"});
+      .send({ companyNumber: "A123" });
 
     expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
     expect(response.status).toEqual(302);
@@ -294,7 +294,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "AA123"});
+      .send({ companyNumber: "AA123" });
 
     expect(response.header.location).toEqual(OBJECTIONS_CONFIRM_COMPANY);
     expect(response.status).toEqual(302);
