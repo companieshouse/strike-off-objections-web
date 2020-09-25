@@ -1,12 +1,12 @@
 import { Session } from "ch-node-session-handler";
 import {
-  addObjectionCreateToObjectionSession, deleteObjectionCreateFromObjectionSession,
+  addObjectionCreateToObjectionSession, deleteFromObjectionSession, deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveObjectionCreateFromObjectionSession,
   retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
 import { ObjectionCreate } from "../../src/modules/sdk/objections";
-import {OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE} from "../../src/constants";
+import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
 
 const accessTokenValue = "tokenABC123";
 const testEmail = "demo@ch.gov.uk";
@@ -123,8 +123,15 @@ describe ("objections session service tests", () => {
     deleteObjectionCreateFromObjectionSession(session);
     expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][SESSION_OBJECTION_CREATE]).toBeUndefined();
   });
-});
 
+  it("should delete key from session if present", () => {
+    const session: Session = new Session();
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {[CHANGE_ANSWER_KEY]: "test"};
+
+    deleteFromObjectionSession(session, CHANGE_ANSWER_KEY);
+    expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][CHANGE_ANSWER_KEY]).toBeFalsy();
+  })
+});
 
 const dummyObjectionCreate: ObjectionCreate = {
   fullName: "Joe Bloggs",

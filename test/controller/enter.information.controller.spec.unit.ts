@@ -14,11 +14,17 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { OBJECTIONS_DOCUMENT_UPLOAD, OBJECTIONS_ENTER_INFORMATION } from "../../src/model/page.urls";
-import { updateObjectionReason } from "../../src/services/objection.service";
+import {
+  OBJECTIONS_CHECK_YOUR_ANSWERS,
+  OBJECTIONS_DOCUMENT_UPLOAD,
+  OBJECTIONS_ENTER_INFORMATION
+} from "../../src/model/page.urls";
+import { Objection } from "../../src/modules/sdk/objections";
+import { getObjection, updateObjectionReason } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
   retrieveFromObjectionSession,
+  retrieveObjectionSessionFromSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -54,9 +60,16 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
+const mockRetrieveObjectionSessionFromSession = retrieveObjectionSessionFromSession as jest.Mock;
+
+const mockGetObjection = getObjection as jest.Mock;
+
 describe("enter information tests", () => {
 
   it("should render the page", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -65,21 +78,98 @@ describe("enter information tests", () => {
     expect(response.text).toContain("Tell us why");
   });
 
-  it("should redirect to the document-upload page on post", async () => {
+  it("should redirect to the document-upload page on post and change flag undefined", async () => {
 
     mockGetObjectionSessionValue.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce("objectionId");
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
     const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        information: REASON
+      });
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
   });
 
-  it("should call the API to update the objection with the reason", async () => {
+  it("should render the page with existing information when present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
 
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(200);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(response.text).toContain("Tell us why");
+    expect(response.text).toContain(REASON);
+  });
+
+  it("should throw an error when no session is present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = undefined;
+      return next();
+    });
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+
+  it("should throw an error when no objection is present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(undefined);
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+
+  it("should redirect to the check-your-answers page on post with change key set to true", async () => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
+    mockGetObjectionSessionValue.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce("objectionId");
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        information: REASON
+      });
+
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_CHECK_YOUR_ANSWERS);
+  });
+
+  it("should call the API to update the objection with the reason", async () => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
@@ -100,7 +190,10 @@ describe("enter information tests", () => {
   });
 
   it("should render error page if updating objection reason produces error", async () => {
-
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      req.session = SESSION;
+      return next();
+    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
@@ -136,3 +229,18 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyType: "limited",
   incorporationDate: "26 June 1872",
 };
+
+const mockObjection: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  created_by: {
+    fullName: "name",
+    shareIdentity: false
+  },
+  reason: REASON,
+}

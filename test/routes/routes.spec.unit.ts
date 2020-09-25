@@ -2,6 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
+jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/modules/sdk/objections");
 
@@ -14,8 +15,10 @@ import authenticationMiddleware from "../../src/middleware/authentication.middle
 import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
+import { Objection } from "../../src/modules/sdk/objections";
+import { getObjection } from "../../src/services/objection.service";
 import {
-  retrieveCompanyProfileFromObjectionSession,
+  retrieveCompanyProfileFromObjectionSession
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -41,6 +44,8 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 
   return next(new Error("No session on request"));
 });
+
+const mockGetObjection = getObjection as jest.Mock;
 
 describe("Basic URL Tests", () => {
 
@@ -89,6 +94,8 @@ describe("Basic URL Tests", () => {
   });
 
   it("should find the enter information page", async () => {
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
     const response = await request(app)
       .get("/strike-off-objections/enter-information");
 
@@ -150,3 +157,18 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyType: "limited",
   incorporationDate: "26 June 1872",
 };
+
+const mockObjection: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  created_by: {
+    fullName: "name",
+    shareIdentity: false
+  },
+  reason: "Reason",
+}
