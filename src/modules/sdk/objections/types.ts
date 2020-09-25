@@ -57,11 +57,11 @@ export interface Attachment {
  * @interface
  */
 export interface Objection {
-  reason: string;
-  created_by: CreatedBy,
   attachments: Array<{
     name: string;
-  }>;
+  }>,
+  created_by: CreatedBy,
+  reason: string;
 }
 
 export interface CreatedBy {

@@ -61,10 +61,8 @@ describe("objecting entity name tests", () => {
       if (req.session) {
         req.session.data[OBJECTIONS_SESSION_NAME] = {};
         req.session.data[SESSION_OBJECTION_CREATE] = mockObjectionCreate;
-        return next();
       }
-
-      return next(new Error("No session on request"));
+      return next();
     });
   });
 
@@ -191,7 +189,7 @@ describe("objecting entity name tests", () => {
 
   it("should reroute to error page if session is not present", async() => {
     mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       return next();
     });
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -300,7 +298,7 @@ describe("objecting entity name tests", () => {
 
   it("should render error page if session is not present", async () => {
     mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       return next();
     });
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -366,6 +364,46 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
     expect(mockUpdateObjectionUserDetails).toThrow(Error("Test"));
+  });
+
+  it("should return error page when change answer flag is set to true, objection returned from mongo but name missing", async () => {
+    mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce(true);
+    mockGetObjection.mockReset().mockResolvedValueOnce(
+      {
+        created_by: {
+          shareIdentity: false,
+        }
+      } as Objection
+    );
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+  });
+
+  it("should return error page when change answer flag is set to true, objection returned from mongo but shareIdentity missing", async () => {
+    mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce(true);
+    mockGetObjection.mockReset().mockResolvedValueOnce(
+      {
+        created_by: {
+          fullName: FULL_NAME,
+        }
+      } as Objection
+    );
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 });
 
