@@ -130,7 +130,7 @@ describe ("objections session service tests", () => {
 
     deleteFromObjectionSession(session, CHANGE_ANSWER_KEY);
     expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][CHANGE_ANSWER_KEY]).toBeFalsy();
-  })
+  });
 });
 
 const dummyObjectionCreate: ObjectionCreate = {
