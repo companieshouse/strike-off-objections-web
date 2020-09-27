@@ -16,7 +16,8 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Response} res http response
    */
   public handleSuccess = (req: Request, res: Response): Promise<void> => {
-    return Promise.resolve(res.redirect(OBJECTIONS_DOCUMENT_UPLOAD));
+    res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
+    return Promise.resolve();
   }
 
   /**
@@ -27,7 +28,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    */
   public handleGenericError = (res: Response, e: Error, next?: NextFunction): Promise<void> => {
     if (next) {
-      return Promise.resolve(next(e));
+      next(e);
     }
     return Promise.resolve();
   }
@@ -39,13 +40,12 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
    * @param {Attachment[]} attachments the list of uploaded attachments
    */
   public handleGovUKError = (res: Response, errorData: GovUkErrorData, attachments: Attachment[]): Promise<void> => {
-    return Promise.resolve(
-      res.render(Templates.DOCUMENT_UPLOAD, {
-        attachments,
-        documentUploadErr: errorData,
-        errorList: [errorData],
-        templateName: Templates.DOCUMENT_UPLOAD,
-      })
-    );
+    res.render(Templates.DOCUMENT_UPLOAD, {
+      attachments,
+      documentUploadErr: errorData,
+      errorList: [errorData],
+      templateName: Templates.DOCUMENT_UPLOAD,
+    })
+    return Promise.resolve();
   }
 }
