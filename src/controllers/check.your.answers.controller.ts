@@ -12,8 +12,9 @@ import logger from "../utils/logger";
 import { CHANGE_ANSWER_KEY } from "../constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.session) {
+  if (((req.session))) {
     try {
+
       deleteFromObjectionSession(req.session, CHANGE_ANSWER_KEY);
       const { companyName, companyNumber } = retrieveCompanyProfileFromObjectionSession(req.session);
       let shareIdentity: string = "No";
