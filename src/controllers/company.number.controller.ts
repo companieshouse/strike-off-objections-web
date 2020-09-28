@@ -16,9 +16,10 @@ import { ValidationError } from "../model/validation.error";
 
 const companyNumberFieldName: string = "companyNumber";
 
-// validator middleware that checks for an empty company number or one that is too long
+// validator middleware that checks for alpha numeric company number, an empty company number or one that is too long
 const preValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().not().isEmpty().withMessage(CompanySearchErrorMessages.NO_COMPANY_NUMBER_SUPPLIED),
+  check(companyNumberFieldName).isAlphanumeric().withMessage(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER),
   check(companyNumberFieldName).blacklist(" ").escape().isLength({ max: 8 }).withMessage(CompanySearchErrorMessages.COMPANY_NUMBER_TOO_LONG),
 ];
 

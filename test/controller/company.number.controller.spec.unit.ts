@@ -89,6 +89,21 @@ describe("company number lookup tests", () => {
     expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
   });
 
+  it("should create an error message when company number is supplied (non-alphanumeric)", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_COMPANY_NUMBER)
+      .set("Accept", "application/json")
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({companyNumber: "&"});
+
+    expect(response.status).toEqual(200);
+    expect(response).not.toBeUndefined();
+    expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
+    expect(response.text).toContain(INVALID_COMPANY_NUMBER);
+    expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
+  });
+
   it("should create an error message when company number is invalid (characters)", async () => {
     const response = await request(app)
       .post(OBJECTIONS_COMPANY_NUMBER)
