@@ -37,6 +37,8 @@ export interface ObjectionCreate {
  * @interface
  */
 export interface ObjectionPatch {
+  fullName?: string;
+  shareIdentity?: boolean;
   reason?: string;
   status?: ObjectionStatus;
 }
@@ -55,11 +57,11 @@ export interface Attachment {
  * @interface
  */
 export interface Objection {
-  reason: string;
-  created_by: CreatedBy,
   attachments: Array<{
     name: string;
-  }>;
+  }>,
+  created_by: CreatedBy,
+  reason: string;
 }
 
 export interface CreatedBy {

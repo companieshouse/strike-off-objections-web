@@ -8,7 +8,7 @@ import {
   retrieveAccessTokenFromSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
-import { check, validationResult } from "express-validator/check";
+import { check, validationResult } from "express-validator";
 import { CompanySearchErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { Templates } from "../model/template.paths";
@@ -27,7 +27,7 @@ const padCompanyNumber = (req: Request, res: Response, next: NextFunction): void
   let companyNumber: string = req.body.companyNumber;
   if (/^([a-zA-Z]{2}?)/gm.test(companyNumber)) {
     companyNumber = formatCompanyNumber(companyNumber, 2);
-  } else if (/^([a-zA-Z]{1}?)/gm.test(companyNumber)) {
+  } else if (/^([a-zA-Z])/gm.test(companyNumber)) {
     companyNumber = formatCompanyNumber(companyNumber, 1);
   } else {
     companyNumber = companyNumber.padStart(8, "0");
@@ -46,7 +46,7 @@ const formatCompanyNumber = (companyNumber: string, leadPoint: number): string  
 // validator middleware that checks for invalid characters in the input
 const postValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().custom((value: string) => {
-    if (!/^[0-9]{8}$|^([a-zA-Z]{1})[0-9]{7}$|^([a-zA-Z]{2})[0-9]{6}$/gm.test(value)) {
+    if (!/^[0-9]{8}$|^([a-zA-Z])[0-9]{7}$|^([a-zA-Z]{2})[0-9]{6}$/gm.test(value)) {
       throw new Error(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER);
     }
     return true;
