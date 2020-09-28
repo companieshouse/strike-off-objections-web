@@ -116,9 +116,17 @@ describe("objections API service unit tests", () => {
   it("objections SDK is called with objection create when creating an objection reason", async () => {
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
-    const objectionId: string = await objectionsService.createNewObjection(
+    await objectionsService.createNewObjection(
       COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
     expect(mockCreateNewObjection).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
+  });
+
+  it("objections SDK is called when updating user details", async () => {
+    await objectionsService.updateObjectionUserDetails(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, dummyObjectionCreate);
+    expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, {
+      fullName: "Joe Bloggs",
+      shareIdentity: false,
+    });
   });
 
   it("objections SDK is called when updating an objection reason", async () => {
@@ -224,3 +232,5 @@ const dummyObjectionCreate: ObjectionCreate = {
   fullName: "Joe Bloggs",
   shareIdentity: false,
 };
+
+

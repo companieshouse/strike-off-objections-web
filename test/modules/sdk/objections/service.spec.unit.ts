@@ -38,6 +38,10 @@ const dummyObjection: Objection = {
     {
       name: "document.pdf",
     }],
+  created_by: {
+    fullName: "bob",
+    shareIdentity: true,
+  },
   reason: "Owed some money",
 };
 

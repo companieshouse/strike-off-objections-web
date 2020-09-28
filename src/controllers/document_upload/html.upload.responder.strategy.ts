@@ -18,7 +18,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
   public handleSuccess = (req: Request, res: Response): Promise<void> => {
     res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
     return Promise.resolve();
-  }
+  };
 
   /**
    * Passes the error onto the generic error handler
@@ -31,7 +31,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
       next(e);
     }
     return Promise.resolve();
-  }
+  };
 
   /**
    * Renders the upload screen with the error
@@ -45,7 +45,7 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
       documentUploadErr: errorData,
       errorList: [errorData],
       templateName: Templates.DOCUMENT_UPLOAD,
-    })
+    });
     return Promise.resolve();
-  }
+  };
 }

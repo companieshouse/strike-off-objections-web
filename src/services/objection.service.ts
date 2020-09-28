@@ -31,6 +31,13 @@ export const createNewObjection = async (companyNumber: string, token: string, c
   return objectionId;
 };
 
+export const updateObjectionUserDetails = async (companyNumber: string, objectionId: string,
+                                                 token: string, userData: ObjectionCreate) => {
+  logger.info(`Updating objection user details for company number ${companyNumber}`);
+  const patch: ObjectionPatch = { fullName: userData.fullName, shareIdentity: userData.shareIdentity  };
+  await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
+};
+
 /**
  * Update an objection reason for the given objection ID.
  *

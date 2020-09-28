@@ -15,10 +15,10 @@ import logger from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await renderPageWithSessionDataIfPresent(req, res, next);
+    await renderPageWithSessionDataIfPresent(req, res);
   } catch (e) {
-    logger.error(e.message)
-    next(e)
+    logger.error(e.message);
+    next(e);
   }
 };
 
@@ -45,7 +45,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const renderPageWithSessionDataIfPresent = async (req: Request, res: Response, next: NextFunction) => {
+const renderPageWithSessionDataIfPresent = async (req: Request, res: Response) => {
   const objection: Objection = await getObjectionFromSession(req);
   let existingInformation;
   if (objection && objection.reason) {
@@ -67,9 +67,9 @@ const getObjectionFromSession = async (req: Request) => {
   if (!req.session) {
     throw new Error("No session present");
   }
-  const objection: Objection = await getObjection(req.session)
+  const objection: Objection = await getObjection(req.session);
   if (!objection) {
     throw new Error("No objection found in session");
   }
   return objection;
-}
+};

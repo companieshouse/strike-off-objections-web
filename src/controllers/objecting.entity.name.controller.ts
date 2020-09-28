@@ -2,17 +2,20 @@ import { NextFunction, Request, Response } from "express";
 import { check, Result, ValidationError, validationResult } from "express-validator";
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
-import { OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
+import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
 import {
   addObjectionCreateToObjectionSession,
-  retrieveFromObjectionSession
+  retrieveAccessTokenFromSession,
+  retrieveCompanyProfileFromObjectionSession,
+  retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 import { Objection, ObjectionCreate } from "../modules/sdk/objections";
 import { Session } from "ch-node-session-handler";
 import { Templates } from "../model/template.paths";
-import { getObjection } from "../services/objection.service";
+import { getObjection, updateObjectionUserDetails } from "../services/objection.service";
 import logger from "../utils/logger";
-import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE } from "../constants";
+import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE, SESSION_OBJECTION_ID } from "../constants";
+import ObjectionCompanyProfile from "../model/objection.company.profile";
 
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
@@ -40,7 +43,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     isNoChecked: noChecked,
     templateName: Templates.OBJECTING_ENTITY_NAME,
   });
-}
+};
 
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
   try {
@@ -61,7 +64,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     logger.error(e.message);
     return next(e);
   }
-}
+};
 
 /**
  * GET checks for change flag and renders page
@@ -77,9 +80,22 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     } else {
       return showPageWithSessionDataIfPresent(session, res);
     }
-    return next(new Error("No Session present"));
   }
-}
+  return next(new Error("No Session present"));
+};
+
+const updateMongoWithChangedUserDetails = async (session: Session,
+                                                 objectionCreate: ObjectionCreate) => {
+  try {
+    const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+    const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+    const token: string = retrieveAccessTokenFromSession(session);
+    await updateObjectionUserDetails(company.companyNumber, objectionId, token, objectionCreate);
+  } catch (e) {
+    logger.error(e.message);
+    throw e;
+  }
+};
 
 /**
  * POST validates input and processes form
@@ -87,7 +103,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
  * @param res
  * @param next
  */
-export const post = [...validators, (req: Request, res: Response, next: NextFunction) => {
+export const post = [...validators, async (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return showErrorsOnScreen(errors, req, res);
@@ -97,11 +113,20 @@ export const post = [...validators, (req: Request, res: Response, next: NextFunc
   const objectionCreate: ObjectionCreate = { shareIdentity: shareIdentityValue, fullName: fullNameValue };
   const session: Session | undefined  = req.session;
   if (session) {
+    if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
+      try {
+        await updateMongoWithChangedUserDetails(session, objectionCreate);
+      } catch (e) {
+        logger.error(e.message);
+        return next(e);
+      }
+      return res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
+    }
     addObjectionCreateToObjectionSession(session, objectionCreate);
     return res.redirect(OBJECTIONS_COMPANY_NUMBER);
   } else {
     const error: Error = new Error("Session not present");
-    next(error);
+    return next(error);
   }
 }];
 
@@ -133,4 +158,4 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     objectingEntityNameErr,
     templateName: Templates.OBJECTING_ENTITY_NAME,
   });
-}
+};

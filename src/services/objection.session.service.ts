@@ -53,7 +53,7 @@ export const retrieveObjectionCreateFromObjectionSession = (session: Session): O
     throw new Error("Error: No ObjectionCreate present in ObjectionSession");
   }
   throw new Error("No Objection session to retrieve create objection from");
-}
+};
 
 export const retrieveCompanyProfileFromObjectionSession = (session: Session): ObjectionCompanyProfile => {
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
@@ -114,7 +114,7 @@ export const deleteFromObjectionSession = (session: Session, key: string): void 
     return;
   }
   throw new Error(`No Objection Session to delete ${key} from`);
-}
+};
 
 export const addToObjectionSession = (session: Session, key: string, v: any): void => {
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);

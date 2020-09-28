@@ -37,11 +37,11 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
         .then((html: string) =>  this.addReplacementDiv(replacementDivs, html, CHOOSE_FILE_DIV));
       logger.trace("Rendered fragment " + Templates.DOCUMENT_UPLOAD_FILE_PICKER);
 
-      res.send({divs: replacementDivs});
+      res.send({ divs: replacementDivs });
     } catch (e) {
       await this.handleGenericError(res, e);
     }
-  }
+  };
 
   /**
    * As the AJAX response is handled by upload.js this will return a message to instruct it to redirect
@@ -54,7 +54,7 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
     logger.error(ErrorMessages.ERROR_500 + ": " + e);
     res.status(500).send({ redirect: pageURLs.OBJECTIONS_ERROR });
     return Promise.resolve();
-  }
+  };
 
   /**
    * Renders the 'red' gov.uk error boxes and returns them to upload.js
@@ -84,13 +84,13 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
     } catch (e) {
       await this.handleGenericError(res, e);
     }
-  }
+  };
 
   private addReplacementDiv = (replacementDivs: object[], html: string, id: string): void => {
     replacementDivs.push(
       { divHtml: html,
         divId: id });
-  }
+  };
 
   /**
    * Renders a nunjucks template and captures the html
@@ -110,5 +110,5 @@ export class AjaxUploadResponderStrategy implements UploadResponderStrategy {
                    }
                  });
     });
-  }
+  };
 }

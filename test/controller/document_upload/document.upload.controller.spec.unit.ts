@@ -1,5 +1,3 @@
-import * as path from "path";
-
 jest.mock("ioredis");
 jest.mock("../../../src/middleware/authentication.middleware");
 jest.mock("../../../src/middleware/session.middleware");
@@ -16,7 +14,6 @@ import authenticationMiddleware from "../../../src/middleware/authentication.mid
 import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
 import sessionMiddleware from "../../../src/middleware/session.middleware";
 import { UploadErrorMessages } from "../../../src/model/error.messages";
-import ObjectionCompanyProfile from "../../../src/model/objection.company.profile";
 import * as pageURLs from "../../../src/model/page.urls";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
@@ -28,7 +25,6 @@ import { COOKIE_NAME } from "../../../src/utils/properties";
 
 /* Constants */
 
-const COMPANY_NUMBER = "00006400";
 const EXPECTED_MAX_FILE_SIZE_MESSAGE = "File size must be smaller than 0 MB";
 const SORRY_ERROR_MESSAGE = "Sorry, there is a problem with the service";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
@@ -48,10 +44,6 @@ const INVALID_MIME_TYPE = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG,
 const dummySession: Session = {
   data: {},
 } as Session;
-
-const dummyCompanyProfile: ObjectionCompanyProfile = {
-  companyNumber: COMPANY_NUMBER,
-} as ObjectionCompanyProfile;
 
 const dummyAttachments = [
   {

@@ -8,7 +8,7 @@ import {
 export const get = (req: Request, res: Response) => {
   const session: Session = req.session as Session;
 
-  const { companyName } = retrieveCompanyProfileFromObjectionSession(session)
+  const { companyName } = retrieveCompanyProfileFromObjectionSession(session);
 
   return res.render(Templates.NO_STRIKE_OFF, {
     companyName,

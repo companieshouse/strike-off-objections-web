@@ -171,4 +171,4 @@ const mockObjection: Objection = {
     shareIdentity: false
   },
   reason: "Reason",
-}
+};

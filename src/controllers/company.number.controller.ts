@@ -8,7 +8,7 @@ import {
   retrieveAccessTokenFromSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
-import { check, validationResult } from "express-validator/check";
+import { check, validationResult } from "express-validator";
 import { CompanySearchErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { Templates } from "../model/template.paths";
@@ -16,10 +16,11 @@ import { ValidationError } from "../model/validation.error";
 
 const companyNumberFieldName: string = "companyNumber";
 
-// validator middleware that checks for an empty company number or one that is too long
+// validator middleware that checks for alpha numeric company number, an empty company number or one that is too long
 const preValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().not().isEmpty().withMessage(CompanySearchErrorMessages.NO_COMPANY_NUMBER_SUPPLIED),
-  check(companyNumberFieldName).blacklist(" ").escape().isLength({max: 8}).withMessage(CompanySearchErrorMessages.COMPANY_NUMBER_TOO_LONG),
+  check(companyNumberFieldName).isAlphanumeric().withMessage(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER),
+  check(companyNumberFieldName).blacklist(" ").escape().isLength({ max: 8 }).withMessage(CompanySearchErrorMessages.COMPANY_NUMBER_TOO_LONG),
 ];
 
 // pads company number to 8 digits with zeros and removes whitespace
@@ -27,7 +28,7 @@ const padCompanyNumber = (req: Request, res: Response, next: NextFunction): void
   let companyNumber: string = req.body.companyNumber;
   if (/^([a-zA-Z]{2}?)/gm.test(companyNumber)) {
     companyNumber = formatCompanyNumber(companyNumber, 2);
-  } else if (/^([a-zA-Z]{1}?)/gm.test(companyNumber)) {
+  } else if (/^([a-zA-Z])/gm.test(companyNumber)) {
     companyNumber = formatCompanyNumber(companyNumber, 1);
   } else {
     companyNumber = companyNumber.padStart(8, "0");
@@ -46,7 +47,7 @@ const formatCompanyNumber = (companyNumber: string, leadPoint: number): string  
 // validator middleware that checks for invalid characters in the input
 const postValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().custom((value: string) => {
-    if (!/^[0-9]{8}$|^([a-zA-Z]{1})[0-9]{7}$|^([a-zA-Z]{2})[0-9]{6}$/gm.test(value)) {
+    if (!/^[0-9]{8}$|^([a-zA-Z])[0-9]{7}$|^([a-zA-Z]{2})[0-9]{6}$/gm.test(value)) {
       throw new Error(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER);
     }
     return true;
