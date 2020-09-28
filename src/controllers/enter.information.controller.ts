@@ -17,8 +17,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await renderPageWithSessionDataIfPresent(req, res);
   } catch (e) {
-    logger.error(e.message)
-    next(e)
+    logger.error(e.message);
+    next(e);
   }
 };
 
@@ -67,9 +67,9 @@ const getObjectionFromSession = async (req: Request) => {
   if (!req.session) {
     throw new Error("No session present");
   }
-  const objection: Objection = await getObjection(req.session)
+  const objection: Objection = await getObjection(req.session);
   if (!objection) {
     throw new Error("No objection found in session");
   }
   return objection;
-}
+};

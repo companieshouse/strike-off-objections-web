@@ -116,7 +116,7 @@ describe("objections API service unit tests", () => {
   it("objections SDK is called with objection create when creating an objection reason", async () => {
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
-    const objectionId: string = await objectionsService.createNewObjection(
+    await objectionsService.createNewObjection(
       COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
     expect(mockCreateNewObjection).toBeCalledWith(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
   });

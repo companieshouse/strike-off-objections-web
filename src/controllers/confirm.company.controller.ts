@@ -18,7 +18,7 @@ import logger from "../utils/logger";
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
   [ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION]: OBJECTIONS_NO_STRIKE_OFF,
-}
+};
 
 /**
  * GET controller for check company details screen
@@ -45,7 +45,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  const session: Session = req.session as Session
+  const session: Session = req.session as Session;
   try {
     const token: string = retrieveAccessTokenFromSession(session);
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
@@ -62,11 +62,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         return res.redirect(ineligiblePage);
       }
     }
-    return next(e)
+    return next(e);
   }
 };
 
 const getIneligiblePage = (apiError: ApiError): string => {
   return INELIGIBLE_PAGES[apiError.data.status];
-}
-
+};
