@@ -126,11 +126,11 @@ describe ("objections session service tests", () => {
 
   it("should delete key from session if present", () => {
     const session: Session = new Session();
-    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {[CHANGE_ANSWER_KEY]: "test"};
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = { [CHANGE_ANSWER_KEY]: "test" };
 
     deleteFromObjectionSession(session, CHANGE_ANSWER_KEY);
     expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][CHANGE_ANSWER_KEY]).toBeFalsy();
-  })
+  });
 });
 
 const dummyObjectionCreate: ObjectionCreate = {

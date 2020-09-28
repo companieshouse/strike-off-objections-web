@@ -420,7 +420,7 @@ const mockObjection: Objection = {
     shareIdentity: false
   },
   reason: "Owed some money",
-}
+};
 
 const mockObjectionCreate: ObjectionCreate = {
   fullName: FULL_NAME,

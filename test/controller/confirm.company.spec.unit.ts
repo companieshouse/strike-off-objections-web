@@ -36,15 +36,15 @@ const SESSION: Session = {
 } as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
-const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock
-const mockDeleteObjectCreate = deleteObjectionCreateFromObjectionSession as jest.Mock
+const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock;
+const mockDeleteObjectCreate = deleteObjectionCreateFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = SESSION
+  req.session = SESSION;
   return next();
 });
 
@@ -136,7 +136,7 @@ describe("confirm company tests", () => {
 
     mockCreateNewObjection.mockReset();
     mockCreateNewObjection.mockImplementation(() => {
-      throw apiError
+      throw apiError;
     });
 
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
@@ -166,7 +166,7 @@ describe("confirm company tests", () => {
 
     mockCreateNewObjection.mockReset();
     mockCreateNewObjection.mockImplementation(() => {
-      throw apiError
+      throw apiError;
     });
 
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
@@ -198,7 +198,7 @@ describe("confirm company tests", () => {
 
     mockCreateNewObjection.mockReset();
     mockCreateNewObjection.mockImplementation(() => {
-      throw apiError
+      throw apiError;
     });
 
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)

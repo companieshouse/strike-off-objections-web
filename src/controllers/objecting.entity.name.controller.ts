@@ -43,7 +43,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     isNoChecked: noChecked,
     templateName: Templates.OBJECTING_ENTITY_NAME,
   });
-}
+};
 
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
   try {
@@ -64,7 +64,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     logger.error(e.message);
     return next(e);
   }
-}
+};
 
 /**
  * GET checks for change flag and renders page
@@ -95,7 +95,7 @@ const updateMongoWithChangedUserDetails = async (session: Session,
     logger.error(e.message);
     throw e;
   }
-}
+};
 
 /**
  * POST validates input and processes form
@@ -158,4 +158,4 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     objectingEntityNameErr,
     templateName: Templates.OBJECTING_ENTITY_NAME,
   });
-}
+};

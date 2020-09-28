@@ -243,4 +243,4 @@ const mockObjection: Objection = {
     shareIdentity: false
   },
   reason: REASON,
-}
+};

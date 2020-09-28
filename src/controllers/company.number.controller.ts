@@ -20,7 +20,7 @@ const companyNumberFieldName: string = "companyNumber";
 const preValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().not().isEmpty().withMessage(CompanySearchErrorMessages.NO_COMPANY_NUMBER_SUPPLIED),
   check(companyNumberFieldName).isAlphanumeric().withMessage(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER),
-  check(companyNumberFieldName).blacklist(" ").escape().isLength({max: 8}).withMessage(CompanySearchErrorMessages.COMPANY_NUMBER_TOO_LONG),
+  check(companyNumberFieldName).blacklist(" ").escape().isLength({ max: 8 }).withMessage(CompanySearchErrorMessages.COMPANY_NUMBER_TOO_LONG),
 ];
 
 // pads company number to 8 digits with zeros and removes whitespace

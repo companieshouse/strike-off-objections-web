@@ -95,5 +95,5 @@ const showErrorPage = (httpStatus: number, res: Response) => {
  * @param {string} message the message to display
  */
 const renderFileError = (res: Response, heading: string, message: string) => {
-  return res.render(Templates.FILE_ERROR, { heading, message});
+  return res.render(Templates.FILE_ERROR, { heading, message });
 };
