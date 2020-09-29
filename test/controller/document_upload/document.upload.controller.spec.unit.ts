@@ -413,4 +413,14 @@ describe ("document.document_upload.controller tests", () => {
     expect(mockAddAttachment).toHaveBeenCalled();
     done();
   });
+
+  it("should have correct form action fields on document upload page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/document-upload");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Add documents to support your objection/);
+    expect(response.text).toContain("<form method=\"post\" action=\"document-upload\" enctype=\"multipart/form-data\" id=\"file-upload-form\">");
+    expect(response.text).toContain("<form method=\"post\" action=\"document-upload-continue\" id=\"continue\">");
+  });
 });
