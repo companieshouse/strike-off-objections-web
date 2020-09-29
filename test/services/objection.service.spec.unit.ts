@@ -127,7 +127,7 @@ describe("objections API service unit tests", () => {
       fullName: "Joe Bloggs",
       shareIdentity: false,
     });
-  })
+  });
 
   it("objections SDK is called when updating an objection reason", async () => {
     await objectionsService.updateObjectionReason(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, REASON);

@@ -348,7 +348,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
     mockUpdateObjectionUserDetails.mockImplementation(() => {
-      throw new Error("Test")
+      throw new Error("Test");
     });
 
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
