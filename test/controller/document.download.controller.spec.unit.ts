@@ -8,8 +8,8 @@ import { NextFunction, Request, Response } from "express";
 import { Readable } from "stream";
 import request from "supertest";
 import app from "../../src/app";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import sessionMiddleware from "../../src/middleware/session.middleware";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { STRIKE_OFF_OBJECTIONS } from "../../src/model/page.urls";
 import {
   ApiError,
