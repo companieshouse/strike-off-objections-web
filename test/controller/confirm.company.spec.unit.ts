@@ -225,6 +225,6 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const dummyObjectionCreate: ObjectionCreate = {
-  fullName: "Joe Bloggs",
-  shareIdentity: false,
+  full_name: "Joe Bloggs",
+  share_identity: false,
 };

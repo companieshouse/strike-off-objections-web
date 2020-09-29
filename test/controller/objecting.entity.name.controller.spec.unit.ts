@@ -423,6 +423,6 @@ const mockObjection: Objection = {
 };
 
 const mockObjectionCreate: ObjectionCreate = {
-  fullName: FULL_NAME,
-  shareIdentity: false,
+  full_name: FULL_NAME,
+  share_identity: false,
 };

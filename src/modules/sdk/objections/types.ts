@@ -28,8 +28,8 @@ export enum ObjectionStatus {
  * @interface
  */
 export interface ObjectionCreate {
-  fullName: string;
-  shareIdentity: boolean;
+  full_name: string;
+  share_identity: boolean;
 }
 
 /**
@@ -37,8 +37,8 @@ export interface ObjectionCreate {
  * @interface
  */
 export interface ObjectionPatch {
-  fullName?: string;
-  shareIdentity?: boolean;
+  full_name?: string;
+  share_identity?: boolean;
   reason?: string;
   status?: ObjectionStatus;
 }
