@@ -15,7 +15,7 @@
   <ul class="govuk-list govuk-list--bullet">
   {% for attachment in objection.attachments | reverse %}
     <li>
-      <a href="#" class="govuk-link">{{ attachment.name }}</a>
+      {{ attachment.name }}
     </li>
   {% endfor %}
   </ul>

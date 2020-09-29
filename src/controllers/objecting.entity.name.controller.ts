@@ -82,7 +82,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
   }
   return next(new Error("No Session present"));
-}
+};
 
 const updateMongoWithChangedUserDetails = async (session: Session,
                                                  objectionCreate: ObjectionCreate) => {
