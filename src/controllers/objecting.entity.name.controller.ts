@@ -48,8 +48,8 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
   try {
     const objection: Objection = await getObjection(session);
-    const existingName: string = objection.created_by.fullName;
-    const existingShareIdentity: boolean = objection.created_by.shareIdentity;
+    const existingName: string = objection.created_by.full_name;
+    const existingShareIdentity: boolean = objection.created_by.share_identity;
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
@@ -82,7 +82,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
   }
   return next(new Error("No Session present"));
-}
+};
 
 const updateMongoWithChangedUserDetails = async (session: Session,
                                                  objectionCreate: ObjectionCreate) => {

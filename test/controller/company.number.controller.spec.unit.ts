@@ -95,7 +95,7 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({companyNumber: "&"});
+      .send({ companyNumber: "&" });
 
     expect(response.status).toEqual(200);
     expect(response).not.toBeUndefined();

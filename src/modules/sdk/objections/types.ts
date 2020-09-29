@@ -65,8 +65,8 @@ export interface Objection {
 }
 
 export interface CreatedBy {
-  fullName: string,
-  shareIdentity: boolean
+  full_name: string,
+  share_identity: boolean
 }
 
 

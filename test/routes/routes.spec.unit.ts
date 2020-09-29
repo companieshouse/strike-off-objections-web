@@ -167,8 +167,8 @@ const mockObjection: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: "name",
-    shareIdentity: false
+    full_name: "name",
+    share_identity: false
   },
   reason: "Reason",
 };
