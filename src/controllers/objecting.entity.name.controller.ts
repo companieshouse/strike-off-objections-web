@@ -31,8 +31,8 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
   if (objectionCreate) {
-    existingName = objectionCreate.fullName;
-    const existingSharedIdentity = objectionCreate.shareIdentity;
+    existingName = objectionCreate.full_name;
+    const existingSharedIdentity = objectionCreate.share_identity;
     yesChecked = existingSharedIdentity;
     noChecked = !existingSharedIdentity;
   }
@@ -48,8 +48,8 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
   try {
     const objection: Objection = await getObjection(session);
-    const existingName: string = objection.created_by.fullName;
-    const existingShareIdentity: boolean = objection.created_by.shareIdentity;
+    const existingName: string = objection.created_by.full_name;
+    const existingShareIdentity: boolean = objection.created_by.share_identity;
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
@@ -110,7 +110,7 @@ export const post = [...validators, async (req: Request, res: Response, next: Ne
   }
   const fullNameValue: string = req.body.fullName;
   const shareIdentityValue: boolean = req.body.shareIdentity === "yes";
-  const objectionCreate: ObjectionCreate = { shareIdentity: shareIdentityValue, fullName: fullNameValue };
+  const objectionCreate: ObjectionCreate = { share_identity: shareIdentityValue, full_name: fullNameValue };
   const session: Session | undefined  = req.session;
   if (session) {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {

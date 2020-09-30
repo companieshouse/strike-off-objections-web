@@ -96,8 +96,8 @@ describe ("objections session service tests", () => {
     addObjectionCreateToObjectionSession(session, dummyObjectionCreate);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
     expect(objectionCreate).not.toBeUndefined();
-    expect(objectionCreate.fullName).toEqual("Joe Bloggs");
-    expect(objectionCreate.shareIdentity).toEqual(false);
+    expect(objectionCreate.full_name).toEqual("Joe Bloggs");
+    expect(objectionCreate.share_identity).toEqual(false);
   });
 
   it("should not retrieve objection create when objection session is not present", () => {
@@ -134,6 +134,6 @@ describe ("objections session service tests", () => {
 });
 
 const dummyObjectionCreate: ObjectionCreate = {
-  fullName: "Joe Bloggs",
-  shareIdentity: false,
+  full_name: "Joe Bloggs",
+  share_identity: false,
 };

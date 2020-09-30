@@ -124,8 +124,8 @@ describe("objections API service unit tests", () => {
   it("objections SDK is called when updating user details", async () => {
     await objectionsService.updateObjectionUserDetails(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, dummyObjectionCreate);
     expect(mockPatchObjection).toBeCalledWith(COMPANY_NUMBER, NEW_OBJECTION_ID, ACCESS_TOKEN, {
-      fullName: "Joe Bloggs",
-      shareIdentity: false,
+      full_name: "Joe Bloggs",
+      share_identity: false,
     });
   });
 
@@ -229,8 +229,8 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const dummyObjectionCreate: ObjectionCreate = {
-  fullName: "Joe Bloggs",
-  shareIdentity: false,
+  full_name: "Joe Bloggs",
+  share_identity: false,
 };
 
 

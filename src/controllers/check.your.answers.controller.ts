@@ -21,7 +21,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       if (objection) {
         const createdBy: CreatedBy = objection.created_by;
         if (createdBy) {
-          shareIdentity = createdBy.shareIdentity ? "Yes" : "No";
+          shareIdentity = createdBy.share_identity ? "Yes" : "No";
         }
       }
       return res.render(Templates.CHECK_YOUR_ANSWERS, {

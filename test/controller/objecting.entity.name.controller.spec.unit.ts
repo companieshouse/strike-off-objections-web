@@ -371,7 +371,7 @@ describe("objecting entity name tests", () => {
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
         created_by: {
-          shareIdentity: false,
+          share_identity: false,
         }
       } as Objection
     );
@@ -391,7 +391,7 @@ describe("objecting entity name tests", () => {
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
         created_by: {
-          fullName: FULL_NAME,
+          full_name: FULL_NAME,
         }
       } as Objection
     );
@@ -416,13 +416,13 @@ const mockObjection: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: FULL_NAME,
-    shareIdentity: false
+    full_name: FULL_NAME,
+    share_identity: false
   },
   reason: "Owed some money",
 };
 
 const mockObjectionCreate: ObjectionCreate = {
-  fullName: FULL_NAME,
-  shareIdentity: false,
+  full_name: FULL_NAME,
+  share_identity: false,
 };

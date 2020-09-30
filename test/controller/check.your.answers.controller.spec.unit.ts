@@ -141,8 +141,8 @@ const dummyObjectionShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: "Joe Bloggs",
-    shareIdentity: true
+    full_name: "Joe Bloggs",
+    share_identity: true
   },
   reason: "Owed some money",
 };
@@ -156,8 +156,8 @@ const dummyObjectionDoNotShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: "No Bloggs",
-    shareIdentity: false
+    full_name: "No Bloggs",
+    share_identity: false
   },
   reason: "Owed some money",
 };
