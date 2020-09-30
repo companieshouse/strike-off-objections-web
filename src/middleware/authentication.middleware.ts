@@ -3,7 +3,7 @@ import { authMiddleware } from "web-security-node";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
-const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authMiddlewareConfig = getAuthMiddlewareConfig();
 
   if (isADownloadUrl(req.originalUrl)) {
@@ -22,5 +22,3 @@ const getAuthMiddlewareConfig = () => {
 const isADownloadUrl = (url: string): boolean => {
   return url.endsWith(pageURLs.DOWNLOAD);
 };
-
-export default authenticationMiddleware;

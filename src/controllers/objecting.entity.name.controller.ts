@@ -137,7 +137,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
   errors.array({ onlyFirstError: true })
     .forEach((valErr: ValidationError) => {
       const govUkErrorData: GovUkErrorData = createGovUkErrorData(valErr.msg, "#" + valErr.param, true, "");
-      switch ((valErr.param)) {
+      switch (valErr.param) {
           case FULL_NAME_FIELD:
             objectingEntityNameErr = govUkErrorData;
             break;
