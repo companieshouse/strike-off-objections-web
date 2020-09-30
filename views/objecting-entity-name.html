@@ -23,14 +23,6 @@
         }) }}
       {% endif %}
       <form method="post">
-        {% if errorList.length > 0 %}
-          {% set objectingEntityNameErr = {
-            text: objectingEntityNameErr.text
-          } %}
-        {% else %}
-          {% set objectingEntityNameErr = false %}
-        {% endif %}
-
         {{ govukInput({
           label: {
             text: "What is your full name?",
