@@ -17,4 +17,5 @@ export enum Templates {
   INDEX = "index",
   ERROR = "error",
   FILE_ERROR = "file-error",
+  ACCESSIBILITY_STATEMENT = "accessibility-statement",
 }

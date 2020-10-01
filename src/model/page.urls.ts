@@ -25,6 +25,7 @@ export const CHECK_YOUR_ANSWERS: string = SEPARATOR + Templates.CHECK_YOUR_ANSWE
 export const CONFIRMATION: string = SEPARATOR + Templates.CONFIRMATION;
 export const CHANGE_ANSWERS: string = SEPARATOR + "change-answers";
 export const ERROR: string = SEPARATOR + Templates.ERROR;
+export const ACCESSIBILITY_STATEMENT: string = SEPARATOR + Templates.ACCESSIBILITY_STATEMENT;
 
 /**
  * URLs for redirects will need to start with the application name
