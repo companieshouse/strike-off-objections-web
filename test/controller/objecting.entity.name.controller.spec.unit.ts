@@ -14,9 +14,9 @@ import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
-import sessionMiddleware from "../../src/middleware/session.middleware";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
+import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
   OBJECTIONS_COMPANY_NUMBER,
@@ -371,7 +371,7 @@ describe("objecting entity name tests", () => {
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
         created_by: {
-          shareIdentity: false,
+          share_identity: false,
         }
       } as Objection
     );
@@ -391,7 +391,7 @@ describe("objecting entity name tests", () => {
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
         created_by: {
-          fullName: FULL_NAME,
+          full_name: FULL_NAME,
         }
       } as Objection
     );
@@ -416,13 +416,13 @@ const mockObjection: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: FULL_NAME,
-    shareIdentity: false
+    full_name: FULL_NAME,
+    share_identity: false
   },
   reason: "Owed some money",
 };
 
 const mockObjectionCreate: ObjectionCreate = {
-  fullName: FULL_NAME,
-  shareIdentity: false,
+  full_name: FULL_NAME,
+  share_identity: false,
 };

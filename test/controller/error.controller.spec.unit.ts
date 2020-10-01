@@ -4,7 +4,7 @@ jest.mock("../../src/middleware/session.middleware");
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import sessionMiddleware from "../../src/middleware/session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_COMPANY_NUMBER } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 

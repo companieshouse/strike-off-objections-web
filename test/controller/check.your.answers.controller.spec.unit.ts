@@ -10,9 +10,9 @@ import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME } from "../../src/constants";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
-import sessionMiddleware from "../../src/middleware/session.middleware";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
+import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
@@ -141,8 +141,8 @@ const dummyObjectionShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: "Joe Bloggs",
-    shareIdentity: true
+    full_name: "Joe Bloggs",
+    share_identity: true
   },
   reason: "Owed some money",
 };
@@ -156,8 +156,8 @@ const dummyObjectionDoNotShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
-    fullName: "No Bloggs",
-    shareIdentity: false
+    full_name: "No Bloggs",
+    share_identity: false
   },
   reason: "Owed some money",
 };

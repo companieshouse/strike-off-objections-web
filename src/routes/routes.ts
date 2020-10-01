@@ -15,7 +15,7 @@ import * as removeDocumentRoute from "../controllers/remove.document.controller"
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
-const router: Router = Router();
+export const router: Router = Router();
 
 /**
  * Simply renders a view template.
@@ -65,5 +65,3 @@ router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
 router.get(pageURLs.CHANGE_ANSWERS, changeAnswersRoute.get);
 
 router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBILITY_STATEMENT));
-
-export default router;

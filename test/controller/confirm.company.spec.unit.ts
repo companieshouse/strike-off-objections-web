@@ -10,9 +10,9 @@ import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID } from "../../src/constants";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
-import objectionSessionMiddleware from "../../src/middleware/objection.session.middleware";
-import sessionMiddleware from "../../src/middleware/session.middleware";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
+import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CONFIRM_COMPANY,
@@ -225,6 +225,6 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const dummyObjectionCreate: ObjectionCreate = {
-  fullName: "Joe Bloggs",
-  shareIdentity: false,
+  full_name: "Joe Bloggs",
+  share_identity: false,
 };

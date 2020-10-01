@@ -2,7 +2,7 @@ jest.mock("web-security-node");
 
 import { NextFunction, Request, Response } from "express";
 import { authMiddleware } from "web-security-node";
-import authenticationMiddleware from "../../src/middleware/authentication.middleware";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import {
   ACCESSIBILITY_STATEMENT,
   OBJECTIONS_ENTER_INFORMATION,

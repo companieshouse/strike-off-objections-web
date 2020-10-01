@@ -4,7 +4,7 @@ import { OBJECTIONS_SESSION_NAME } from "../constants";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";
 import { ACCESSIBILITY_STATEMENT } from "../model/page.urls";
 
-const objectionSessionMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const objectionSessionMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (isTheAccessibilityStatementUrl(req.originalUrl)) {
     return next();
   }
@@ -27,5 +27,3 @@ const objectionSessionMiddleware = (req: Request, res: Response, next: NextFunct
 const isTheAccessibilityStatementUrl = (url: string): boolean => {
   return url.endsWith(ACCESSIBILITY_STATEMENT);
 };
-
-export default objectionSessionMiddleware;

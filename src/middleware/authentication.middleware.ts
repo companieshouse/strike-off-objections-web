@@ -3,7 +3,7 @@ import { authMiddleware } from "web-security-node";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
-const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (isTheAccessibilityStatementUrl(req.originalUrl)) {
     return next();
   }
@@ -31,5 +31,3 @@ const isADownloadUrl = (url: string): boolean => {
 const isTheAccessibilityStatementUrl = (url: string): boolean => {
   return url.endsWith(pageURLs.ACCESSIBILITY_STATEMENT);
 };
-
-export default authenticationMiddleware;

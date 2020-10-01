@@ -10,9 +10,9 @@ import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../../src/constants";
-import authenticationMiddleware from "../../../src/middleware/authentication.middleware";
-import objectionSessionMiddleware from "../../../src/middleware/objection.session.middleware";
-import sessionMiddleware from "../../../src/middleware/session.middleware";
+import { authenticationMiddleware } from "../../../src/middleware/authentication.middleware";
+import { objectionSessionMiddleware } from "../../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../../src/middleware/session.middleware";
 import { UploadErrorMessages } from "../../../src/model/error.messages";
 import * as pageURLs from "../../../src/model/page.urls";
 import {
