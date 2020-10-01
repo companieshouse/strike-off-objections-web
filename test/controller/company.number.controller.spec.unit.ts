@@ -235,6 +235,36 @@ describe("company number lookup tests", () => {
     expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
   });
 
+  it("should not throw invalid error for company with lower case letter prefix", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_COMPANY_NUMBER)
+      .set("Accept", "application/json")
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({ companyNumber: "ab123456" });
+
+    expect(response.status).toEqual(302);
+    expect(response).not.toBeUndefined();
+    expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
+    expect(response.text).not.toContain(INVALID_COMPANY_NUMBER);
+    expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
+  });
+
+  it("should throw invalid error for company with letters after numbers", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_COMPANY_NUMBER)
+      .set("Accept", "application/json")
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({ companyNumber: "1B345678" });
+
+    expect(response.status).toEqual(200);
+    expect(response).not.toBeUndefined();
+    expect(response.text).not.toContain(NO_COMPANY_NUMBER_SUPPLIED);
+    expect(response.text).toContain(INVALID_COMPANY_NUMBER);
+    expect(response.text).not.toContain(COMPANY_NUMBER_TOO_LONG);
+  });
+
   it("should pad company details for a valid abbreviated company number", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
