@@ -47,7 +47,7 @@ const formatCompanyNumber = (companyNumber: string, leadPoint: number): string  
 // validator middleware that checks for invalid characters in the input
 const postValidators = [
   check(companyNumberFieldName).blacklist(" ").escape().custom((value: string) => {
-    if (!/^[0-9]{8}$|^([a-zA-Z])[0-9]{7}$|^([a-zA-Z]{2})[0-9]{6}$/gm.test(value)) {
+    if (!/^(?=[a-z0-9]{8}$)[a-z]{0,2}\d+$/gmi.test(value)) {
       throw new Error(CompanySearchErrorMessages.INVALID_COMPANY_NUMBER);
     }
     return true;
