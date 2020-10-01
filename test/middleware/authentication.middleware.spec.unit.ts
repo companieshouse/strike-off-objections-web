@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { authMiddleware } from "web-security-node";
 import authenticationMiddleware from "../../src/middleware/authentication.middleware";
 import {
+  ACCESSIBILITY_STATEMENT,
   OBJECTIONS_ENTER_INFORMATION,
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
@@ -66,4 +67,13 @@ describe("authentication middleware tests", () => {
 
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
   });
+
+  it("should not redirect to signin if loading accessibility statement page", () => {
+
+    dummyReq.originalUrl = ACCESSIBILITY_STATEMENT;
+    authenticationMiddleware(dummyReq, dummyRes, dummyNext);
+
+    expect(mockWebSecurityNodeAuthMiddleware).toBeCalledTimes(0);
+  });
+
 });

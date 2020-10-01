@@ -64,4 +64,6 @@ router.get(pageURLs.ERROR, renderTemplate(Templates.ERROR));
 
 router.get(pageURLs.CHANGE_ANSWERS, changeAnswersRoute.get);
 
+router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBILITY_STATEMENT));
+
 export default router;

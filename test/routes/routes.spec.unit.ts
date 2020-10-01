@@ -143,6 +143,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/There is no strike off notice for the company/);
   });
 
+  it("should find the accessibility statement page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/accessibility-statement");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Accessibility statement for the Apply to object to a company being struck off service/);
+  });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
