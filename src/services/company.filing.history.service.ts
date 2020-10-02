@@ -2,6 +2,7 @@ import logger from "../utils/logger";
 import { createApiClient } from "ch-sdk-node";
 import Resource from "ch-sdk-node/dist/services/resource";
 import { CompanyFilingHistory } from "ch-sdk-node/dist/services/company-filing-history";
+import { inspect } from "util";
 
 export const getCompanyFilingHistory = async (companyNumber: string, category: string, token: string):
   Promise<CompanyFilingHistory> => {
@@ -18,7 +19,7 @@ export const getCompanyFilingHistory = async (companyNumber: string, category: s
     };
   }
 
-  logger.debug("Data from company filing history SDK call " + JSON.stringify(sdkResponse, null, 2));
+  logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
 
   return sdkResponse.resource as CompanyFilingHistory;
 }
