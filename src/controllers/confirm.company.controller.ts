@@ -14,7 +14,11 @@ import {
   retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
+import { getCompanyFilingHistory } from "../services/company.filing.history.service";
+import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
+const GAZETTE_CATEGORY = "gazette";
+const GAZ1_TYPE = "GAZ1";
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
   [ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION]: OBJECTIONS_NO_STRIKE_OFF,
@@ -69,3 +73,20 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 const getIneligiblePage = (apiError: ApiError): string => {
   return INELIGIBLE_PAGES[apiError.data.status];
 };
+
+const getLatestGaz1Date = async (companyNumber: string, token: string): Promise<string> => {
+  const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber, GAZETTE_CATEGORY, token);
+  const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
+  // Response from api should be in reverse chronological order so first in list is most recent
+  const mostRecentGaz1Item = companyGaz1History.shift();
+
+  if (!mostRecentGaz1Item) {
+    throw new Error(`No Gaz1 present for Company: ${companyNumber}`)
+  }
+
+  return mostRecentGaz1Item.date;
+}
+
+function isGaz1(element: FilingHistoryItem, index, array) {
+  return element.type === GAZ1_TYPE;
+}
