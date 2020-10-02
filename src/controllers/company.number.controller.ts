@@ -61,9 +61,17 @@ const postValidators = [
  * @param next
  */
 const post = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  // TODO Just a test code smell
   logger.debugRequest(req, "Attempt to retrieve and show the company details");
-
+  // TODO more test code smells
   const errors = validationResult(req);
+  // TODO more test code smells
+  // TODO more test code smells
+  // TODO more test code smells
+  // TODO more test code smells
+  // TODO more test code smells
+  // TODO more test code smells
+  console.log("Bad practice this should be a smell");
 
   // render errors in the view
   if (!errors.isEmpty()) {
