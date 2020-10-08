@@ -1,16 +1,35 @@
 import { Session } from "ch-node-session-handler";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
-import { Download, ObjectionCreate } from "../modules/sdk/objections";
 import * as objectionsSdk from "../modules/sdk/objections";
-import { Attachment, Objection } from "../modules/sdk/objections";
-import { ObjectionPatch, ObjectionStatus } from "../modules/sdk/objections";
+import {
+  Attachment,
+  Download,
+  Objection,
+  ObjectionCreate,
+  ObjectionPatch,
+  ObjectionStatus
+} from "../modules/sdk/objections";
 import logger from "../utils/logger";
 import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveFromObjectionSession,
 } from "./objection.session.service";
+
+/**
+ * Get the eligibility for the given company.
+ *
+ * @param {string} companyNumber the company number
+ * @param {string} token the bearer security token to use to call the api
+ *
+ * @returns {boolean} the eligibility for the given company
+ * @throws {ApiError}
+ */
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+  logger.info(`getting eligibility for company number ${companyNumber}`);
+  return await objectionsSdk.getCompanyEligibility(companyNumber, token);
+};
 
 /**
  * Create a new objection for the given company.
