@@ -19,6 +19,7 @@ import {
   retrieveFromObjectionSession, retrieveObjectionCreateFromObjectionSession,
 } from "../../src/services/objection.session.service";
 
+const mockGetEligibility = objectionsSdk.getCompanyEligibility as jest.Mock;
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
 const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
@@ -100,6 +101,17 @@ describe("objections API service unit tests", () => {
       [SESSION_OBJECTION_CREATE]: dummyObjectionCreate,
       [SESSION_OBJECTION_ID]: NEW_OBJECTION_ID,
     };
+  });
+
+  it("should return boolean when getting company eligibility", async () => {
+    mockGetEligibility.mockResolvedValueOnce(true);
+
+    const returnedEligibility: boolean = await objectionsService.getCompanyEligibility(
+      COMPANY_NUMBER, ACCESS_TOKEN);
+
+    expect(returnedEligibility).toBeDefined();
+    expect(typeof returnedEligibility).toBe("boolean");
+    expect(returnedEligibility).toEqual(true);
   });
 
   it("returns an id when a new objection is created", async () => {
