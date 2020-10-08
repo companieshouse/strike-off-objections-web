@@ -26,9 +26,9 @@ import {
  * @returns {boolean} the eligibility for the given company
  * @throws {ApiError}
  */
-export const getEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
   logger.info(`getting eligibility for company number ${companyNumber}`);
-  return await objectionsSdk.getEligibility(companyNumber, token);
+  return await objectionsSdk.getCompanyEligibility(companyNumber, token);
 };
 
 /**

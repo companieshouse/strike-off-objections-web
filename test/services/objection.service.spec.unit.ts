@@ -19,7 +19,7 @@ import {
   retrieveFromObjectionSession, retrieveObjectionCreateFromObjectionSession,
 } from "../../src/services/objection.session.service";
 
-const mockGetEligibility = objectionsSdk.getEligibility as jest.Mock;
+const mockGetEligibility = objectionsSdk.getCompanyEligibility as jest.Mock;
 const mockCreateNewObjection = objectionsSdk.createNewObjection as jest.Mock;
 const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
 const mockAddAttachment = objectionsSdk.addAttachment as jest.Mock;
@@ -106,7 +106,7 @@ describe("objections API service unit tests", () => {
   it("returns true when getting company eligibility", async () => {
     mockGetEligibility.mockResolvedValueOnce(true);
 
-    const returnedEligibility: boolean = await objectionsService.getEligibility(
+    const returnedEligibility: boolean = await objectionsService.getCompanyEligibility(
       COMPANY_NUMBER, ACCESS_TOKEN);
 
     expect(returnedEligibility).toBeDefined();

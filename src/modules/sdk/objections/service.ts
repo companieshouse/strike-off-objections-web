@@ -39,8 +39,8 @@ const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
  * @returns {boolean} the eligibility for the given company
  * @throws {ApiError}
  */
-export const getEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
-  logger.debug(`getting eligibility for company number ${companyNumber}`);
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+  logger.debug(`getting eligibility for company number ${companyNumber} from the SDK`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_GET, OBJECTIONS_ELIGIBILITY_URL(companyNumber), token);
