@@ -103,7 +103,7 @@ describe("objections API service unit tests", () => {
     };
   });
 
-  it("returns true when getting company eligibility", async () => {
+  it("should return boolean when getting company eligibility", async () => {
     mockGetEligibility.mockResolvedValueOnce(true);
 
     const returnedEligibility: boolean = await objectionsService.getCompanyEligibility(

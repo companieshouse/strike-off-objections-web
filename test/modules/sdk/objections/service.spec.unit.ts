@@ -57,7 +57,7 @@ describe("objections SDK service unit tests", () => {
     mockGetBaseAxiosRequestConfig.mockClear();
   });
 
-  it("should return true when getting company eligibility", async () => {
+  it("should return boolean when getting company eligibility", async () => {
     mockMakeAPICall.mockResolvedValueOnce({
       data: {
         is_eligible: true,
