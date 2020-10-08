@@ -22,7 +22,7 @@ import {
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
 import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
-import { createNewObjection } from "../../src/services/objection.service";
+import { createNewObjection, getStatus } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
@@ -66,6 +66,7 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockCreateNewObjection = createNewObjection as jest.Mock;
+const mockGetStatus = getStatus as jest.Mock;
 
 // TODO test scenario when an error is logged - check that this is happening correctly
 
@@ -77,32 +78,33 @@ describe("confirm company tests", () => {
     mockCompanyFilingHistory.mockReset();
   });
 
-  // TODO Add fixture to suppress call to get filing history and re-include later
+  it("should render the page with company data from the session", async () => {
 
-  // it("should render the page with company data from the session", async () => {
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-  //   mockGetObjectionSessionValue.mockReset();
-  //   mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockGetStatus.mockReset();
+    mockGetStatus.mockImplementation(() => false);
 
-  //   const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
-  //     .set("Referer", "/")
-  //     .set("Cookie", [`${COOKIE_NAME}=123`]);
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-  //   expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-  //   expect(response.status).toEqual(200);
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
 
-  //   // TODO "girl's" caused the html version of apostrophe to be returned
-  //   // something like eg &1233; - just check that apostrophe is rendered ok in browser
-  //   expect(response.text).toContain("Girls school trust");
-  //   expect(response.text).toContain("00006400");
-  //   expect(response.text).toContain("Active");
-  //   expect(response.text).toContain("26 June 1872");
-  //   expect(response.text).toContain("limited");
-  //   expect(response.text).toContain("line1");
-  //   expect(response.text).toContain("line2");
-  //   expect(response.text).toContain("post code");
-  //   expect(response.text).toContain("No notice in The Gazette");
-  // });
+    // TODO "girl's" caused the html version of apostrophe to be returned
+    // something like eg &1233; - just check that apostrophe is rendered ok in browser
+    expect(response.text).toContain("Girls school trust");
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("Active");
+    expect(response.text).toContain("26 June 1872");
+    expect(response.text).toContain("limited");
+    expect(response.text).toContain("line1");
+    expect(response.text).toContain("line2");
+    expect(response.text).toContain("post code");
+    expect(response.text).toContain("No notice in The Gazette");
+  });
 
   it("should call the API to create a new objection then render the enter information page", async () => {
 
@@ -237,6 +239,9 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
+    mockGetStatus.mockReset();
+    mockGetStatus.mockImplementation(() => true);
+
     mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistoryWithNoGaz1Date);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
@@ -262,6 +267,9 @@ describe("confirm company tests", () => {
 
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetStatus.mockReset();
+    mockGetStatus.mockImplementation(() => true);
 
     mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistory);
 

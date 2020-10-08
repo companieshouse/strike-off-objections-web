@@ -5,7 +5,7 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
-import { createNewObjection } from "../services/objection.service";
+import { createNewObjection, getStatus } from "../services/objection.service";
 import {
   addToObjectionSession,
   deleteObjectionCreateFromObjectionSession,
@@ -41,7 +41,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       const session: Session = req.session as Session;
       const token: string = retrieveAccessTokenFromSession(session);
 
-      const latestGaz1Date: string = await getLatestGaz1Date(company.companyNumber, token);
+      let latestGaz1Date: string;
+      if (getStatus(company.companyNumber, token)) {
+        latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
+      } else {
+        latestGaz1Date = "No notice in The Gazette";
+      }
 
       return res.render(Templates.CONFIRM_COMPANY, {
         company,

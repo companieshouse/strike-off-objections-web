@@ -1,7 +1,4 @@
-// import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
 import Resource from "ch-sdk-node/dist/services/resource";
-// import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-// import { getCompanyProfile } from "../../src/services/company.profile.service";
 import CompanyFilingHistoryService from "ch-sdk-node/dist/services/company-filing-history/service";
 import { getCompanyFilingHistory } from "../../src/services/company.filing.history.service";
 import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
