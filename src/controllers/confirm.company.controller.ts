@@ -14,6 +14,7 @@ import {
   retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
+import { formatCHSDateForDisplay } from "../utils/date.formatter";
 import { getCompanyFilingHistory } from "../services/company.filing.history.service";
 import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
@@ -31,12 +32,20 @@ const INELIGIBLE_PAGES = {
  * @param next
  */
 
-export const get = (req: Request, res: Response, next: NextFunction) => {
+export const get = async (req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
     try {
       const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
+
+      // TODO Display 'No notice in the Gazette' text if company action code is not eligible (OBJ-324 must be completed)
+      const session: Session = req.session as Session;
+      const token: string = retrieveAccessTokenFromSession(session);
+
+      const latestGaz1Date: string = await getLatestGaz1Date(company.companyNumber, token);
+
       return res.render(Templates.CONFIRM_COMPANY, {
         company,
+        latestGaz1Date,
         templateName: Templates.CONFIRM_COMPANY,
       });
     } catch (e) {
@@ -77,16 +86,16 @@ const getIneligiblePage = (apiError: ApiError): string => {
 const getLatestGaz1Date = async (companyNumber: string, token: string): Promise<string> => {
   const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber, GAZETTE_CATEGORY, token);
   const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
-  // Response from api should be in reverse chronological order so first in list is most recent
+  // Response from API should be in reverse chronological order, so first in list is most recent
   const mostRecentGaz1Item = companyGaz1History.shift();
 
   if (!mostRecentGaz1Item) {
-    throw new Error(`No Gaz1 present for Company: ${companyNumber}`)
+    throw new Error(`No GAZ1 present for company: ${companyNumber}`);
   }
 
-  return mostRecentGaz1Item.date;
-}
+  return formatCHSDateForDisplay(mostRecentGaz1Item.date);
+};
 
-function isGaz1(element: FilingHistoryItem, index, array) {
+function isGaz1(element: FilingHistoryItem) {
   return element.type === GAZ1_TYPE;
 }

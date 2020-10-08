@@ -11,7 +11,7 @@ export const getCompanyFilingHistory = async (companyNumber: string, category: s
 
   logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);
   const sdkResponse: Resource<CompanyFilingHistory> =
-    await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
+      await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
 
   if (sdkResponse.httpStatusCode >= 400) {
     throw {
@@ -22,4 +22,4 @@ export const getCompanyFilingHistory = async (companyNumber: string, category: s
   logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
 
   return sdkResponse.resource as CompanyFilingHistory;
-}
+};
