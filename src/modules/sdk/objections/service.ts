@@ -14,6 +14,9 @@ import {
   ObjectionPatch,
 } from "./types";
 
+const OBJECTIONS_ELIGIBILITY_URL = (companyNumber: string): string =>
+  `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections/eligibility`;
+
 const OBJECTIONS_API_URL = (companyNumber: string): string =>
   `${INTERNAL_API_URL}/company/${companyNumber}/strike-off-objections`;
 
@@ -26,6 +29,23 @@ const OBJECTIONS_API_ATTACHMENT_URL = (companyNumber: string, objectionId: strin
 const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
     (companyNumber: string, objectionId: string, attachmentId: string): string =>
       OBJECTIONS_API_URL(companyNumber) + `/${objectionId}/attachments/${attachmentId}`;
+
+/**
+ * Get the eligibility for the given company.
+ *
+ * @param {string} companyNumber the company number
+ * @param {string} token the bearer security token to use to call the api
+ *
+ * @returns {boolean} the eligibility for the given company
+ * @throws {ApiError}
+ */
+export const getEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+  logger.debug(`getting eligibility for company number ${companyNumber}`);
+
+  const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
+    HTTP_GET, OBJECTIONS_ELIGIBILITY_URL(companyNumber), token);
+  return (await makeAPICall(axiosConfig)).data.is_eligible as boolean;
+};
 
 /**
  * Create a new objection for the given company.

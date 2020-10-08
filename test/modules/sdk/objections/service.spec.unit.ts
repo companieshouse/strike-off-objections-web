@@ -57,6 +57,24 @@ describe("objections SDK service unit tests", () => {
     mockGetBaseAxiosRequestConfig.mockClear();
   });
 
+  it("should return true when getting company eligibility", async () => {
+    mockMakeAPICall.mockResolvedValueOnce({
+      data: {
+        is_eligible: true,
+      },
+    });
+    const returnedEligibility: boolean = await objectionsSdk.getEligibility(COMPANY_NUMBER,
+                                                                            ACCESS_TOKEN);
+
+    expect(returnedEligibility).toEqual(true);
+    expect(mockMakeAPICall).toBeCalled();
+
+    testCorrectApiValuesAreUsed(
+      `company/${COMPANY_NUMBER}/strike-off-objections/eligibility`,
+      HTTP_GET,
+    );
+  });
+
   it("returns an id when a new objection is created", async () => {
     const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
     mockMakeAPICall.mockResolvedValueOnce({
