@@ -5,7 +5,7 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
-import { createNewObjection, getStatus } from "../services/objection.service";
+import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
   deleteObjectionCreateFromObjectionSession,
@@ -37,12 +37,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
 
-      // TODO Display 'No notice in the Gazette' text if company action code is not eligible (OBJ-324 must be completed)
       const session: Session = req.session as Session;
       const token: string = retrieveAccessTokenFromSession(session);
 
       let latestGaz1Date: string;
-      if (getStatus(company.companyNumber, token)) {
+      if (getCompanyEligibility(company.companyNumber, token)) {
         latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
       } else {
         latestGaz1Date = "No notice in The Gazette";

@@ -22,7 +22,7 @@ import {
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
 import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
-import { createNewObjection, getStatus } from "../../src/services/objection.service";
+import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
@@ -66,7 +66,7 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockCreateNewObjection = createNewObjection as jest.Mock;
-const mockGetStatus = getStatus as jest.Mock;
+const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
 
 // TODO test scenario when an error is logged - check that this is happening correctly
 
@@ -83,8 +83,8 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-    mockGetStatus.mockReset();
-    mockGetStatus.mockImplementation(() => false);
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => false);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -239,8 +239,8 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-    mockGetStatus.mockReset();
-    mockGetStatus.mockImplementation(() => true);
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => true);
 
     mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistoryWithNoGaz1Date);
 
@@ -268,8 +268,8 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
-    mockGetStatus.mockReset();
-    mockGetStatus.mockImplementation(() => true);
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => true);
 
     mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistory);
 
