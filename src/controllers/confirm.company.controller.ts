@@ -33,11 +33,12 @@ const INELIGIBLE_PAGES = {
  */
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.session) {
-    try {
-      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
+  const session: Session = req.session as Session;
 
-      const session: Session = req.session as Session;
+  if (session) {
+    try {
+      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+
       const token: string = retrieveAccessTokenFromSession(session);
 
       let latestGaz1Date: string;
