@@ -41,7 +41,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       const token: string = retrieveAccessTokenFromSession(session);
 
       let latestGaz1Date: string;
-      if (getCompanyEligibility(company.companyNumber, token)) {
+      if (await getCompanyEligibility(company.companyNumber, token)) {
         latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
       } else {
         latestGaz1Date = "No notice in The Gazette";
