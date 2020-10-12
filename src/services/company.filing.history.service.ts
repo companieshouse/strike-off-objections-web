@@ -37,6 +37,6 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
   return sdkResponse.resource as CompanyFilingHistory;
 };
 
-function isGaz1(element: FilingHistoryItem) {
+const isGaz1 = (element: FilingHistoryItem) => {
   return element.type === GAZ1_TYPE;
-}
+};
