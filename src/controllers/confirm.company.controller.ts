@@ -15,11 +15,9 @@ import {
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
-import { getCompanyFilingHistory } from "../services/company.filing.history.service";
-import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { getLatestGaz1FilingHistoryItem } from "../services/company.filing.history.service";
+import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
-const GAZETTE_CATEGORY = "gazette";
-const GAZ1_TYPE = "GAZ1";
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
   [ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION]: OBJECTIONS_NO_STRIKE_OFF,
@@ -89,18 +87,12 @@ const getIneligiblePage = (apiError: ApiError): string => {
 };
 
 const getLatestGaz1Date = async (companyNumber: string, token: string): Promise<string> => {
-  const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber, GAZETTE_CATEGORY, token);
-  const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
-  // Response from API should be in reverse chronological order, so first in list is most recent
-  const mostRecentGaz1Item = companyGaz1History.shift();
+  const filingHistoryItem: FilingHistoryItem = await getLatestGaz1FilingHistoryItem(companyNumber, token);
 
-  if (!mostRecentGaz1Item) {
+  if (!filingHistoryItem) {
     throw new Error(`No GAZ1 present for company: ${companyNumber}`);
   }
 
-  return formatCHSDateForDisplay(mostRecentGaz1Item.date);
+  return formatCHSDateForDisplay(filingHistoryItem.date);
 };
 
-function isGaz1(element: FilingHistoryItem) {
-  return element.type === GAZ1_TYPE;
-}

@@ -31,8 +31,8 @@ import {
   deleteObjectionCreateFromObjectionSession
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { getCompanyFilingHistory } from "../../src/services/company.filing.history.service";
-import { CompanyFilingHistory } from "ch-sdk-node/dist/services/company-filing-history";
+import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
+import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
 const OBJECTION_ID = "123456";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
@@ -72,10 +72,10 @@ const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
 
 describe("confirm company tests", () => {
 
-  const mockCompanyFilingHistory = getCompanyFilingHistory as jest.Mock;
+  const mockLatestGaz1FilingHistoryItem = getLatestGaz1FilingHistoryItem as jest.Mock;
 
   beforeEach(() => {
-    mockCompanyFilingHistory.mockReset();
+    mockLatestGaz1FilingHistoryItem.mockReset();
   });
 
   it("should render the page with company data from the session", async () => {
@@ -242,7 +242,7 @@ describe("confirm company tests", () => {
     mockGetCompanyEligibility.mockReset();
     mockGetCompanyEligibility.mockImplementation(() => true);
 
-    mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistoryWithNoGaz1Date);
+    mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(undefined);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -255,7 +255,7 @@ describe("confirm company tests", () => {
 
   });
 
-  it("should correctly extract the latest GAZ1 date from the filing history if action code is eligible", async () => {
+  it("should correctly display the latest GAZ1 date from the filing history if action code is eligible", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
@@ -271,7 +271,7 @@ describe("confirm company tests", () => {
     mockGetCompanyEligibility.mockReset();
     mockGetCompanyEligibility.mockImplementation(() => true);
 
-    mockCompanyFilingHistory.mockResolvedValueOnce(dummyCompanyFilingHistory);
+    mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -298,57 +298,12 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   incorporationDate: "26 June 1872",
 };
 
-const dummyCompanyFilingHistory: CompanyFilingHistory = {
-  etag: "",
-  filingHistoryStatus: "",
-  items: [
-    {
-      // This entry should be ignored when extracting the GAZ1 date as type is different
-      category: "",
-      date: "2015-04-14",
-      description: "",
-      transactionId: "",
-      type: "288a",
-    },
-    {
-      category: "",
-      date: "2015-04-14",
-      description: "",
-      transactionId: "",
-      type: "GAZ1",
-    },
-    // And this entry shouldn't be used as it's last in the list
-    {
-      category: "",
-      date: "2011-07-21",
-      description: "",
-      transactionId: "",
-      type: "GAZ1",
-    },
-  ],
-  itemsPerPage: 1,
-  kind: "",
-  startIndex: 1,
-  totalCount: 1,
-};
-
-const dummyCompanyFilingHistoryWithNoGaz1Date: CompanyFilingHistory = {
-  etag: "",
-  filingHistoryStatus: "",
-  items: [
-    {
-      // This entry should be ignored when extracting the GAZ1 date as type is different
-      category: "",
-      date: "2015-04-14",
-      description: "",
-      transactionId: "",
-      type: "288a",
-    },
-  ],
-  itemsPerPage: 1,
-  kind: "",
-  startIndex: 1,
-  totalCount: 1,
+const dummyFilingHistoryItem: FilingHistoryItem = {
+  category: "",
+  date: "2015-04-14",
+  description: "",
+  transactionId: "",
+  type: "GAZ1",
 };
 
 const dummyObjectionCreate: ObjectionCreate = {
