@@ -8,12 +8,23 @@ const GAZETTE_CATEGORY = "gazette";
 const GAZ1_TYPE = "GAZ1";
 
 export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, token: string): Promise<FilingHistoryItem> => {
+  logger.debug(`Getting latest GAZ1 filing history item for company number ${companyNumber}`);
+  const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber.toUpperCase(), GAZETTE_CATEGORY, token);
+
+  const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
+  // Response from API should be in reverse chronological order, so first in list is most recent
+  const mostRecentGaz1Item = companyGaz1History.shift();
+
+  return mostRecentGaz1Item as FilingHistoryItem;
+};
+
+const getCompanyFilingHistory = async (companyNumber: string, category: string, token: string): Promise<CompanyFilingHistory> => {
   logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 
-  logger.debug(`Looking for company filing history with company number ${companyNumber}`);
+  logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);
   const sdkResponse: Resource<CompanyFilingHistory> =
-      await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), GAZETTE_CATEGORY);
+      await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
 
   if (sdkResponse.httpStatusCode >= 400) {
     throw {
@@ -23,13 +34,7 @@ export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, toke
 
   logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
 
-  const companyGazetteHistory: CompanyFilingHistory = sdkResponse.resource as CompanyFilingHistory;
-
-  const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
-  // Response from API should be in reverse chronological order, so first in list is most recent
-  const mostRecentGaz1Item = companyGaz1History.shift();
-
-  return mostRecentGaz1Item as FilingHistoryItem;
+  return sdkResponse.resource as CompanyFilingHistory;
 };
 
 function isGaz1(element: FilingHistoryItem) {
