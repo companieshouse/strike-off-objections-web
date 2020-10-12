@@ -64,7 +64,7 @@ describe("objections SDK service unit tests", () => {
       },
     });
     const returnedEligibility: boolean = await objectionsSdk.getCompanyEligibility(COMPANY_NUMBER,
-                                                                            ACCESS_TOKEN);
+                                                                                   ACCESS_TOKEN);
 
     expect(returnedEligibility).toEqual(true);
     expect(mockMakeAPICall).toBeCalled();

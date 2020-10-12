@@ -1,17 +1,30 @@
 import logger from "../utils/logger";
 import { createApiClient } from "ch-sdk-node";
 import Resource from "ch-sdk-node/dist/services/resource";
-import { CompanyFilingHistory } from "ch-sdk-node/dist/services/company-filing-history";
+import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 import { inspect } from "util";
 
-export const getCompanyFilingHistory = async (companyNumber: string, category: string, token: string):
-  Promise<CompanyFilingHistory> => {
+const GAZETTE_CATEGORY = "gazette";
+const GAZ1_TYPE = "GAZ1";
+
+export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, token: string): Promise<FilingHistoryItem> => {
+  logger.debug(`Getting latest GAZ1 filing history item for company number ${companyNumber}`);
+  const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber.toUpperCase(), GAZETTE_CATEGORY, token);
+
+  const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
+  // Response from API should be in reverse chronological order, so first in list is most recent
+  const mostRecentGaz1Item = companyGaz1History.shift();
+
+  return mostRecentGaz1Item as FilingHistoryItem;
+};
+
+const getCompanyFilingHistory = async (companyNumber: string, category: string, token: string): Promise<CompanyFilingHistory> => {
   logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 
   logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);
   const sdkResponse: Resource<CompanyFilingHistory> =
-    await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
+      await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
 
   if (sdkResponse.httpStatusCode >= 400) {
     throw {
@@ -22,4 +35,8 @@ export const getCompanyFilingHistory = async (companyNumber: string, category: s
   logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
 
   return sdkResponse.resource as CompanyFilingHistory;
-}
+};
+
+const isGaz1 = (element: FilingHistoryItem) => {
+  return element.type === GAZ1_TYPE;
+};

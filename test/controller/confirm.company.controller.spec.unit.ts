@@ -4,6 +4,7 @@ jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
+jest.mock("../../src/services/company.filing.history.service");
 
 import { Session } from "ch-node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -21,16 +22,20 @@ import {
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
 import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
-import { createNewObjection } from "../../src/services/objection.service";
+import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
+  retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession,
   deleteObjectionCreateFromObjectionSession
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
+import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
+import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
 const OBJECTION_ID = "123456";
+const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const SESSION: Session = {
   data: {},
 } as Session;
@@ -61,15 +66,25 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockCreateNewObjection = createNewObjection as jest.Mock;
+const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
 
 // TODO test scenario when an error is logged - check that this is happening correctly
 
 describe("confirm company tests", () => {
 
+  const mockLatestGaz1FilingHistoryItem = getLatestGaz1FilingHistoryItem as jest.Mock;
+
+  beforeEach(() => {
+    mockLatestGaz1FilingHistoryItem.mockReset();
+  });
+
   it("should render the page with company data from the session", async () => {
 
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => false);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -88,6 +103,7 @@ describe("confirm company tests", () => {
     expect(response.text).toContain("line1");
     expect(response.text).toContain("line2");
     expect(response.text).toContain("post code");
+    expect(response.text).toContain("No notice in The Gazette");
   });
 
   it("should call the API to create a new objection then render the enter information page", async () => {
@@ -209,6 +225,64 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
+
+  it("should re-direct to error page when action code is eligible but no GAZ1 date is found", async () => {
+
+    const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+
+    beforeEach(() => {
+      mockValidAccessToken.mockReset();
+    });
+
+    mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => true);
+
+    mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(undefined);
+
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(500);
+
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+
+  });
+
+  it("should correctly display the latest GAZ1 date from the filing history if action code is eligible", async () => {
+
+    const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+
+    beforeEach(() => {
+      mockValidAccessToken.mockReset();
+    });
+
+    mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => true);
+
+    mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
+
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("14 April 2015");
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
@@ -222,6 +296,14 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
+};
+
+const dummyFilingHistoryItem: FilingHistoryItem = {
+  category: "",
+  date: "2015-04-14",
+  description: "",
+  transactionId: "",
+  type: "GAZ1",
 };
 
 const dummyObjectionCreate: ObjectionCreate = {

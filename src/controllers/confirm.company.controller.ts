@@ -5,7 +5,7 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
-import { createNewObjection } from "../services/objection.service";
+import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
   deleteObjectionCreateFromObjectionSession,
@@ -14,6 +14,9 @@ import {
   retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
+import { formatCHSDateForDisplay } from "../utils/date.formatter";
+import { getLatestGaz1FilingHistoryItem } from "../services/company.filing.history.service";
+import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
 
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
@@ -27,12 +30,25 @@ const INELIGIBLE_PAGES = {
  * @param next
  */
 
-export const get = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session) {
+export const get = async (req: Request, res: Response, next: NextFunction) => {
+  const session: Session = req.session as Session;
+
+  if (session) {
     try {
-      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(req.session);
+      const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+
+      const token: string = retrieveAccessTokenFromSession(session);
+
+      let latestGaz1Date: string;
+      if (await getCompanyEligibility(company.companyNumber, token)) {
+        latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
+      } else {
+        latestGaz1Date = "No notice in The Gazette";
+      }
+
       return res.render(Templates.CONFIRM_COMPANY, {
         company,
+        latestGaz1Date,
         templateName: Templates.CONFIRM_COMPANY,
       });
     } catch (e) {
@@ -69,3 +85,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 const getIneligiblePage = (apiError: ApiError): string => {
   return INELIGIBLE_PAGES[apiError.data.status];
 };
+
+const getLatestGaz1Date = async (companyNumber: string, token: string): Promise<string> => {
+  const filingHistoryItem: FilingHistoryItem = await getLatestGaz1FilingHistoryItem(companyNumber, token);
+
+  if (!filingHistoryItem) {
+    throw new Error(`No GAZ1 present for company: ${companyNumber}`);
+  }
+
+  return formatCHSDateForDisplay(filingHistoryItem.date);
+};
+
