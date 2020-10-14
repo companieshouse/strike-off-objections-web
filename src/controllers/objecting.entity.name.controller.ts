@@ -21,7 +21,7 @@ const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
 
 const validators = [
-  check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_FULL_NAME),
+  check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
   check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
