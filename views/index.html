@@ -45,6 +45,14 @@
         <li>to upload evidence to support the objection, for example invoices showing the company is still trading or owes a debt</li>
       </ul>
 
+      {{ govukDetails({
+        summaryText: "What is the Gazette?",
+        html: '<p> Official notices about insolvency or companies being wound up are published in
+        <a href="https://www.thegazette.co.uk/">The London, Edinburgh and Belfast Gazettes</a>.
+        You can search The Gazettes online, and get help using their
+        <a href="https://www.thegazette.co.uk/all-notices/content/116">guide to searching</a>.</p>'
+      }) }}
+
     </div>
   </div>
 {% endblock %}
