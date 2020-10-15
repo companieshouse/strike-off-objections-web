@@ -56,6 +56,7 @@ describe("Basic URL Tests", () => {
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
+    expect(response.text).toMatch(/What is The Gazette?/);
   });
 
   it("should find start page without cookie", async () => {
@@ -64,6 +65,7 @@ describe("Basic URL Tests", () => {
 
     expect(response.status).toEqual(200);
     expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
+    expect(response.text).toMatch(/What is The Gazette?/);
   });
 
   it("should find the objecting entity name page", async () => {
