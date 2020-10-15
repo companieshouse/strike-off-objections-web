@@ -4,13 +4,6 @@
   Check your answers before submitting your objection application
 {% endblock %}
 
-{% block backLink %}
-  {{ govukBackLink({
-    text: "Back",
-    href: "/strike-off-objections/document-upload"
-  }) }}
-{% endblock %}
-
 {% set documentList %}
   <ul class="govuk-list govuk-list--bullet">
   {% for attachment in objection.attachments | reverse %}
@@ -54,7 +47,7 @@
           },
           {
             key: {
-              text: "Full name"
+              text: "Full name or organisation name"
             },
             value: {
               text: objection.created_by.full_name
@@ -80,7 +73,9 @@
             actions: {
               items: [
                 {
-                  visuallyHiddenText: "share identity cannot be changed"
+                  href: "/strike-off-objections/change-answers?changePage=objecting-entity-name",
+                  text: "Change",
+                  visuallyHiddenText: "change share identity"
                 }
               ]
             }
