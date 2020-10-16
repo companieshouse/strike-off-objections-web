@@ -22,4 +22,4 @@ export const getCompanyFilingHistory = async (companyNumber: string, category: s
   logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
 
   return sdkResponse.resource as CompanyFilingHistory;
-}
+};

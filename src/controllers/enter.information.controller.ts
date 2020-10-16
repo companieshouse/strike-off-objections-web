@@ -12,6 +12,7 @@ import {
   retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
+import { removeNonPrintableChars } from "../utils/string.formatter";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,7 +30,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
   const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
 
-  const reason: string = req.body.information;
+  const reason: string = removeNonPrintableChars(req.body.information);
 
   try {
     await updateObjectionReason(company.companyNumber, objectionId, token, reason);

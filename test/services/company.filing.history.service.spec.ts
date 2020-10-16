@@ -1,7 +1,4 @@
-import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
 import Resource from "ch-sdk-node/dist/services/resource";
-import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { getCompanyProfile } from "../../src/services/company.profile.service";
 import CompanyFilingHistoryService from "ch-sdk-node/dist/services/company-filing-history/service";
 import { getCompanyFilingHistory } from "../../src/services/company.filing.history.service";
 import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
@@ -19,7 +16,7 @@ describe("company filing history service unit tests", () => {
 
   it("converts company number to uppercase", async () => {
     mockGetCompanyFilingHistory.mockResolvedValueOnce(dummySDKResponse);
-    const company = await getCompanyFilingHistory("sc100079", "category", ACCESS_TOKEN);
+    await getCompanyFilingHistory("sc100079", "category", ACCESS_TOKEN);
     expect(mockGetCompanyFilingHistory).toBeCalledWith("SC100079");
   });
 
@@ -46,7 +43,7 @@ const dummyFilingHistoryItem: FilingHistoryItem = {
   description: "A description",
   transactionId: "transactionId",
   type: "a type"
-}
+};
 
 const dummyCompanyFilingHistory: CompanyFilingHistory = {
   etag: "etag",
@@ -56,7 +53,7 @@ const dummyCompanyFilingHistory: CompanyFilingHistory = {
   startIndex: 0,
   totalCount: 0
 
-}
+};
 
 const dummySDKResponse: Resource<CompanyFilingHistory> = {
   httpStatusCode: 200,
