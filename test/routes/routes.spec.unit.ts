@@ -118,7 +118,7 @@ describe("Basic URL Tests", () => {
       .get("/strike-off-objections/check-your-answers");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Check your answers before submitting your objection application/);
+    expect(response.text).toMatch(/Check your answers before submitting your objection/);
   });
 
   it("should find the error page", async () => {
