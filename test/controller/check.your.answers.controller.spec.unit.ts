@@ -117,6 +117,21 @@ describe("check company tests", () => {
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_CONFIRMATION);
   });
+
+  it ("should show the error screen if api returns error on post", async () => {
+
+    mockSubmitObjection.mockRejectedValueOnce(new Error("Invalid status"));
+
+    const res = await request(app)
+      .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
+      .set("referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockSubmitObjection).toBeCalledWith(dummySession);
+
+    expect(res.status).toEqual(500);
+    expect(res.text).toContain("Sorry, there is a problem with the service");
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
