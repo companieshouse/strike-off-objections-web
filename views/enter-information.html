@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
   Tell us why you're objecting to the company being struck off
 {% endblock %}
 
