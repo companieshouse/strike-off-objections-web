@@ -39,12 +39,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   return next(new Error("No Session present"));
 };
 
-export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    await submitObjection(req.session as Session);
-    return res.redirect(OBJECTIONS_CONFIRMATION);
-  } catch (e) {
-    logger.errorRequest(req, "Error confirming and submitting objection");
-    return next(e);
-  }
+export const post = async (req: Request, res: Response) => {
+  await submitObjection(req.session as Session);
+
+  return res.redirect(OBJECTIONS_CONFIRMATION);
 };
