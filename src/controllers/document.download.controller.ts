@@ -79,8 +79,8 @@ const showErrorPage = (httpStatus: number, res: Response) => {
       case UNAUTHORIZED:
       case FORBIDDEN:
       case NOT_FOUND: {
-        const { HEADING_NOT_FOUND, MESSAGE_NOT_FOUND } = DownloadErrorMessages;
-        return renderFileError(res, HEADING_NOT_FOUND, MESSAGE_NOT_FOUND);
+        const { HEADING_NOT_ALLOWED, MESSAGE_NOT_ALLOWED } = DownloadErrorMessages;
+        return renderFileError(res, HEADING_NOT_ALLOWED, MESSAGE_NOT_ALLOWED);
       }
       default: {
         return res.render(Templates.ERROR);

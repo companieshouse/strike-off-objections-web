@@ -74,24 +74,24 @@ describe("document download controller unit tests", () => {
     const status = 401;
     mockDownloadAttachment.mockRejectedValueOnce({ status } as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+                          "Error Downloading Attachment",
+                          "Unable to download file. Please contact the Support Team.");
   });
 
   it("should show correct error message to user when download from API returns status 403", async () => {
     const status = 403;
     mockDownloadAttachment.mockRejectedValueOnce({ status } as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+                          "Error Downloading Attachment",
+                          "Unable to download file. Please contact the Support Team.");
   });
 
   it("should show correct error message to user when download from API returns status 404", async () => {
     const status = 404;
     mockDownloadAttachment.mockRejectedValueOnce({ status } as ApiError);
     await testErrorScreen(status,
-                          "Not Found",
-                          "The file path could not be found.");
+                          "Error Downloading Attachment",
+                          "Unable to download file. Please contact the Support Team.");
   });
 
   it("should show generic error page to user when error thrown with no http status ", async () => {

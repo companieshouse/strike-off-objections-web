@@ -6,8 +6,8 @@ export enum UploadErrorMessages {
 }
 
 export enum DownloadErrorMessages {
-  HEADING_NOT_FOUND = "Not Found",
-  MESSAGE_NOT_FOUND = "The file path could not be found.",
+  HEADING_NOT_ALLOWED = "Error Downloading Attachment",
+  MESSAGE_NOT_ALLOWED = "Unable to download file. Please contact the Support Team.",
 }
 
 export enum ErrorMessages {
