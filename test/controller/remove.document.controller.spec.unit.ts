@@ -140,15 +140,14 @@ describe("remove document url tests", () => {
       .post(OBJECTIONS_REMOVE_DOCUMENT)
       .send({
         [REMOVE_DOCUMENT_FORM_FIELD]: null,
-        [ATTACHMENT_ID_FORM_FIELD]: ATTACHMENT_ID,
-      },
-      )
+        [ATTACHMENT_ID_FORM_FIELD]: ATTACHMENT_ID })
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockDeleteAttachment).not.toBeCalled();
     expect(res.status).toEqual(200);
+    expect(res.text).toContain("There is a problem");
     expect(res.text).toContain(SELECT_TO_REMOVE);
-    expect(res.header.location).toEqual(OBJECTIONS_REMOVE_DOCUMENT);
+    expect(res.text).toContain("Error:");
   });
 });
