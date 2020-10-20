@@ -3,7 +3,7 @@ import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { APP_NAME } from "./constants";
-import { errorHandler } from "./controllers/error.controller";
+import  errorHandlers from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "./middleware/objection.session.middleware";
 import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
@@ -45,7 +45,7 @@ app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*(?<!download)$`, objectionSessionMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
-app.use(errorHandler);
+app.use(...errorHandlers);
 
 logger.info(`************** ${APP_NAME} has started **************`);
 
