@@ -1,5 +1,3 @@
-import { ErrorMessages } from "../../src/model/error.messages";
-
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
@@ -8,6 +6,7 @@ jest.mock("../../src/middleware/objection.session.middleware");
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
+import { ErrorMessages } from "../../src/model/error.messages";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_COMPANY_NUMBER, STRIKE_OFF_OBJECTIONS } from "../../src/model/page.urls";

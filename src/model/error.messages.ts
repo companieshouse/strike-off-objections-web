@@ -16,7 +16,6 @@ export enum ErrorMessages {
   ERROR_SUMMARY_TITLE = "There is a problem",
   ENTER_NAME = "Enter your full name or organisation name",
   SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
-
 }
 
 export enum HttpStatusCodes {
