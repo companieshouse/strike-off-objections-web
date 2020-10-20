@@ -2,7 +2,6 @@ import logger from "../utils/logger";
 import { createApiClient } from "ch-sdk-node";
 import Resource from "ch-sdk-node/dist/services/resource";
 import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
-import { inspect } from "util";
 
 const GAZETTE_CATEGORY = "gazette";
 const GAZ1_TYPE = "GAZ1";
@@ -32,7 +31,7 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
     };
   }
 
-  logger.debug("Data from company filing history SDK call " + inspect(sdkResponse));
+  logger.debug("Data from company filing history SDK call " + JSON.stringify(sdkResponse, null, 2));
 
   return sdkResponse.resource as CompanyFilingHistory;
 };
