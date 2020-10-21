@@ -36,6 +36,12 @@ describe("company filing history service unit tests", () => {
     expect(filingHistoryItem).toEqual(dummyGaz1FilingHistoryItem);
   });
 
+  it("returns the correct FilingHistoryItem object when GAZ1(A) entries are found", async () => {
+    mockGetCompanyFilingHistory.mockResolvedValueOnce(dummyGaz1ASDKResponse);
+    const filingHistoryItem = await getLatestGaz1FilingHistoryItem("12345678", ACCESS_TOKEN);
+    expect(filingHistoryItem).toEqual(dummyGaz1AFilingHistoryItem);
+  });
+
   it("returns 'undefined' when no GAZ1 entries are found", async () => {
     mockGetCompanyFilingHistory.mockResolvedValueOnce(dummySDKResponseWithNoGaz1Date);
     const filingHistoryItem = await getLatestGaz1FilingHistoryItem("12345678", ACCESS_TOKEN);
@@ -49,6 +55,14 @@ const dummyGaz1FilingHistoryItem: FilingHistoryItem = {
   description: "A description",
   transactionId: "transactionId",
   type: "GAZ1"
+};
+
+const dummyGaz1AFilingHistoryItem: FilingHistoryItem = {
+  category: "category",
+  date: "someDate",
+  description: "A description",
+  transactionId: "transactionId",
+  type: "GAZ1(A)"
 };
 
 const dummyCompanyFilingHistory: CompanyFilingHistory = {
@@ -79,6 +93,26 @@ const dummyCompanyFilingHistory: CompanyFilingHistory = {
   totalCount: 1,
 };
 
+const dummyGaz1ACompanyFilingHistory: CompanyFilingHistory = {
+  etag: "",
+  filingHistoryStatus: "",
+  items: [
+    {
+      // This entry should be ignored when extracting the GAZ1 date as type is different
+      category: "",
+      date: "2015-04-14",
+      description: "",
+      transactionId: "",
+      type: "288a",
+    },
+    dummyGaz1AFilingHistoryItem,
+  ],
+  itemsPerPage: 1,
+  kind: "",
+  startIndex: 1,
+  totalCount: 1,
+};
+
 const dummyCompanyFilingHistoryWithNoGaz1Date: CompanyFilingHistory = {
   etag: "",
   filingHistoryStatus: "",
@@ -101,6 +135,11 @@ const dummyCompanyFilingHistoryWithNoGaz1Date: CompanyFilingHistory = {
 const dummySDKResponse: Resource<CompanyFilingHistory> = {
   httpStatusCode: 200,
   resource: dummyCompanyFilingHistory,
+};
+
+const dummyGaz1ASDKResponse: Resource<CompanyFilingHistory> = {
+  httpStatusCode: 200,
+  resource: dummyGaz1ACompanyFilingHistory,
 };
 
 const dummySDKResponseWithNoGaz1Date: Resource<CompanyFilingHistory> = {
