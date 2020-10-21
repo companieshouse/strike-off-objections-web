@@ -12,8 +12,10 @@ export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, toke
   const companyGazetteHistory: CompanyFilingHistory = await getCompanyFilingHistory(companyNumber.toUpperCase(), GAZETTE_CATEGORY, token);
 
   const companyGaz1History = companyGazetteHistory.items.filter(isGaz1);
+  logger.debug("Company GAZ1 history: " + JSON.stringify(companyGaz1History));
   // Response from API should be in reverse chronological order, so first in list is most recent
   const mostRecentGaz1Item = companyGaz1History.shift();
+  logger.debug("Most recent GAZ1 item: " + JSON.stringify(mostRecentGaz1Item));
 
   return mostRecentGaz1Item as FilingHistoryItem;
 };
