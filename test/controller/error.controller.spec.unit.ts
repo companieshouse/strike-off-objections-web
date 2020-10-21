@@ -34,7 +34,7 @@ describe("error controller", () => {
       return next();
     });
 
-    mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockObjectionSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       if (req.session) {
         req.session.data[OBJECTIONS_SESSION_NAME] = {};
         return next();
