@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
   Remove document
 {% endblock %}
 
@@ -14,13 +17,7 @@
             errorList: errorList
           }) }}
         {% endif %}
-        {% if errorList.length > 0 %}
-          {% set Err = {
-            text: Err.text
-          } %}
-        {% else %}
-          {% set Err = false %}
-        {% endif %}
+
         {% set fileNameTitle %}
           Are you sure you want to remove {{fileName}}?
         {% endset -%}
@@ -28,7 +25,7 @@
           classes: "govuk-radios--inline",
           idPrefix: "remove-document",
           name: "removeDocument",
-          errorMessage: Err,
+          errorMessage: removeDocumentError,
           fieldset: {
             legend: {
               html: fileNameTitle,
