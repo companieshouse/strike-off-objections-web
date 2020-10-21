@@ -27,7 +27,7 @@ describe("error controller", () => {
 
   it("should render the 404 template if a page is not found", async () => {
     mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       req.session = {
         data: {},
       } as Session;
@@ -54,7 +54,7 @@ describe("error controller", () => {
 
   it("should render the error template", async () => {
     mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
       return next(new Error("Error"));
     });
     const response = await request(app)
