@@ -11,6 +11,7 @@ export enum DownloadErrorMessages {
 }
 
 export enum ErrorMessages {
+  ERROR_404 =  "Page not found",
   ERROR_500 = "An internal server error has occurred",
   ERROR_SUMMARY_TITLE = "There is a problem",
   ENTER_NAME = "Enter your full name or organisation name",
