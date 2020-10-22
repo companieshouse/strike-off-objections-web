@@ -5,6 +5,7 @@ import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/servic
 
 const GAZETTE_CATEGORY = "gazette";
 const GAZ1_TYPE = "GAZ1";
+const GAZ1A_TYPE = "GAZ1(A)";
 
 export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, token: string): Promise<FilingHistoryItem> => {
   logger.debug(`Getting latest GAZ1 filing history item for company number ${companyNumber}`);
@@ -39,5 +40,8 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
 };
 
 const isGaz1 = (element: FilingHistoryItem) => {
-  return element.type === GAZ1_TYPE;
+  if (element.type) {
+    return element.type.toUpperCase() === GAZ1_TYPE || element.type.toUpperCase() === GAZ1A_TYPE;
+  }
+  return false;
 };
