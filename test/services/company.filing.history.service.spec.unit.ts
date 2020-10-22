@@ -47,6 +47,12 @@ describe("company filing history service unit tests", () => {
     const filingHistoryItem = await getLatestGaz1FilingHistoryItem("12345678", ACCESS_TOKEN);
     expect(filingHistoryItem).toEqual(undefined);
   });
+
+  it("returns undefined if only type is undefined", async () => {
+    mockGetCompanyFilingHistory.mockResolvedValueOnce(dummySDKResponseWithNoType);
+    const filingHistoryItem = await getLatestGaz1FilingHistoryItem("12345678", ACCESS_TOKEN);
+    expect(filingHistoryItem).toEqual(undefined);
+  });
 });
 
 const dummyGaz1FilingHistoryItem: FilingHistoryItem = {
@@ -132,6 +138,24 @@ const dummyCompanyFilingHistoryWithNoGaz1Date: CompanyFilingHistory = {
   totalCount: 1,
 };
 
+const dummyNoTypeCompanyFilingHistory: CompanyFilingHistory = {
+  etag: "",
+  filingHistoryStatus: "",
+  items: [
+    {
+      category: "",
+      date: "2015-04-14",
+      description: "",
+      transactionId: "",
+      type: "",
+    },
+  ],
+  itemsPerPage: 1,
+  kind: "",
+  startIndex: 1,
+  totalCount: 1,
+};
+
 const dummySDKResponse: Resource<CompanyFilingHistory> = {
   httpStatusCode: 200,
   resource: dummyCompanyFilingHistory,
@@ -145,6 +169,11 @@ const dummyGaz1ASDKResponse: Resource<CompanyFilingHistory> = {
 const dummySDKResponseWithNoGaz1Date: Resource<CompanyFilingHistory> = {
   httpStatusCode: 200,
   resource: dummyCompanyFilingHistoryWithNoGaz1Date,
+};
+
+const dummySDKResponseWithNoType: Resource<CompanyFilingHistory> = {
+  httpStatusCode: 200,
+  resource: dummyNoTypeCompanyFilingHistory,
 };
 
 const errorSdkResponse: any = {
