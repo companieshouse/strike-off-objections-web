@@ -22,7 +22,7 @@ const ATTACHMENT_ID_FORM_FIELD = "attachmentId";
 const QUERY_ID = "?documentID=attachment1";
 const ATTACHMENT_ID = "sghsaghj-3623-khh";
 const TEXT_FILE_NAME = "text.txt";
-const SELECT_TO_REMOVE = "You must tell us if you want to remove a document";
+const SELECT_TO_REMOVE = "You must tell us if you want to remove the document";
 const dummySession: Session = {
   data: {},
 } as Session;
