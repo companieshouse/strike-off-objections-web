@@ -119,9 +119,9 @@ describe("check company tests", () => {
   });
 
   it("should have double click prevention on the submit button", async () => {
-    mockGetObjectionSessionValue.mockReset().mockReturnValue(dummyCompanyProfile);
+    mockGetObjectionSessionValue.mockReset().mockReturnValueOnce(dummyCompanyProfile);
 
-    mockGetObjection.mockReset().mockResolvedValue(dummyObjectionShare);
+    mockGetObjection.mockReset().mockResolvedValueOnce(dummyObjectionShare);
 
     const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
       .set("Referer", "/")
