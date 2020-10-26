@@ -24,6 +24,8 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
   logger.debug("Creating CH SDK ApiClient");
   const api = createApiClient(undefined, token);
 
+  const test = "this should produce a smell";
+
   logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);
   const sdkResponse: Resource<CompanyFilingHistory> =
       await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
