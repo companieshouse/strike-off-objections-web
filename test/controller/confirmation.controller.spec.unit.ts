@@ -88,7 +88,7 @@ describe("confirmation screen tests", () => {
     mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
     mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((next: NextFunction) => {
+    mockSessionMiddleware.mockImplementationOnce((next: NextFunction) => {
       return next();
     });
 
