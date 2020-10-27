@@ -1,13 +1,17 @@
 /*
  * String formatting functions
  */
-const REGEX_MATCH_NON_PRINTABLE_CHARS: RegExp =
-    /[^ÀÁÂÄÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜẀẂŴẄỲÝŶŸàáâäèéêëìíîïòóôöùúûüẁẃŵẅỳýŷÿA-Za-z0-9&@£$€¥.,:;–\-‘’'()\[\]\{\}<>!“”»«"\?\/\\*=#%\+ \r\n]/g;
+const PRINTABLE_CHARS: string =
+    "ÀÁÂÄÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜẀẂŴẄỲÝŶŸàáâäèéêëìíîïòóôöùúûüẁẃŵẅỳýŷÿABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&@£$€¥.,:;–-‘’'()[]{}<>!“”»«\"?/\\*=#%+ \r\n";
 
 export const removeNonPrintableChars = (inputStr: string): string => {
   if (inputStr) {
-    return inputStr.replace(REGEX_MATCH_NON_PRINTABLE_CHARS, " ");
-  } else {
+    for (let index = 0; index < inputStr.length; index++) {
+      if (PRINTABLE_CHARS.indexOf(inputStr.charAt(index)) === -1) {
+        inputStr = inputStr.replace(inputStr.charAt(index), " ");
+      }
+    }
     return inputStr;
   }
+  return "";
 };
