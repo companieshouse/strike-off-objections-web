@@ -18,4 +18,5 @@ export enum Templates {
   ERROR = "error",
   FILE_ERROR = "file-error",
   ACCESSIBILITY_STATEMENT = "accessibility-statement",
+  ERROR_404 = "page-not-found"
 }

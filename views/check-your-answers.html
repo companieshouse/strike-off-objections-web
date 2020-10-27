@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Check your answers before submitting your objection application
+  Check your answers
 {% endblock %}
 
 {% set documentList %}
@@ -158,6 +158,7 @@
       <form method="post">
         {{ govukButton({
           text: "Confirm and submit objection",
+          preventDoubleClick: true,
           attributes: {
             id: "submit"
           }

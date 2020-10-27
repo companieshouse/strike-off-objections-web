@@ -9,6 +9,9 @@ module.exports = {
   collectCoverageFrom: [
     "./src/**/*.ts"
   ],
+  coveragePathIgnorePatterns: [
+    "/src/bin/"
+  ],
   preset: "ts-jest",
   testEnvironment: "node",
   verbose: true,

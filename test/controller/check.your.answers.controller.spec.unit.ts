@@ -117,6 +117,19 @@ describe("check company tests", () => {
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_CONFIRMATION);
   });
+
+  it("should have double click prevention on the submit button", async () => {
+    mockGetObjectionSessionValue.mockReset().mockReturnValueOnce(dummyCompanyProfile);
+
+    mockGetObjection.mockReset().mockResolvedValueOnce(dummyObjectionShare);
+
+    const response = await request(app).get(OBJECTIONS_CHECK_YOUR_ANSWERS)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.text).toContain("data-prevent-double-click=\"true\"");
+  });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {

@@ -6,15 +6,17 @@ export enum UploadErrorMessages {
 }
 
 export enum DownloadErrorMessages {
-  HEADING_NOT_FOUND = "Not Found",
-  MESSAGE_NOT_FOUND = "The file path could not be found.",
+  HEADING_NOT_ALLOWED = "Error Downloading Attachment",
+  MESSAGE_NOT_ALLOWED = "Unable to download file. Please contact the Support Team.",
 }
 
 export enum ErrorMessages {
+  ERROR_404 =  "Page not found",
   ERROR_500 = "An internal server error has occurred",
   ERROR_SUMMARY_TITLE = "There is a problem",
   ENTER_NAME = "Enter your full name or organisation name",
   SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
+  SELECT_TO_REMOVE = "You must tell us if you want to remove the document",
 }
 
 export enum HttpStatusCodes {
