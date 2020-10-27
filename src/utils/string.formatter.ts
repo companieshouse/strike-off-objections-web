@@ -6,8 +6,9 @@ const PRINTABLE_CHARS: Set<string> =
 export const removeNonPrintableChars = (inputStr: string): string => {
   if (inputStr) {
     for (let index = 0; index < inputStr.length; index++) {
-      if (!PRINTABLE_CHARS.has(inputStr.charAt(index))) {
-        inputStr = inputStr.replace(inputStr.charAt(index), " ");
+      const char: string = inputStr.charAt(index);
+      if (!PRINTABLE_CHARS.has(char)) {
+        inputStr = inputStr.replace(char, " ");
       }
     }
     return inputStr;
