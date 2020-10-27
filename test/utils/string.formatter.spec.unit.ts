@@ -27,7 +27,7 @@ describe("String formatter tests", () => {
     const preFormattedString: string = "hello. This string is dodgy !`@\t£$%^&*()€#¢§¶ªº";
     const formattedString: string = removeNonPrintableChars(preFormattedString);
 
-    expect(formattedString).toEqual("hello. This string is dodgy ! @ £$% &*()€# ");
+    expect(formattedString).toEqual("hello. This string is dodgy ! @ £$% &*()€#     ");
   });
 
   it("should not remove printable chars", () => {
