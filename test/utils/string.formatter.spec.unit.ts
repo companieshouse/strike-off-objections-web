@@ -50,6 +50,4 @@ describe("String formatter tests", () => {
 
     expect(formattedString).toEqual(blankString);
   });
-
-  //"Hylô amgáu düwch mẁg"
 });
