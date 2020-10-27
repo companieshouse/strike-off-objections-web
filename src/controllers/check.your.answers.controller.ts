@@ -44,7 +44,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     await submitObjection(req.session as Session);
     return res.redirect(OBJECTIONS_CONFIRMATION);
   } catch (e) {
-      logger.errorRequest(req, "Error submitting objection for processing");
-      return next(e);
-    }
+    logger.errorRequest(req, "Error submitting objection for processing");
+    return next(e);
+  }
 };

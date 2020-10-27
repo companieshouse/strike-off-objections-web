@@ -130,6 +130,26 @@ describe("check company tests", () => {
     expect(response.text).toContain("data-prevent-double-click=\"true\"");
   });
 
+  it ("should return the error page when submitting an objection fails", async () => {
+    mockSubmitObjection.mockImplementation(() => {
+      throw {
+        message: "Unexpected error",
+        status: 500,
+      };
+    });
+
+    const res = await request(app)
+      .post(OBJECTIONS_CHECK_YOUR_ANSWERS)
+      .set("referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockSubmitObjection).toBeCalledWith(dummySession);
+
+    expect(res.status).toEqual(500);
+    expect(res).not.toBeUndefined();
+    expect(res.text).toContain("Sorry, there is a problem with the service");
+  });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
