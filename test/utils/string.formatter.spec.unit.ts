@@ -31,10 +31,10 @@ describe("String formatter tests", () => {
   });
 
   it("should not remove printable chars", () => {
-    const preFormattedString: string = "hello. This string is not dodgy !@£$%&*{}()€#";
+    const preFormattedString: string = "hello. This string is not dodgy, !@£$%&*{}()€#";
     const formattedString: string = removeNonPrintableChars(preFormattedString);
 
-    expect(formattedString).toEqual("hello. This string is not dodgy !@£$%&*{}()€#");
+    expect(formattedString).toEqual("hello. This string is not dodgy, !@£$%&*{}()€#");
   });
 
   it("should return original string if it is empty", () => {
