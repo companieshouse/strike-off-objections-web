@@ -39,9 +39,7 @@ describe("String formatter tests", () => {
   it("should not remove any printable chars when entire set is provided", () => {
     const preFormattedString: string = "ÀÁÂÄÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜẀẂŴẄỲÝŶŸàáâäèéêëìíîïòóôöùúûüẁẃŵẅỳýŷÿABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&@£$€¥.,:;–-‘’'()[]{}<>!“”»«\"?/\\*=#%+ \r\n";
     const formattedString: string = removeNonPrintableChars(preFormattedString);
-    const test: boolean = preFormattedString === formattedString;
-    expect(test).toBe(true);
-    expect(formattedString).toEqual(preFormattedString);
+    expect(formattedString).toStrictEqual(preFormattedString);
   });
 
   it("should return original string if it is empty", () => {
