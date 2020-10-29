@@ -26,6 +26,7 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
 
   const test = "this should produce a smell";
   const anotherTest = "this should produce a smell as well";
+  // Just a comment
 
   logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);
   const sdkResponse: Resource<CompanyFilingHistory> =
