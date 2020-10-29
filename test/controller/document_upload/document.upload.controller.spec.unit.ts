@@ -349,7 +349,7 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[0].divHtml).toContain("/remove-document/" + ATTACHMENT_ID);
 
     expect(responseObj.divs[1].divHtml).toContain(CLASS_FILE_UPLOAD);
-    expect(responseObj.divs[1].divHtml).toContain("Add another document");
+    expect(responseObj.divs[1].divHtml).toContain("Upload another document");
 
     expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
