@@ -110,7 +110,7 @@ describe("Basic URL Tests", () => {
       .get("/strike-off-objections/document-upload");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Add documents to support your objection/);
+    expect(response.text).toMatch(/Upload documents to support your objection/);
   });
 
   it("should find the check your answers page", async () => {

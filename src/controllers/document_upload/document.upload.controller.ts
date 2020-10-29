@@ -48,7 +48,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
  * @param {NextFunction} next the next function in the middleware chain
  */
 export const postFile = async (req: Request, res: Response, next: NextFunction) => {
-  logger.debugRequest(req, "Add document http request type is " + (isAjaxRequest(req) ? "" : "NOT ") + "AJAX / XmlHttpRequest");
+  logger.debugRequest(req, "Upload document http request type is " + (isAjaxRequest(req) ? "" : "NOT ") + "AJAX / XmlHttpRequest");
 
   const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
 
