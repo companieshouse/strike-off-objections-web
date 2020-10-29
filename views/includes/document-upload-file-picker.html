@@ -3,9 +3,9 @@
 
 {% set uploadText %}
   {% if attachments and attachments.length > 0 %}
-    Add another document
+    Upload another document
   {% else %}
-    Add a document
+    Upload a document
   {% endif %}
 {% endset %}
 
@@ -28,7 +28,7 @@
   }) }}
   <noscript>
     {{ govukButton({
-      text: "Add document",
+      text: "Upload document",
       classes: "govuk-button--secondary"
     }) }}
   </noscript>

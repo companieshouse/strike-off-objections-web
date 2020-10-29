@@ -349,7 +349,7 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[0].divHtml).toContain("/remove-document/" + ATTACHMENT_ID);
 
     expect(responseObj.divs[1].divHtml).toContain(CLASS_FILE_UPLOAD);
-    expect(responseObj.divs[1].divHtml).toContain("Add another document");
+    expect(responseObj.divs[1].divHtml).toContain("Upload another document");
 
     expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
@@ -419,7 +419,7 @@ describe ("document.document_upload.controller tests", () => {
       .get("/strike-off-objections/document-upload");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Add documents to support your objection/);
+    expect(response.text).toMatch(/Upload documents to support your objection/);
     expect(response.text).toContain("<form method=\"post\" action=\"document-upload\" enctype=\"multipart/form-data\" id=\"file-upload-form\">");
     expect(response.text).toContain("<form method=\"post\" action=\"document-upload-continue\" id=\"continue\">");
   });
