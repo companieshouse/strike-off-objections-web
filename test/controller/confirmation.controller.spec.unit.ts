@@ -15,6 +15,7 @@ import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import {
   deleteFromObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
   retrieveFromObjectionSession,
   retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
@@ -46,11 +47,18 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 const mockDeleteObjectionSessionValue = deleteFromObjectionSession as jest.Mock;
+const mockDeleteObjectionCreateFromObjectionSession = deleteObjectionCreateFromObjectionSession as jest.Mock;
 
 const email = "mttest@test.co.uk";
 const OBJECTION_ID = "a1b2c3";
 
 describe("confirmation screen tests", () => {
+
+  beforeEach(() => {
+    mockDeleteObjectionSessionValue.mockClear();
+    mockDeleteObjectionCreateFromObjectionSession.mockClear();
+    mockSessionMiddleware.mockClear();
+  });
 
   it("should land on confirmation screen with submitted message and correct details", async () => {
     mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
@@ -69,8 +77,6 @@ describe("confirmation screen tests", () => {
     mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
-    mockDeleteObjectionSessionValue.mockReset();
-
     const response = await request(app).get(OBJECTIONS_CONFIRMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -83,11 +89,26 @@ describe("confirmation screen tests", () => {
     expect(response.text).toContain(email);
   });
 
+  it("should remove the objecting entity details from the session before showing the confirmation screen", async () => {
+    mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
+
+    const response = await request(app).get(OBJECTIONS_CONFIRMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockDeleteObjectionCreateFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockDeleteObjectionCreateFromObjectionSession).toHaveBeenCalledWith(SESSION);
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(OBJECTION_ID);
+    expect(response.text).toContain(email);
+  });
+
   it("should land on error screen if no session is available", async () => {
     mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
-    mockSessionMiddleware.mockReset();
     mockSessionMiddleware.mockImplementationOnce((next: NextFunction) => {
       return next();
     });

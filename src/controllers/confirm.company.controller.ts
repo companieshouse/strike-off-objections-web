@@ -68,7 +68,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
     const objectionId = await createNewObjection(company.companyNumber, token, objectionCreate);
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
-    deleteObjectionCreateFromObjectionSession(session);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
     deleteObjectionCreateFromObjectionSession(session);

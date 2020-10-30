@@ -25,11 +25,10 @@ import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveObjectionCreateFromObjectionSession,
-  deleteObjectionCreateFromObjectionSession
-} from "../../src/services/objection.session.service";
+  retrieveObjectionCreateFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
 import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
@@ -119,14 +118,11 @@ describe("confirm company tests", () => {
     mockGetObjectCreate.mockReset();
     mockGetObjectCreate.mockImplementation(() =>  dummyObjectionCreate );
 
-    mockDeleteObjectCreate.mockReset();
-
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
-    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID, OBJECTION_ID);
     expect(mockCreateNewObjection).toHaveBeenCalledWith(dummyCompanyProfile.companyNumber, undefined, dummyObjectionCreate);
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
