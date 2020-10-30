@@ -8,6 +8,7 @@ import { ApiError, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objec
 import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession
@@ -60,8 +61,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
+  const session: Session = req.session as Session;
   try {
-    const session: Session = req.session as Session;
     const token: string = retrieveAccessTokenFromSession(session);
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
@@ -69,6 +70,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
+    deleteObjectionCreateFromObjectionSession(session);
     if (e.status === 400 && e.data.status) {
       const ineligiblePage = getIneligiblePage(e);
       if (ineligiblePage) {

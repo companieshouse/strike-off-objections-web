@@ -25,10 +25,10 @@ import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveObjectionCreateFromObjectionSession
-} from "../../src/services/objection.session.service";
+  retrieveObjectionCreateFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
 import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
@@ -41,6 +41,7 @@ const SESSION: Session = {
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock;
+const mockDeleteObjectCreate = deleteObjectionCreateFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
@@ -139,6 +140,7 @@ describe("confirm company tests", () => {
       status: 400,
     };
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -153,6 +155,7 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
   });
@@ -167,6 +170,7 @@ describe("confirm company tests", () => {
       status: 400,
     };
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -181,6 +185,7 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NO_STRIKE_OFF);
   });
@@ -197,6 +202,7 @@ describe("confirm company tests", () => {
 
     const ERROR_500 = "Sorry, there is a problem with the service";
 
+    mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
@@ -211,6 +217,7 @@ describe("confirm company tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_500);
   });
