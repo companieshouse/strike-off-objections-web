@@ -1,7 +1,11 @@
 import logger from "../utils/logger";
-import { createApiClient } from "ch-sdk-node";
-import Resource from "ch-sdk-node/dist/services/resource";
-import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { createApiClient } from "@companieshouse/api-sdk-node";
+import Resource from "@companieshouse/api-sdk-node/dist/services/resource";
+import {
+  CompanyFilingHistory,
+  FilingHistoryItem
+} from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
+
 
 const GAZETTE_CATEGORY = "gazette";
 const GAZ1_TYPE = "GAZ1";
@@ -21,7 +25,7 @@ export const getLatestGaz1FilingHistoryItem = async (companyNumber: string, toke
 };
 
 const getCompanyFilingHistory = async (companyNumber: string, category: string, token: string): Promise<CompanyFilingHistory> => {
-  logger.debug("Creating CH SDK ApiClient");
+  logger.debug("Creating SDK Node ApiClient");
   const api = createApiClient(undefined, token);
 
   logger.debug(`Looking for company filing history with company number ${companyNumber} and category ${category}`);

@@ -14,13 +14,13 @@
     "coverage": "jest --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@companieshouse/api-sdk-node": "^1.0.5",
     "axios": "^0.19.2",
     "bufferutil": "^4.0.1",
     "busboy": "^0.3.1",
     "canvas": "^2.6.1",
     "ch-logging": "git+ssh://git@github.com/companieshouse/ch-structured-logging-node.git#a3e0dcc57f91f63803e02ceef2cc5e4038de9a19",
     "ch-node-session-handler": "git+ssh://git@github.com/companieshouse/node-session-handler.git#3.0.1",
-    "ch-sdk-node": "git+ssh://git@github.com/companieshouse/ch-sdk-node.git#0.2.30",
     "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
     "express-validator": "^6.6.1",

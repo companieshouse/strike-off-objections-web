@@ -1,10 +1,10 @@
-import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
-import CompanyProfileService from "ch-sdk-node/dist/services/company-profile/service";
-import Resource from "ch-sdk-node/dist/services/resource";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile";
+import CompanyProfileService from "@companieshouse/api-sdk-node/dist/services/company-profile/service";
+import Resource from "@companieshouse/api-sdk-node/dist/services/resource";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 
-jest.mock("ch-sdk-node/dist/services/company-profile/service");
+jest.mock("@companieshouse/api-sdk-node/dist/services/company-profile/service");
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 
