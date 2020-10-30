@@ -80,7 +80,6 @@ export const deleteObjectionCreateFromObjectionSession = (session: Session): voi
     delete objectionsExtraData[SESSION_OBJECTION_CREATE];
     return;
   }
-  throw new Error("Error deleting objection create");
 };
 
 export const addCompanyProfileToObjectionSession = (session: Session, company: ObjectionCompanyProfile): void => {
