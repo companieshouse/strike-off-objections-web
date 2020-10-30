@@ -16,7 +16,7 @@ import {
 import logger from "../utils/logger";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
 import { getLatestGaz1FilingHistoryItem } from "../services/company.filing.history.service";
-import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,

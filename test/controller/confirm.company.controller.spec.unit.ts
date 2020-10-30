@@ -31,7 +31,7 @@ import {
   retrieveObjectionCreateFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
-import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 
 const OBJECTION_ID = "123456";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";

@@ -1,6 +1,6 @@
-import { createApiClient } from "ch-sdk-node";
-import { CompanyProfile } from "ch-sdk-node/dist/services/company-profile";
-import Resource from "ch-sdk-node/dist/services/resource";
+import { createApiClient } from "@companieshouse/api-sdk-node";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile";
+import Resource from "@companieshouse/api-sdk-node/dist/services/resource";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
