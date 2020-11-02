@@ -8,6 +8,7 @@ import * as documentDownloadRoute from "../controllers/document.download.control
 import * as documentDownloadLandingRoute from "../controllers/document.download.landing.controller";
 import * as documentUploadRoute from "../controllers/document_upload/document.upload.controller";
 import * as enterInformationRoute from "../controllers/enter.information.controller";
+import * as indexRoute from "../controllers/index.controller";
 import * as noticeExpiredRoute from "../controllers/notice.expired.controller";
 import * as noStrikeOffRoute from "../controllers/no.strike.off.controller";
 import * as objectingEntityNameRoute from "../controllers/objecting.entity.name.controller";
@@ -26,7 +27,8 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
   return res.render(template, { templateName: template });
 };
 
-router.get("/", renderTemplate(Templates.INDEX));
+router.get("/", indexRoute.get);
+router.post("/", indexRoute.post);
 
 router.get(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.get);
 router.post(pageURLs.OBJECTING_ENTITY_NAME, objectingEntityNameRoute.post);

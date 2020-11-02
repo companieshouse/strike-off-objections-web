@@ -40,9 +40,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
-app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, sessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
-app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*(?<!download)$`, objectionSessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*(?<!download)$`, objectionSessionMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 app.use(...errorHandlers);
