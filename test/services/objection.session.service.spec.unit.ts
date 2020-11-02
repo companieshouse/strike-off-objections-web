@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import {
   addObjectionCreateToObjectionSession, deleteFromObjectionSession, deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,

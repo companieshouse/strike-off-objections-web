@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { Request, Response } from "express";
 import { Templates } from "../model/template.paths";
 import {

@@ -1,9 +1,9 @@
-import { Session } from "ch-node-session-handler";
-import { AccessTokenKeys } from "ch-node-session-handler/lib/session/keys/AccessTokenKeys";
-import { SessionKey } from "ch-node-session-handler/lib/session/keys/SessionKey";
-import { SignInInfoKeys } from "ch-node-session-handler/lib/session/keys/SignInInfoKeys";
-import { UserProfileKeys } from "ch-node-session-handler/lib/session/keys/UserProfileKeys";
-import { IAccessToken, ISignInInfo, IUserProfile } from "ch-node-session-handler/lib/session/model/SessionInterfaces";
+import { Session } from "@companieshouse/node-session-handler";
+import { AccessTokenKeys } from "@companieshouse/node-session-handler/lib/session/keys/AccessTokenKeys";
+import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
+import { SignInInfoKeys } from "@companieshouse/node-session-handler/lib/session/keys/SignInInfoKeys";
+import { UserProfileKeys } from "@companieshouse/node-session-handler/lib/session/keys/UserProfileKeys";
+import { IAccessToken, ISignInInfo, IUserProfile } from "@companieshouse/node-session-handler/lib/session/model/SessionInterfaces";
 import { OBJECTIONS_SESSION_NAME, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";

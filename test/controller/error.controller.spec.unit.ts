@@ -11,7 +11,7 @@ import { authenticationMiddleware } from "../../src/middleware/authentication.mi
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_COMPANY_NUMBER, STRIKE_OFF_OBJECTIONS } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { Session } from "ch-node-session-handler/lib/session/model/Session";
+import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 

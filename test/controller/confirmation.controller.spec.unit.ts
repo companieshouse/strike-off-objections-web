@@ -4,7 +4,7 @@ jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
