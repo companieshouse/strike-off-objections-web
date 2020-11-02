@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { OBJECTIONS_SESSION_NAME } from "../constants";
 import ObjectionSessionExtraData from "../model/objection.session.extra.data";

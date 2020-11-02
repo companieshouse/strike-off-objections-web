@@ -10,7 +10,7 @@ import {
   retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 import { Objection, ObjectionCreate } from "../modules/sdk/objections";
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { Templates } from "../model/template.paths";
 import { getObjection, updateObjectionUserDetails } from "../services/objection.service";
 import logger from "../utils/logger";

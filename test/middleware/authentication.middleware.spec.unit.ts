@@ -1,7 +1,7 @@
-jest.mock("web-security-node");
+jest.mock("@companieshouse/web-security-node");
 
 import { NextFunction, Request, Response } from "express";
-import { authMiddleware } from "web-security-node";
+import { authMiddleware } from "@companieshouse/web-security-node";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import {
   ACCESSIBILITY_STATEMENT,
