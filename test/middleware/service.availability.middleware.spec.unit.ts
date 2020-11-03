@@ -1,8 +1,35 @@
 jest.mock("ioredis");
+jest.mock("../../src/middleware/authentication.middleware");
+jest.mock("../../src/middleware/session.middleware");
+jest.mock("../../src/middleware/objection.session.middleware");
 
+import { Session } from "ch-node-session-handler/lib/session/model/Session";
+import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
+import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
+import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { COOKIE_NAME } from "../../src/utils/properties";
+
+const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
+mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
+
+const mockSessionMiddleware = sessionMiddleware as jest.Mock;
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+  req.session = {
+    data: {},
+  } as Session;
+  return next();
+});
+
+const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
+mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+  const session: Session = req.session as Session;
+  session.data[OBJECTIONS_SESSION_NAME] = {};
+  return next();
+});
 
 afterAll(() => {
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";
