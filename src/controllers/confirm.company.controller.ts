@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
@@ -16,7 +16,7 @@ import {
 import logger from "../utils/logger";
 import { formatCHSDateForDisplay } from "../utils/date.formatter";
 import { getLatestGaz1FilingHistoryItem } from "../services/company.filing.history.service";
-import { FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
@@ -68,7 +68,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
     const objectionId = await createNewObjection(company.companyNumber, token, objectionCreate);
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
-    deleteObjectionCreateFromObjectionSession(session);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
     deleteObjectionCreateFromObjectionSession(session);

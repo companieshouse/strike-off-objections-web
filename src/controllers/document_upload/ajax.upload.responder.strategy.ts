@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { ErrorMessages } from "../../model/error.messages";
 import { GovUkErrorData } from "../../model/govuk.error.data";

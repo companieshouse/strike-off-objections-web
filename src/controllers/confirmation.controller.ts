@@ -1,8 +1,13 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { Templates } from "../model/template.paths";
-import { deleteFromObjectionSession, retrieveFromObjectionSession, retrieveUserEmailFromSession } from "../services/objection.session.service";
+import {
+  deleteFromObjectionSession,
+  deleteObjectionCreateFromObjectionSession,
+  retrieveFromObjectionSession,
+  retrieveUserEmailFromSession
+} from "../services/objection.session.service";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined  = req.session;
@@ -12,6 +17,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 
     // Objection has been submitted and should no longer be referenced by this web session, so remove the objection id from the session
     deleteFromObjectionSession(session, SESSION_OBJECTION_ID);
+    deleteObjectionCreateFromObjectionSession(session);
 
     return res.render(Templates.CONFIRMATION, {
       email,

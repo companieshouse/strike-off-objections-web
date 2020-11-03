@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_ID } from "../constants";

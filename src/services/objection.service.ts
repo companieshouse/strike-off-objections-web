@@ -1,4 +1,4 @@
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";

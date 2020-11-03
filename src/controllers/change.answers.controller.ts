@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { addToObjectionSession } from "../services/objection.session.service";
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import { STRIKE_OFF_OBJECTIONS } from "../model/page.urls";
 import { CHANGE_ANSWER_KEY } from "../constants";
 

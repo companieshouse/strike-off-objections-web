@@ -1,9 +1,9 @@
-import Resource from "ch-sdk-node/dist/services/resource";
-import CompanyFilingHistoryService from "ch-sdk-node/dist/services/company-filing-history/service";
+import Resource from "@companieshouse/api-sdk-node/dist/services/resource";
+import CompanyFilingHistoryService from "@companieshouse/api-sdk-node/dist/services/company-filing-history/service";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
-import { CompanyFilingHistory, FilingHistoryItem } from "ch-sdk-node/dist/services/company-filing-history";
+import { CompanyFilingHistory, FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 
-jest.mock("ch-sdk-node/dist/services/company-filing-history/service");
+jest.mock("@companieshouse/api-sdk-node/dist/services/company-filing-history/service");
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 

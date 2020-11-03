@@ -1,7 +1,7 @@
 jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/services/objection.session.service");
 
-import { Session } from "ch-node-session-handler";
+import { Session } from "@companieshouse/node-session-handler";
 import {
   OBJECTIONS_SESSION_NAME,
   SESSION_COMPANY_PROFILE,

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { authMiddleware } from "web-security-node";
+import { authMiddleware } from "@companieshouse/web-security-node";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
