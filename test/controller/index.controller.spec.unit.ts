@@ -5,9 +5,9 @@ jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/modules/sdk/objections");
-jest.mock("ch-node-session-handler/lib/session/model/Session");
+jest.mock("@companieshouse/node-session-handler/lib/session/model/Session");
 
-import { Session } from "ch-node-session-handler/lib/session/model/Session";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
@@ -55,8 +55,8 @@ describe("Index page post tests", () => {
       .post("/strike-off-objections")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
     expect(response.status).toEqual(302);
+    expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
     expect(response.header.location).toEqual(OBJECTIONS_OBJECTING_ENTITY_NAME);
   });
 });
