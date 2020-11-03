@@ -15,9 +15,7 @@ export const post = (req: Request, res: Response) => {
   const session: Session | undefined = req.session as Session;
   if (session) {
     logger.debug("Deleting existing session data from " + OBJECTIONS_SESSION_NAME);
-    logger.debug(OBJECTIONS_SESSION_NAME);
     session.deleteExtraData(OBJECTIONS_SESSION_NAME);
-    logger.debug("Existing session data deleted");
   }
   return res.redirect(OBJECTIONS_OBJECTING_ENTITY_NAME);
 };

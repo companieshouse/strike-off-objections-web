@@ -18,7 +18,6 @@ import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const testEmail = "testEmail";
-
 const mockDeleteExtraData = Session.prototype.deleteExtraData as jest.Mock;
 
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
@@ -50,6 +49,11 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 describe("Index page post tests", () => {
+  beforeEach(() => {
+    mockSessionMiddleware.mockClear();
+    mockDeleteExtraData.mockClear();
+  });
+
   it("should post index page and wipe session data", async () => {
     const response = await request(app)
       .post("/strike-off-objections")
@@ -57,6 +61,19 @@ describe("Index page post tests", () => {
 
     expect(response.status).toEqual(302);
     expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
+    expect(response.header.location).toEqual(OBJECTIONS_OBJECTING_ENTITY_NAME);
+  });
+
+  it("shouldn't call deleteExtraData when posting index page with no session data", async () => {
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
+    mockObjectionSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
+
+    const response = await request(app)
+      .post("/strike-off-objections")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(302);
+    expect(mockDeleteExtraData).not.toHaveBeenCalled();
     expect(response.header.location).toEqual(OBJECTIONS_OBJECTING_ENTITY_NAME);
   });
 });
