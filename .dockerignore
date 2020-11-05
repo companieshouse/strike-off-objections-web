@@ -1,0 +1,7 @@
+*
+!api-enumerations
+!src
+!views
+!package-lock.json
+!package.json
+!tsconfig.json
