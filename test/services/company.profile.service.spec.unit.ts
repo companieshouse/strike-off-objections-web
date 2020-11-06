@@ -63,6 +63,7 @@ const dummySDKResponse: Resource<CompanyProfile> = {
     hasCharges: false,
     hasInsolvencyHistory: false,
     jurisdiction: "england-wales",
+    links: {},
     registeredOfficeAddress: {
       addressLineOne: "line1",
       addressLineTwo: "line2",
