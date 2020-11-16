@@ -24,7 +24,7 @@ const env = nunjucks.configure([
   autoescape: true,
   express: app,
 });
-env.addGlobal("CDN_URL", process.env.CDN_HOST);
+env.addGlobal("assetPath", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
