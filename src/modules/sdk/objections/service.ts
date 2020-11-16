@@ -10,7 +10,7 @@ import {
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
   Objection,
-  ObjectionCreate,
+  ObjectionCreate, ObjectionCreatedResponse,
   ObjectionPatch,
 } from "./types";
 
@@ -57,13 +57,18 @@ export const getCompanyEligibility = async (companyNumber: string, token: string
  * @returns {string} the id of the newly created objection
  * @throws {ApiError}
  */
-export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<string> => {
+export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<ObjectionCreatedResponse> => {
   logger.debug(`Creating a new objection for company number ${companyNumber}`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_POST, OBJECTIONS_API_URL(companyNumber), token);
   axiosConfig.data = createWithData;
-  return (await makeAPICall(axiosConfig)).data.id as string;
+
+  const axiosResponseData = (await makeAPICall(axiosConfig)).data;
+  return {
+    objectionId: axiosResponseData.id,
+    objectionStatus: axiosResponseData.status,
+  } as ObjectionCreatedResponse;
 };
 
 /**

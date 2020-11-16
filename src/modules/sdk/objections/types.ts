@@ -86,3 +86,12 @@ export interface Download {
     [HEADER_CONTENT_TYPE]: string;
   };
 }
+
+/**
+ * Data structure containing the response after creating an Objection
+ * @interface
+ */
+export interface ObjectionCreatedResponse {
+  objectionId: string;
+  objectionStatus: ObjectionStatus;
+}

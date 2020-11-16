@@ -6,7 +6,7 @@ import {
   Attachment,
   Download,
   Objection,
-  ObjectionCreate,
+  ObjectionCreate, ObjectionCreatedResponse,
   ObjectionPatch,
   ObjectionStatus
 } from "../modules/sdk/objections";
@@ -41,13 +41,13 @@ export const getCompanyEligibility = async (companyNumber: string, token: string
  * @returns {string} the id of the newly created objection
  * @throws {ApiError}
  */
-export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<string> => {
+export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<ObjectionCreatedResponse> => {
   logger.info(`Creating objection for company number ${companyNumber}`);
 
-  const objectionId: string = await objectionsSdk.createNewObjection(companyNumber, token, createWithData);
+  const response: ObjectionCreatedResponse = await objectionsSdk.createNewObjection(companyNumber, token, createWithData);
 
-  logger.info(`Id of newly created objection is ${objectionId}`);
-  return objectionId;
+  logger.info(`Id of newly created objection is ${response.objectionId}`);
+  return response;
 };
 
 export const updateObjectionUserDetails = async (companyNumber: string, objectionId: string,

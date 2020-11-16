@@ -10,7 +10,7 @@ import {
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
   Objection,
-  ObjectionCreate,
+  ObjectionCreate, ObjectionCreatedResponse, ObjectionStatus,
 } from "../../../../src/modules/sdk/objections";
 import {
   getBaseAxiosRequestConfig,
@@ -75,19 +75,18 @@ describe("objections SDK service unit tests", () => {
     );
   });
 
-  it("returns an id when a new objection is created", async () => {
+  it("returns an ObjectionCreatedResponse when a new objection is created", async () => {
     const NEW_OBJECTION_ID = "7687kjh-33kjkjkjh-hjgh435";
     mockMakeAPICall.mockResolvedValueOnce({
       data: {
         id: NEW_OBJECTION_ID,
+        status: ObjectionStatus.OPEN,
       },
     });
-    const objectionId: string = await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
+    const objectionCreatedResponse: ObjectionCreatedResponse = await objectionsSdk.createNewObjection(COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
 
-    expect(objectionId).toBeDefined();
-    expect(typeof objectionId).toBe("string");
-    expect(objectionId).toStrictEqual(NEW_OBJECTION_ID);
-
+    expect(objectionCreatedResponse.objectionId).toStrictEqual(NEW_OBJECTION_ID);
+    expect(objectionCreatedResponse.objectionStatus).toStrictEqual(ObjectionStatus.OPEN);
     expect(mockMakeAPICall).toBeCalled();
 
     testCorrectApiValuesAreUsed(
