@@ -1,26 +1,7 @@
-
 local_resource(
-  name = 'dev:strike-off-objections-web:init',
-  cmd = 'npm --silent install && npm --silent run build:init'
-)
-
-local_resource(
-  name = 'dev:strike-off-objections-web:build-views',
-  cmd = 'npm --silent run build:copy-views',
-  deps = [
-    'src/views'
-  ]
-)
-
-local_resource(
-  name = 'dev:strike-off-objections-web:build-code',
-  cmd = 'npm --silent run build:compile',
-  deps = [
-    'src'
-  ],
-  ignore = [
-    'src/views'
-  ]
+  name = 'dev:strike-off-objections-web',
+  cmd = 'npm --silent install && npm --silent run build',
+  deps = ['src']
 )
 
 custom_build(
@@ -28,12 +9,13 @@ custom_build(
   command = 'docker build --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" --build-arg SSH_PRIVATE_KEY_PASSPHRASE --tag $EXPECTED_REF .',
   live_update = [
     sync(
-      local_path = './dist',
-      remote_path = '/app/dist'
+      local_path = './src',
+      remote_path = '/app/src'
     ),
     restart_container()
   ],
   deps = [
-    './dist'
+    './dist',
+    './src'
   ]
 )
