@@ -54,7 +54,7 @@ export const getCompanyEligibility = async (companyNumber: string, token: string
  * @param {string} token the bearer security token to use to call the api
  * @param {ObjectionCreate} createWithData the user data passed in the body of the request
  *
- * @returns {string} the id of the newly created objection
+ * @returns {ObjectionCreatedResponse} containing the id and status of the newly created objection
  * @throws {ApiError}
  */
 export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<ObjectionCreatedResponse> => {

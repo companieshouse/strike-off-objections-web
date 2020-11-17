@@ -130,7 +130,6 @@ describe("axios client tests", () => {
       url: theUrl,
       method: httpMethod,
     };
-    dummyAxiosResponse.status = 200;
 
     const response: AxiosResponse = await makeAPICall(config);
 
