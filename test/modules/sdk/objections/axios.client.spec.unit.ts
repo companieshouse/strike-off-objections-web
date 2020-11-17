@@ -35,7 +35,7 @@ describe("axios client tests", () => {
 
   beforeEach(() => {
     mockAxiosRequest.mockClear();
-    mockJSONStringify.mockRestore();
+    mockJSONStringify.mockClear();
     mockLoggerDebug.mockClear();
   });
 
