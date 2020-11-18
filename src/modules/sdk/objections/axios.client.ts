@@ -39,7 +39,11 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
     logger.debug(`Calling ${config.method} ${config.url}`);
     const axiosResponse: AxiosResponse = await axios.request<any>(config);
     try {
-      logger.debug(`axios response from api call : ${JSON.stringify(axiosResponse, null, 2)}`);
+      const loggableAxiosResponse = {
+        status: axiosResponse.status,
+        data: axiosResponse.data,
+      };
+      logger.debug(`axios response from api call ${config.method} ${config.url} : ${JSON.stringify(loggableAxiosResponse, null, 2)}`);
     } catch (logErr) {
       // Downloads contain circular object references so can't be Json parsed causing error to be thrown
       // we don't want the log to fill up with these errors for each download so just logger.debug it

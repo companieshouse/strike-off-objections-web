@@ -13,16 +13,21 @@ import logger from "../../../../src/utils/logger";
 
 const mockAxiosRequest = axios.request as jest.Mock;
 const mockJSONStringify = JSON.stringify = jest.fn();
+const mockLoggerDebug = logger.debug as jest.Mock;
+
+const AXIOS_DATA_NAME = "bob";
+const AXIOS_STATUS = 200;
+const ERROR_MSG_PREFIX = "ERROR calling API";
 
 const dummyAxiosResponse: AxiosResponse = {
   config: {},
-  data: {},
+  data: {
+    name: AXIOS_DATA_NAME,
+  },
   headers: "header",
-  status: 100,
-  statusText: "Error",
+  status: AXIOS_STATUS,
+  statusText: "OK",
 };
-
-const ERROR_MSG_PREFIX = "ERROR calling API";
 
 describe("axios client tests", () => {
 
@@ -31,6 +36,7 @@ describe("axios client tests", () => {
   beforeEach(() => {
     mockAxiosRequest.mockClear();
     mockJSONStringify.mockClear();
+    mockLoggerDebug.mockClear();
   });
 
   it("should return axios config with the correct fields", () => {
@@ -114,5 +120,26 @@ describe("axios client tests", () => {
 
     expect(logger.debug).toBeCalledWith(expect.stringContaining(err.message));
     expect(response.status).toEqual(200);
+  });
+
+  it("should log axios status and data on successful call", async () => {
+    const theUrl = "localhost/strike-off";
+    const httpMethod = "GET";
+
+    const config: AxiosRequestConfig = {
+      url: theUrl,
+      method: httpMethod,
+    };
+
+    const response: AxiosResponse = await makeAPICall(config);
+
+    expect(response.status).toEqual(200);
+    const loggerArg = mockLoggerDebug.mock.calls[1][0];
+    expect(loggerArg).toContain(theUrl);
+    expect(loggerArg).toContain(httpMethod);
+
+    const stringifyArg = mockJSONStringify.mock.calls[0][0];
+    expect(stringifyArg.status).toBe(AXIOS_STATUS);
+    expect(stringifyArg.data.name).toBe(AXIOS_DATA_NAME);
   });
 });

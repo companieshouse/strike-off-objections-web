@@ -6,6 +6,7 @@ jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/company.filing.history.service");
 
+import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
@@ -21,17 +22,17 @@ import {
   OBJECTIONS_NO_STRIKE_OFF,
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
-import { ApiError, ObjectionCreate } from "../../src/modules/sdk/objections";
+import { ApiError, ObjectionCreate, ObjectionCreatedResponse, ObjectionStatus } from "../../src/modules/sdk/objections";
+import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
 import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
   deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveObjectionCreateFromObjectionSession } from "../../src/services/objection.session.service";
+  retrieveObjectionCreateFromObjectionSession
+} from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
-import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 
 const OBJECTION_ID = "123456";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
@@ -67,8 +68,6 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 const mockCreateNewObjection = createNewObjection as jest.Mock;
 const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
 
-// TODO test scenario when an error is logged - check that this is happening correctly
-
 describe("confirm company tests", () => {
 
   const mockLatestGaz1FilingHistoryItem = getLatestGaz1FilingHistoryItem as jest.Mock;
@@ -91,9 +90,6 @@ describe("confirm company tests", () => {
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
-
-    // TODO "girl's" caused the html version of apostrophe to be returned
-    // something like eg &1233; - just check that apostrophe is rendered ok in browser
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
     expect(response.text).toContain("Active");
@@ -113,7 +109,7 @@ describe("confirm company tests", () => {
     mockSetObjectionSessionValue.mockReset();
 
     mockCreateNewObjection.mockReset();
-    mockCreateNewObjection.mockImplementation(() => OBJECTION_ID);
+    mockCreateNewObjection.mockImplementation(() => dummyOpenObjectionCreatedResponse);
 
     mockGetObjectCreate.mockReset();
     mockGetObjectCreate.mockImplementation(() =>  dummyObjectionCreate );
@@ -130,16 +126,7 @@ describe("confirm company tests", () => {
     expect(response.header.location).toEqual(OBJECTIONS_ENTER_INFORMATION);
   });
 
-  it("should render the notice expired page when an api error occurs with the status INELIGIBLE_COMPANY_STRUCK_OFF", async () => {
-
-    const apiError: ApiError = {
-      data: {
-        status: "INELIGIBLE_COMPANY_STRUCK_OFF"
-      },
-      message: "There is an error",
-      status: 400,
-    };
-
+  it("should render the notice expired page when an objection is created with the status INELIGIBLE_COMPANY_STRUCK_OFF", async () => {
     mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
@@ -147,9 +134,7 @@ describe("confirm company tests", () => {
     mockSetObjectionSessionValue.mockReset();
 
     mockCreateNewObjection.mockReset();
-    mockCreateNewObjection.mockImplementation(() => {
-      throw apiError;
-    });
+    mockCreateNewObjection.mockImplementation(() => dummyStruckOffObjectionCreatedResponse);
 
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -160,16 +145,7 @@ describe("confirm company tests", () => {
     expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
   });
 
-  it("should render the no strike off page when an api error occurs with the status INELIGIBLE_NO_DISSOLUTION_ACTION", async () => {
-
-    const apiError: ApiError = {
-      data: {
-        status: "INELIGIBLE_NO_DISSOLUTION_ACTION"
-      },
-      message: "There is an error",
-      status: 400,
-    };
-
+  it("should render the no strike off page when an objection is created with the status INELIGIBLE_NO_DISSOLUTION_ACTION", async () => {
     mockDeleteObjectCreate.mockReset();
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
@@ -177,9 +153,7 @@ describe("confirm company tests", () => {
     mockSetObjectionSessionValue.mockReset();
 
     mockCreateNewObjection.mockReset();
-    mockCreateNewObjection.mockImplementation(() => {
-      throw apiError;
-    });
+    mockCreateNewObjection.mockImplementation(() => dummyNoDissolutionActionObjectionCreatedResponse);
 
     const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
       .set("Referer", "/")
@@ -305,4 +279,19 @@ const dummyFilingHistoryItem: FilingHistoryItem = {
 const dummyObjectionCreate: ObjectionCreate = {
   full_name: "Joe Bloggs",
   share_identity: false,
+};
+
+const dummyOpenObjectionCreatedResponse: ObjectionCreatedResponse = {
+  objectionId: OBJECTION_ID,
+  objectionStatus: ObjectionStatus.OPEN,
+};
+
+const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
+  objectionId: OBJECTION_ID,
+  objectionStatus: ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION,
+};
+
+const dummyStruckOffObjectionCreatedResponse: ObjectionCreatedResponse = {
+  objectionId: OBJECTION_ID,
+  objectionStatus: ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
 };
