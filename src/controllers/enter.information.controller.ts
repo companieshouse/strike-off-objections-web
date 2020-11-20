@@ -25,14 +25,14 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
-  const token: string = retrieveAccessTokenFromSession(session);
-
-  const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
-  const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
-
-  const reason: string = removeNonPrintableChars(req.body.information);
-
   try {
+    const token: string = retrieveAccessTokenFromSession(session);
+
+    const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
+    const objectionId: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+
+    const reason: string = removeNonPrintableChars(req.body.information);
+
     await updateObjectionReason(company.companyNumber, objectionId, token, reason);
   } catch (e) {
     return next(e);
