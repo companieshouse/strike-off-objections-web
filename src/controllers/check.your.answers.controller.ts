@@ -29,7 +29,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
         companyNumber,
         objection,
         shareIdentity,
-        templateName: Templates.CHECK_YOUR_ANSWERS,
       });
     } catch (e) {
       logger.errorRequest(req, "Error retrieving company profile from session");

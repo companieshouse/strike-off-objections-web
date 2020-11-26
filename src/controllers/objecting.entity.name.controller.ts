@@ -41,7 +41,6 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
-    templateName: Templates.OBJECTING_ENTITY_NAME,
   });
 };
 
@@ -55,7 +54,6 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
-        templateName: Templates.OBJECTING_ENTITY_NAME,
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -156,6 +154,5 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
-    templateName: Templates.OBJECTING_ENTITY_NAME,
   });
 };

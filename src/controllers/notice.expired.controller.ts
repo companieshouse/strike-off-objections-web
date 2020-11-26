@@ -12,6 +12,5 @@ export const get = (req: Request, res: Response) => {
 
   return res.render(Templates.NOTICE_EXPIRED, {
     companyName,
-    templateName: Templates.NOTICE_EXPIRED,
   });
 };

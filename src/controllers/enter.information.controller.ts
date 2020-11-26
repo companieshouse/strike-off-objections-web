@@ -55,12 +55,9 @@ const renderPageWithSessionDataIfPresent = async (req: Request, res: Response) =
   if (existingInformation) {
     return res.render(Templates.ENTER_INFORMATION, {
       information: existingInformation,
-      templateName: Templates.ENTER_INFORMATION,
     });
   } else {
-    return res.render(Templates.ENTER_INFORMATION, {
-      templateName: Templates.ENTER_INFORMATION,
-    });
+    return res.render(Templates.ENTER_INFORMATION);
   }
 };
 
