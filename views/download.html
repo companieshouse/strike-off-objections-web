@@ -25,3 +25,9 @@
     </div>
   </div>
 {% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+  <script src="{{assetPath}}/javascripts/govuk-frontend/v3.6.0/govuk-frontend-3.6.0.min.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+{% endblock %}

@@ -94,15 +94,5 @@
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{assetPath}}/javascripts/govuk-frontend/v3.6.0/govuk-frontend-3.6.0.min.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
-  <script src="{{assetPath}}/javascripts/app/piwik-enable.js"></script>
-  <script type="application/javascript">
-    (function() {
-      bindPiwikListener('strike-off-objections', '{{PIWIK_URL}}', {{PIWIK_SITE_ID}});
-    }());
-  </script>
-  <noscript>
-    <p>
-      <img src="{{PIWIK_URL}}/piwik.php?idsite={{PIWIK_SITE_ID}}" style="border:0;" alt="" />
-    </p>
-  </noscript>
+  {% include "includes/piwik-scripts.html" %}
 {% endblock %}
