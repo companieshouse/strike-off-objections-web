@@ -49,7 +49,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 const renderPageWithSessionDataIfPresent = async (req: Request, res: Response) => {
   const objection: Objection = await getObjectionFromSession(req);
   let existingInformation;
-  if (objection && objection.reason) {
+  if (objection.reason) {
     existingInformation = objection.reason;
   }
   if (existingInformation) {
