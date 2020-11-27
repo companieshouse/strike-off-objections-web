@@ -76,6 +76,21 @@ describe("enter information tests", () => {
 
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Tell us why");
+    expect(response.text).not.toContain(REASON);
+  });
+
+  it("should render the page with existing information when present", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjectionWithReason);
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(200);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(response.text).toContain("Tell us why");
+    expect(response.text).toContain(REASON);
   });
 
   it("should redirect to the document-upload page on post and change flag undefined", async () => {
@@ -94,20 +109,6 @@ describe("enter information tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
-  });
-
-  it("should render the page with existing information when present", async () => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
-
-    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(response.status).toEqual(200);
-    expect(mockGetObjection).toHaveBeenCalledTimes(1);
-    expect(response.text).toContain("Tell us why");
-    expect(response.text).toContain(REASON);
   });
 
   it("should throw an error when no session is present", async () => {
@@ -152,7 +153,7 @@ describe("enter information tests", () => {
     mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce("objectionId");
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
-    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjectionWithReason);
 
     const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
@@ -231,6 +232,20 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const mockObjection: Objection = {
+  attachments: [
+    {
+      name: "attachment.jpg",
+    },
+    {
+      name: "document.pdf",
+    }],
+  created_by: {
+    full_name: "name",
+    share_identity: false
+  },
+};
+
+const mockObjectionWithReason: Objection = {
   attachments: [
     {
       name: "attachment.jpg",

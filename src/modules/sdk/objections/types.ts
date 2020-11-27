@@ -61,7 +61,7 @@ export interface Objection {
     name: string;
   }>,
   created_by: CreatedBy,
-  reason: string;
+  reason?: string;
 }
 
 export interface CreatedBy {

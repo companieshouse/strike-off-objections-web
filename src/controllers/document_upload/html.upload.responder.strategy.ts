@@ -44,7 +44,6 @@ export class HtmlUploadResponderStrategy implements UploadResponderStrategy {
       attachments,
       documentUploadErr: errorData,
       errorList: [errorData],
-      templateName: Templates.DOCUMENT_UPLOAD,
     });
     return Promise.resolve();
   };
