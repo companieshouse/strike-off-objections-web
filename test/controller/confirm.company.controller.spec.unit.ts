@@ -277,6 +277,25 @@ describe("confirm company tests", () => {
     expect(response.text).toContain("00006400");
     expect(response.text).toContain("14 April 2015");
   });
+
+  it("should render the strike off expired page when an objection is created with the status INELIGIBLE_GAZ2_REQUESTED", async () => {
+    mockDeleteObjectCreate.mockReset();
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockSetObjectionSessionValue.mockReset();
+
+    mockCreateNewObjection.mockReset();
+    mockCreateNewObjection.mockImplementation(() => dummyGaz2RequestedObjectionCreatedResponse);
+
+    const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockDeleteObjectCreate).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
+  });
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
@@ -313,6 +332,11 @@ const dummyOpenObjectionCreatedResponse: ObjectionCreatedResponse = {
 const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
   objectionId: OBJECTION_ID,
   objectionStatus: ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION,
+};
+
+const dummyGaz2RequestedObjectionCreatedResponse: ObjectionCreatedResponse = {
+  objectionId: OBJECTION_ID,
+  objectionStatus: ObjectionStatus.INELIGIBLE_GAZ2_REQUESTED,
 };
 
 const dummyStruckOffObjectionCreatedResponse: ObjectionCreatedResponse = {
