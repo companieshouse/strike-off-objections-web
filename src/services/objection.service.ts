@@ -3,7 +3,7 @@ import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
 import {
-  Attachment,
+  Attachment, CompanyEligibility,
   Download,
   Objection,
   ObjectionCreate, ObjectionCreatedResponse,
@@ -26,7 +26,7 @@ import {
  * @returns {boolean} the eligibility for the given company
  * @throws {ApiError}
  */
-export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<CompanyEligibility> => {
   logger.info(`getting eligibility for company number ${companyNumber}`);
   return await objectionsSdk.getCompanyEligibility(companyNumber, token);
 };

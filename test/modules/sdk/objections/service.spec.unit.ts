@@ -4,8 +4,8 @@ import { AxiosRequestConfig, AxiosResponse, Method } from "axios";
 import { Readable } from "stream";
 import * as objectionsSdk from "../../../../src/modules/sdk/objections";
 import {
-  Attachment,
-  Download,
+  Attachment, CompanyEligibility,
+  Download, EligibilityStatus,
   HEADER_CONTENT_DISPOSITION,
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
@@ -61,12 +61,14 @@ describe("objections SDK service unit tests", () => {
     mockMakeAPICall.mockResolvedValueOnce({
       data: {
         is_eligible: true,
+        eligibility_status: EligibilityStatus.ELIGIBLE,
       },
     });
-    const returnedEligibility: boolean = await objectionsSdk.getCompanyEligibility(COMPANY_NUMBER,
-                                                                                   ACCESS_TOKEN);
+    const returnedEligibility: CompanyEligibility = await objectionsSdk.getCompanyEligibility(COMPANY_NUMBER,
+                                                                                              ACCESS_TOKEN);
 
-    expect(returnedEligibility).toEqual(true);
+    expect(returnedEligibility.is_eligible).toEqual(true);
+    expect(returnedEligibility.eligibility_status).toEqual(EligibilityStatus.ELIGIBLE);
     expect(mockMakeAPICall).toBeCalled();
 
     testCorrectApiValuesAreUsed(

@@ -24,6 +24,26 @@ export enum ObjectionStatus {
 }
 
 /**
+ * Eligibility Status of a Company
+ * @enum
+ */
+export enum EligibilityStatus {
+  ELIGIBLE = "ELIGIBLE",
+  INELIGIBLE_COMPANY_STRUCK_OFF = "INELIGIBLE_COMPANY_STRUCK_OFF",
+  INELIGIBLE_NO_DISSOLUTION_ACTION = "INELIGIBLE_NO_DISSOLUTION_ACTION",
+  INELIGIBLE_GAZ2_REQUESTED = "INELIGIBLE_GAZ2_REQUESTED",
+}
+
+/**
+ * Eligibility of a company
+ * @interface
+ */
+export interface CompanyEligibility {
+  is_eligible: boolean;
+  eligibility_status: EligibilityStatus;
+}
+
+/**
  * Data structure for creating an Objection
  * @interface
  */
