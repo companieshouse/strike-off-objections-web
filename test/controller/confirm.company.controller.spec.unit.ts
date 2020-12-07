@@ -22,7 +22,14 @@ import {
   OBJECTIONS_NO_STRIKE_OFF,
   OBJECTIONS_NOTICE_EXPIRED
 } from "../../src/model/page.urls";
-import { ApiError, ObjectionCreate, ObjectionCreatedResponse, ObjectionStatus } from "../../src/modules/sdk/objections";
+import {
+  ApiError,
+  CompanyEligibility,
+  EligibilityStatus,
+  ObjectionCreate,
+  ObjectionCreatedResponse,
+  ObjectionStatus
+} from "../../src/modules/sdk/objections";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
 import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
 import {
@@ -210,7 +217,7 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
     mockGetCompanyEligibility.mockReset();
-    mockGetCompanyEligibility.mockImplementation(() => true);
+    mockGetCompanyEligibility.mockImplementation(() => dummyCompanyEligibility);
 
     mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(undefined);
 
@@ -239,7 +246,36 @@ describe("confirm company tests", () => {
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
 
     mockGetCompanyEligibility.mockReset();
-    mockGetCompanyEligibility.mockImplementation(() => true);
+    mockGetCompanyEligibility.mockImplementation(() => dummyCompanyEligibility);
+
+    mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
+
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("14 April 2015");
+  });
+
+  it("should correctly display the latest GAZ1 date from the filing history if company in gaz1, with gaz2 requested", async () => {
+
+    const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+
+    beforeEach(() => {
+      mockValidAccessToken.mockReset();
+    });
+
+    mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
+
+    mockGetObjectionSessionValue.mockReset();
+    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockImplementation(() => dummyCompanyEligibilityIneligibleGaz2Requested);
 
     mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
 
@@ -294,4 +330,14 @@ const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse
 const dummyStruckOffObjectionCreatedResponse: ObjectionCreatedResponse = {
   objectionId: OBJECTION_ID,
   objectionStatus: ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
+};
+
+const dummyCompanyEligibility: CompanyEligibility = {
+  is_eligible: true,
+  eligibility_status: EligibilityStatus.ELIGIBLE,
+};
+
+const dummyCompanyEligibilityIneligibleGaz2Requested: CompanyEligibility = {
+  is_eligible: false,
+  eligibility_status: EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED,
 };

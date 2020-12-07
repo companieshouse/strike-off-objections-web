@@ -15,14 +15,13 @@ import { authenticationMiddleware } from "../../src/middleware/authentication.mi
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { Objection } from "../../src/modules/sdk/objections";
-import { getObjection } from "../../src/services/objection.service";
-import {
-  retrieveCompanyProfileFromObjectionSession
-} from "../../src/services/objection.session.service";
+import { CompanyEligibility, EligibilityStatus, Objection } from "../../src/modules/sdk/objections";
+import { getCompanyEligibility, getObjection } from "../../src/services/objection.service";
+import { retrieveCompanyProfileFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -87,6 +86,12 @@ describe("Basic URL Tests", () => {
   it("should find the confirm company page", async () => {
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
+    mockGetCompanyEligibility.mockReset().mockImplementationOnce(() => {
+      return {
+        is_eligible: false,
+        eligibility_status: EligibilityStatus.INELIGIBLE_NO_DISSOLUTION_ACTION
+      } as CompanyEligibility;
+    });
 
     const response = await request(app)
       .get("/strike-off-objections/confirm-company");

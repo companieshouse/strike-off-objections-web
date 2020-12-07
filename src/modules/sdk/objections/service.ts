@@ -4,7 +4,7 @@ import logger from "../../../utils/logger";
 import { INTERNAL_API_URL } from "../../../utils/properties";
 import { getBaseAxiosRequestConfig, HTTP_DELETE, HTTP_GET, HTTP_PATCH, HTTP_POST, makeAPICall } from "./axios.client";
 import {
-  Attachment,
+  Attachment, CompanyEligibility,
   Download,
   HEADER_CONTENT_DISPOSITION,
   HEADER_CONTENT_LENGTH,
@@ -39,12 +39,12 @@ const OBJECTIONS_API_SINGLE_ATTACHMENT_URL =
  * @returns {boolean} the eligibility for the given company
  * @throws {ApiError}
  */
-export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<boolean> => {
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<CompanyEligibility> => {
   logger.debug(`getting eligibility for company number ${companyNumber} from the SDK`);
 
   const axiosConfig: AxiosRequestConfig = getBaseAxiosRequestConfig(
     HTTP_GET, OBJECTIONS_ELIGIBILITY_URL(companyNumber), token);
-  return (await makeAPICall(axiosConfig)).data.is_eligible as boolean;
+  return (await makeAPICall(axiosConfig)).data as CompanyEligibility;
 };
 
 /**
