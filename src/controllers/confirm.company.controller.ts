@@ -21,6 +21,7 @@ import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/co
 const INELIGIBLE_PAGES = {
   [ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF]: OBJECTIONS_NOTICE_EXPIRED,
   [ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION]: OBJECTIONS_NO_STRIKE_OFF,
+  [ObjectionStatus.INELIGIBLE_GAZ2_REQUESTED]: OBJECTIONS_NOTICE_EXPIRED,
 };
 
 /**
