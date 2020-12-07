@@ -235,12 +235,7 @@ describe("confirm company tests", () => {
   it("should correctly display the latest GAZ1 date from the filing history if action code is eligible", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
-
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-    });
-
-    mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
+    mockValidAccessToken.mockReset().mockImplementation(() => ACCESS_TOKEN );
 
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
@@ -264,18 +259,11 @@ describe("confirm company tests", () => {
   it("should correctly display the latest GAZ1 date from the filing history if company in gaz1, with gaz2 requested", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+    mockValidAccessToken.mockReset().mockImplementation(() => ACCESS_TOKEN);
 
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-    });
+    mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
 
-    mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
-
-    mockGetObjectionSessionValue.mockReset();
-    mockGetObjectionSessionValue.mockImplementation(() => dummyCompanyProfile);
-
-    mockGetCompanyEligibility.mockReset();
-    mockGetCompanyEligibility.mockImplementation(() => dummyCompanyEligibilityIneligibleGaz2Requested);
+    mockGetCompanyEligibility.mockReset().mockImplementation(() => dummyCompanyEligibilityIneligibleGaz2Requested);
 
     mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
 
