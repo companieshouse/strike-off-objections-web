@@ -263,7 +263,6 @@ describe("confirm company tests", () => {
 
     mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
 
-    mockGetCompanyEligibility.mockReset();
     mockGetCompanyEligibility.mockReset().mockImplementation(() => dummyCompanyEligibilityIneligibleGaz2Requested);
 
     mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
@@ -286,7 +285,6 @@ describe("confirm company tests", () => {
 
     mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
 
-    mockGetCompanyEligibility.mockReset();
     mockGetCompanyEligibility.mockReset().mockImplementation(() => dummyCompanyEligibilityIneligibleStruckOff);
 
     const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
