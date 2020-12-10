@@ -42,9 +42,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
       let latestGaz1Date: string;
       const companyEligibility: CompanyEligibility = await getCompanyEligibility(company.companyNumber, token);
-      if (companyEligibility.eligibility_status === EligibilityStatus.ELIGIBLE ||
-        companyEligibility.eligibility_status === EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED) {
+
+      if (companyEligibility.eligibility_status === EligibilityStatus.ELIGIBLE) {
         latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
+      } else if (companyEligibility.eligibility_status === EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED ||
+                 companyEligibility.eligibility_status === EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF) {
+        latestGaz1Date = "Notice expired";
       } else {
         latestGaz1Date = "No notice in The Gazette";
       }

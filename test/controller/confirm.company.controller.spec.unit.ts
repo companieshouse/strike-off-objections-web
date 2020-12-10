@@ -256,13 +256,14 @@ describe("confirm company tests", () => {
     expect(response.text).toContain("14 April 2015");
   });
 
-  it("should correctly display the latest GAZ1 date from the filing history if company in gaz1, with gaz2 requested", async () => {
+  it("should correctly display the notice expired message from the filing history if company in gaz1, with gaz2 requested", async () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
     mockValidAccessToken.mockReset().mockImplementation(() => ACCESS_TOKEN);
 
     mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
 
+    mockGetCompanyEligibility.mockReset();
     mockGetCompanyEligibility.mockReset().mockImplementation(() => dummyCompanyEligibilityIneligibleGaz2Requested);
 
     mockLatestGaz1FilingHistoryItem.mockResolvedValueOnce(dummyFilingHistoryItem);
@@ -275,7 +276,28 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(200);
 
     expect(response.text).toContain("00006400");
-    expect(response.text).toContain("14 April 2015");
+    expect(response.text).toContain("Notice expired");
+  });
+
+  it("should correctly display the notice expired message from the filing history if company is INELIGIBLE_COMPANY_STRUCK_OFF", async () => {
+
+    const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
+    mockValidAccessToken.mockReset().mockImplementation(() => ACCESS_TOKEN);
+
+    mockGetObjectionSessionValue.mockReset().mockImplementation(() => dummyCompanyProfile);
+
+    mockGetCompanyEligibility.mockReset();
+    mockGetCompanyEligibility.mockReset().mockImplementation(() => dummyCompanyEligibilityIneligibleStruckOff);
+
+    const response = await request(app).get(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+
+    expect(response.text).toContain("00006400");
+    expect(response.text).toContain("Notice expired");
   });
 
   it("should render the strike off expired page when an objection is created with the status INELIGIBLE_GAZ2_REQUESTED", async () => {
@@ -296,6 +318,7 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
   });
+
 });
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
@@ -352,4 +375,9 @@ const dummyCompanyEligibility: CompanyEligibility = {
 const dummyCompanyEligibilityIneligibleGaz2Requested: CompanyEligibility = {
   is_eligible: false,
   eligibility_status: EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED,
+};
+
+const dummyCompanyEligibilityIneligibleStruckOff: CompanyEligibility = {
+  is_eligible: false,
+  eligibility_status: EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
 };
