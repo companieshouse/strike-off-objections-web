@@ -4,7 +4,7 @@ import ObjectionCompanyProfile from "model/objection.company.profile";
 import { SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { CompanyEligibility, EligibilityStatus, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
+import { EligibilityStatus, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
 import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
@@ -41,10 +41,13 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       const token: string = retrieveAccessTokenFromSession(session);
 
       let latestGaz1Date: string;
-      const companyEligibility: CompanyEligibility = await getCompanyEligibility(company.companyNumber, token);
-      if (companyEligibility.eligibility_status === EligibilityStatus.ELIGIBLE ||
-        companyEligibility.eligibility_status === EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED) {
+      const { eligibility_status } = await getCompanyEligibility(company.companyNumber, token);
+
+      if (eligibility_status === EligibilityStatus.ELIGIBLE) {
         latestGaz1Date = await getLatestGaz1Date(company.companyNumber, token);
+      } else if (eligibility_status === EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED ||
+                 eligibility_status === EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF) {
+        latestGaz1Date = "Notice expired";
       } else {
         latestGaz1Date = "No notice in The Gazette";
       }
