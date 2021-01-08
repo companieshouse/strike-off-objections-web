@@ -134,7 +134,7 @@ describe("Basic URL Tests", () => {
       .get("/strike-off-objections/notice-expired");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/The strike off notice has expired for the company/);
+    expect(response.text).toMatch(/It's too late to object to the company being struck off/);
   });
 
   it("should find the no strike off page", async () => {
