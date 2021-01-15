@@ -9,27 +9,37 @@ Web frontend for submitting objections to a company being struck off the registe
 In order to run the service locally you will need the following:
 
 - [NodeJS](https://nodejs.org/en/)
-- [Node Version Manager](https://github.com/nvm-sh/nvm)
 - [Homebrew](https://formulae.brew.sh/formula/node)
-- [expressJS](https://expressjs.com/)
-- [NunJucks](https://mozilla.github.io/nunjucks)
 - [Git](https://git-scm.com/downloads)
 
 ### Getting started
 
 To checkout and build the service:
 1. Clone [Docker CHS Development](https://github.com/companieshouse/docker-chs-development) and follow the steps in the README. 
-2. git clone strike off objections web under your "repositories/SingleService" directory you will also require [Strike Off Objections API](https://github.com/companieshouse/strike-off-objections-api)
-3. run make
-4. Enable modules strike-off-objections.
-5. Enable development strike-off-objections api and web this will allow you to make changes.
-6. Run docker using "tilt up" in the docker chs root directory.
+2. Run ./bin/chs-dev modules enable strike-off-objections
+3. Run ./bin/chs-dev development enable strike-off-objections (this will allow you to make changes).
+4. Run docker using "tilt up" in the docker chs root directory.
+5. Open your browser and go to page http://chs.local/strike-off-obections
 
 These instructions are for a local docker environment.
 
+### Config variables
+
+- API_URL=http://<host>:<port> Required for accessing the backend application
+- CACHE_SERVER=redis Required for storing values in memory
+- CDN_HOST=http://<cdn_host> Address of chs styling for the frontend
+- CHS_URL=http://chs.local Used when navigating to the webpage
+- COOKIE_DOMAIN=chs.local
+- COOKIE_EXPIRATION_IN_SECONDS=3600
+- COOKIE_NAME=__SID
+- COOKIE_SECRET=<signing_key>
+- COOKIE_SECURE_FLAG=0
+- DOWNLOAD_FILENAME_PREFIX=CH_SO_OBJ_
+- INTERNAL_API_URL=http://<host>:<port>
+- HUMAN_LOG=1
+- LOG_LEVEL=DEBUG 
+- MAX_FILE_SIZE_BYTES=4194304
+- SHOW_SERVICE_OFFLINE_PAGE=false 
+
 ### Further Information
 For futher informaion on running building and testing ch node js apps see the [Node Web Starter](https://github.com/companieshouse/node-web-starter/blob/master/README.md) page
-
-
-
-
