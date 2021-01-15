@@ -25,7 +25,7 @@ These instructions are for a local docker environment.
 
 ### Config variables
 
-- API_URL=http://<host>:<port> Required for accessing the backend application
+- API_URL=http://<host><port> Required for accessing the backend application
 - CACHE_SERVER=redis Required for storing values in memory
 - CDN_HOST=http://<cdn_host> Address of chs styling for the frontend
 - CHS_URL=http://chs.local Used when navigating to the webpage
@@ -35,7 +35,7 @@ These instructions are for a local docker environment.
 - COOKIE_SECRET=<signing_key>
 - COOKIE_SECURE_FLAG=0
 - DOWNLOAD_FILENAME_PREFIX=CH_SO_OBJ_
-- INTERNAL_API_URL=http://<host>:<port>
+- INTERNAL_API_URL=http://<host><port>
 - HUMAN_LOG=1
 - LOG_LEVEL=DEBUG 
 - MAX_FILE_SIZE_BYTES=4194304
