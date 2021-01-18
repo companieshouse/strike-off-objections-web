@@ -45,4 +45,4 @@ MAX_FILE_SIZE_BYTES | 4194304 |
 SHOW_SERVICE_OFFLINE_PAGE | false | Feature Flag
 
 ### Further Information
-For further information on running building and testing ch node js apps see the [Node Web Starter](https://github.com/companieshouse/node-web-starter/blob/master/README.md) page
+For further information on running building and testing ch node js apps see the [Node Web Starter](https://github.com/companieshouse/node-web-starter/blob/master/README.md) page.
