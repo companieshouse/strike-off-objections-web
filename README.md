@@ -9,7 +9,6 @@ Web frontend for submitting objections to a company being struck off the registe
 In order to run the service locally you will need the following:
 
 - [NodeJS](https://nodejs.org/en/)
-- [Homebrew](https://formulae.brew.sh/formula/node)
 - [Git](https://git-scm.com/downloads)
 
 ### Getting started
