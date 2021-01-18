@@ -16,7 +16,7 @@ In order to run the service locally you will need the following:
 To checkout and build the service:
 1. Clone [Docker CHS Development](https://github.com/companieshouse/docker-chs-development) and follow the steps in the README. 
 2. Run ./bin/chs-dev modules enable strike-off-objections
-3. Run ./bin/chs-dev development enable strike-off-objections (this will allow you to make changes).
+3. Run ./bin/chs-dev development enable strike-off-objections-web (this will allow you to make changes).
 4. Run docker using "tilt up" in the docker-chs-development directory.
 5. Use spacebar in the command line to open tilt window - wait for strike-off-objections-web to become green.
 6. Open your browser and go to page http://chs.local/strike-off-objections
