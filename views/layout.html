@@ -39,11 +39,8 @@
   {% endblock %}
 {% endblock %}
 
-{% block bodyStart %}
-  {% include "includes/cookie-consent-banner.html" %}
-{% endblock %}
-
 {% block header %}
+  {% include "includes/cookie-consent-banner.html" %}
   {{ govukHeader({
     homepageUrl: "/strike-off-objections",
     serviceName: "Apply to object to a company being struck off",
