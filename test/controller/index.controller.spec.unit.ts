@@ -54,6 +54,14 @@ describe("Index page post tests", () => {
     mockDeleteExtraData.mockClear();
   });
 
+  it("should display a cookie banner", async() => {
+    const response = await request(app)
+      .get("/strike-off-objections");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain("govuk-cookie-banner");
+  });
+
   it("should post index page and wipe session data", async () => {
     const response = await request(app)
       .post("/strike-off-objections")
