@@ -54,7 +54,7 @@ describe("Index page post tests", () => {
     mockDeleteExtraData.mockClear();
   });
 
-  it("should display a cookie banner", async() => {
+  it("should contain a cookie banner", async() => {
     const response = await request(app)
       .get("/strike-off-objections");
 
