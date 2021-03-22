@@ -8,7 +8,6 @@ import { EligibilityStatus, ObjectionCreate, ObjectionStatus } from "../modules/
 import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
-  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession
