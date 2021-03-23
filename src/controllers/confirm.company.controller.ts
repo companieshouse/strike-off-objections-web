@@ -8,7 +8,6 @@ import { EligibilityStatus, ObjectionCreate, ObjectionStatus } from "../modules/
 import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
 import {
   addToObjectionSession,
-  deleteObjectionCreateFromObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession
@@ -75,7 +74,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const ineligiblePage = getIneligiblePage(objectionStatus);
     if (ineligiblePage) {
-      deleteObjectionCreateFromObjectionSession(session);
       logger.info(`Objection status is ${objectionStatus} for objection id ${objectionId}, company ${companyNumber},`
         + ` redirecting user to ${ineligiblePage}`);
       return res.redirect(ineligiblePage);
@@ -84,7 +82,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
-    deleteObjectionCreateFromObjectionSession(session);
     return next(e);
   }
 };
