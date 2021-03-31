@@ -21,7 +21,15 @@
 
       <p>You can only object to a company being struck off after the notice has been published in The Gazette.</p>
 
-      <p>Companies House must receive the objection within 2 months of the publish date.</p>
+      {{ govukDetails({
+        summaryText: "What is The Gazette?",
+        html: '<p>Official notices about insolvency or companies being struck off are published in
+          <a href="https://www.thegazette.co.uk/">The London, Edinburgh and Belfast Gazettes</a>.
+          You can search The Gazettes online, and get help using their
+          <a href="https://www.thegazette.co.uk/all-notices/content/116">guide to searching</a>.</p>'
+      }) }}
+
+      <p>We must receive the objection within 2 months of the publish date.</p>
 
       <p>We cannot register your objection if the company has already been dissolved and struck off. If you have a legal claim to pursue, the company must be restored first.
         <a href="https://www.gov.uk/guidance/company-restoration-guide#who-makes-the-application">Read the company restoration guidance</a>
@@ -49,13 +57,13 @@
         <li>to upload evidence to support the objection, for example invoices showing the company is still trading or owes a debt</li>
       </ul>
 
-      {{ govukDetails({
-        summaryText: "What is The Gazette?",
-        html: '<p>Official notices about insolvency or companies being struck off are published in
-          <a href="https://www.thegazette.co.uk/">The London, Edinburgh and Belfast Gazettes</a>.
-          You can search The Gazettes online, and get help using their
-          <a href="https://www.thegazette.co.uk/all-notices/content/116">guide to searching</a>.</p>'
-      }) }}
+      <p>Documents must:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>show the full name of the company being struck off</li>
+        <li>show how the company is being pursued</li>
+        <li>be no more than 6 months older than today's date</li>
+        <li>show evidence that supports your objection, such as invoices or court documents</li>
+      </ul>
 
     </div>
   </div>
