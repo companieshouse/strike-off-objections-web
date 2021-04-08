@@ -1,5 +1,3 @@
-import { OBJECTIONS_OBJECTOR_ORGANISATION } from "./page.urls";
-
 export enum Templates {
   OBJECTING_ENTITY_NAME = "objecting-entity-name",
   COMPANY_NUMBER = "company-number",
