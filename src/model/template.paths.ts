@@ -1,3 +1,5 @@
+import { OBJECTIONS_OBJECTOR_ORGANISATION } from "./page.urls";
+
 export enum Templates {
   OBJECTING_ENTITY_NAME = "objecting-entity-name",
   COMPANY_NUMBER = "company-number",
@@ -18,5 +20,6 @@ export enum Templates {
   ERROR = "error",
   FILE_ERROR = "file-error",
   ACCESSIBILITY_STATEMENT = "accessibility-statement",
-  ERROR_404 = "page-not-found"
+  ERROR_404 = "page-not-found",
+  OBJECTOR_ORGANISATION_PAGE = "objector-organisation"
 }
