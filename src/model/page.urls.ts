@@ -26,6 +26,7 @@ export const CONFIRMATION: string = SEPARATOR + Templates.CONFIRMATION;
 export const CHANGE_ANSWERS: string = SEPARATOR + "change-answers";
 export const ERROR: string = SEPARATOR + Templates.ERROR;
 export const ACCESSIBILITY_STATEMENT: string = SEPARATOR + Templates.ACCESSIBILITY_STATEMENT;
+export const OBJECTOR_ORGANISATION: string = SEPARATOR + Templates.OBJECTOR_ORGANISATION_PAGE;
 
 /**
  * URLs for redirects will need to start with the application name
@@ -43,3 +44,4 @@ export const OBJECTIONS_CHECK_YOUR_ANSWERS: string = STRIKE_OFF_OBJECTIONS + CHE
 export const OBJECTIONS_CONFIRMATION: string = STRIKE_OFF_OBJECTIONS + CONFIRMATION;
 export const OBJECTIONS_CHANGE_ANSWERS: string = STRIKE_OFF_OBJECTIONS + CHANGE_ANSWERS;
 export const OBJECTIONS_ERROR: string = STRIKE_OFF_OBJECTIONS + ERROR;
+export const OBJECTIONS_OBJECTOR_ORGANISATION: string = STRIKE_OFF_OBJECTIONS + OBJECTOR_ORGANISATION;

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Apply to object to a company being struck off
+{% endblock %}
+
+{% block backLink %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/strike-off-objections"
+  }) }}
+{% endblock %}
+
+{% block content %}
+    {{ govukRadios({
+        idPrefix: "objector-organisation",
+        name: "objector-organisation",
+        fieldset: {
+          legend: {
+            text: "Who is applying to object?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        items: [
+          {
+            value: "myself-or-company",
+            text: "I'm objecting for myself, or a company I work for"
+          },
+          {
+            value: "client",
+            text: "I'm objecting on behalf of a client"
+          }
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: "Continue"
+      }) }}
+{% endblock %}
