@@ -15,7 +15,9 @@
 {% endblock %}
 
 {% block content %}
-    {{ govukRadios({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukRadios({
         idPrefix: "objector-organisation",
         name: "objector-organisation",
         fieldset: {
@@ -40,4 +42,6 @@
       {{ govukButton({
         text: "Continue"
       }) }}
+    </div>
+  </div>
 {% endblock %}
