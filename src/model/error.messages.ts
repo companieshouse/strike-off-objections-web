@@ -17,6 +17,7 @@ export enum ErrorMessages {
   ENTER_NAME = "Enter your full name or organisation name",
   SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
   SELECT_TO_REMOVE = "You must tell us if you want to remove the document",
+  SELECT_OBJECTOR_ORGANISATION = "Select who is applying to object",
 }
 
 export enum HttpStatusCodes {
