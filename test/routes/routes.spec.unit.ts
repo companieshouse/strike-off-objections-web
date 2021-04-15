@@ -67,6 +67,14 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/What is The Gazette?/);
   });
 
+  it("should find the objector-organisation page", async () => {
+    const response = await request(app)
+      .get("/strike-off-objections/objector-organisation");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Who is applying to object/);
+  });
+
   it("should find the objecting entity name page", async () => {
     const response = await request(app)
       .get("/strike-off-objections/objecting-entity-name");

@@ -13,6 +13,7 @@ import * as noticeExpiredRoute from "../controllers/notice.expired.controller";
 import * as noStrikeOffRoute from "../controllers/no.strike.off.controller";
 import * as objectingEntityNameRoute from "../controllers/objecting.entity.name.controller";
 import * as removeDocumentRoute from "../controllers/remove.document.controller";
+import * as objectorOrganisation from "../controllers/objector.organisation.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
@@ -69,3 +70,4 @@ router.get(pageURLs.CHANGE_ANSWERS, changeAnswersRoute.get);
 router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBILITY_STATEMENT));
 
 router.get(pageURLs.OBJECTOR_ORGANISATION, renderTemplate(Templates.OBJECTOR_ORGANISATION_PAGE));
+router.post(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.post);

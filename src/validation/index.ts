@@ -1,0 +1,1 @@
+export * as objectorOrganisation from './objector.organisation.validator';

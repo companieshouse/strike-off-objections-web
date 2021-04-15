@@ -15,29 +15,46 @@
 {% endblock %}
 
 {% block content %}
-    {{ govukRadios({
-        idPrefix: "objector-organisation",
-        name: "objector-organisation",
-        fieldset: {
-          legend: {
-            text: "Who is applying to object?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        items: [
-          {
-            value: "myself-or-company",
-            text: "I'm objecting for myself, or a company I work for"
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: ERROR_SUMMARY_TITLE,
+            errorList: errorList
+          }) }}
+        {% endif %}
+        
+        {{ govukRadios({
+          idPrefix: "objector-organisation",
+          name: "objector-organisation",
+          errorMessage: selectObjectorOrganisation,
+          fieldset: {
+            legend: {
+              text: "Who is applying to object?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
           },
-          {
-            value: "client",
-            text: "I'm objecting on behalf of a client"
-          }
-        ]
-      }) }}
+          items: [
+            {
+              value: "myself-or-company",
+              text: "I'm objecting for myself, or a company I work for"
+            },
+            {
+              value: "client",
+              text: "I'm objecting on behalf of a client"
+            }
+          ]
+        }) }}
 
-      {{ govukButton({
-        text: "Continue"
-      }) }}
+        {{ govukButton({
+          text: "Continue",
+          attributes: {
+            id: "submit"
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
 {% endblock %}
