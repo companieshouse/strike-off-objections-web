@@ -22,6 +22,7 @@ const postObjectorOrganisation = (req: Request, res: Response, next: NextFunctio
     return res.render(Templates.OBJECTOR_ORGANISATION_PAGE, {
       errorList: [selectObjectorOrganisation],
       selectObjectorOrganisation,
+      templateName: Templates.OBJECTOR_ORGANISATION_PAGE
     });
 
   } catch (e) {
