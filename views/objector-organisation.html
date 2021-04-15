@@ -4,7 +4,7 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Apply to object to a company being struck off
+  Who is applying to object?
 {% endblock %}
 
 {% block backLink %}
@@ -39,11 +39,17 @@
           items: [
             {
               value: "myself-or-company",
-              text: "I'm objecting for myself, or a company I work for"
+              text: "I'm objecting for myself, or a company I work for",
+              attributes: {
+                "data-event-id" : "myself-or-company"
+              }
             },
             {
               value: "client",
-              text: "I'm objecting on behalf of a client"
+              text: "I'm objecting on behalf of a client",
+              attributes: {
+                "data-event-id" : "client"
+              }
             }
           ]
         }) }}
