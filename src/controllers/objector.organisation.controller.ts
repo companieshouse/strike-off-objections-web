@@ -4,7 +4,7 @@ import { GovUkErrorData } from "model/govuk.error.data";
 
 import { objectorOrganisation } from "../validation";
 
-import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } from "../model/page.urls";
+import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
 import logger from "../utils/logger";
