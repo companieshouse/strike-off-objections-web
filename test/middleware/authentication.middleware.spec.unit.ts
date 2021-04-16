@@ -30,7 +30,7 @@ describe("authentication middleware tests", () => {
 
   beforeEach(() => {
     mockWebSecurityNodeAuthMiddleware.mockClear();
-    dummyReq.originalUrl = "";  
+    dummyReq.originalUrl = "";
     dummyReq.app = {
       locals: { objectorJourneyFeatureFlag: OBJECTIONS_OBJECTING_ENTITY_NAME }
     } as any;

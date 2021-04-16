@@ -33,7 +33,7 @@ env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
 
 // Feature flag for objector journey
 app.locals.objectorJourneyFeatureFlag = isActiveFeature(process.env.OBJECTOR_JOURNEY_FEATURE_FLAG)
-  ? pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION 
+  ? pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION
   : pageURLs.OBJECTIONS_OBJECTING_ENTITY_NAME;
 
 app.enable("trust proxy");
