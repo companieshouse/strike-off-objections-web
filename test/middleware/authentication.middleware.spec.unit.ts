@@ -6,7 +6,8 @@ import { authenticationMiddleware } from "../../src/middleware/authentication.mi
 import {
   ACCESSIBILITY_STATEMENT,
   OBJECTIONS_ENTER_INFORMATION,
-  OBJECTIONS_OBJECTING_ENTITY_NAME
+  OBJECTIONS_OBJECTING_ENTITY_NAME,
+  OBJECTIONS_OBJECTOR_ORGANISATION
 } from "../../src/model/page.urls";
 
 const DOWNLOAD_LANDING_PAGE_URL =
@@ -29,7 +30,10 @@ describe("authentication middleware tests", () => {
 
   beforeEach(() => {
     mockWebSecurityNodeAuthMiddleware.mockClear();
-    dummyReq.originalUrl = "";
+    dummyReq.originalUrl = "";  
+    dummyReq.app = {
+      locals: { objectorJourneyFeatureFlag: OBJECTIONS_OBJECTING_ENTITY_NAME }
+    } as any;
   });
 
   it("should set return url to download landing page", () => {
@@ -56,7 +60,7 @@ describe("authentication middleware tests", () => {
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
   });
 
-  it("should set return url to objecting entity name page", () => {
+  it("should set return url to objecting entity name page if the objector journey feature flag is false", () => {
     dummyReq.originalUrl = OBJECTIONS_ENTER_INFORMATION;
     authenticationMiddleware(dummyReq, dummyRes, dummyNext);
 
@@ -67,6 +71,20 @@ describe("authentication middleware tests", () => {
 
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
   });
+
+  it("should set return url to objector organisation page if the objector journey feature flag is true", () => {
+    dummyReq.originalUrl = OBJECTIONS_ENTER_INFORMATION;
+    dummyReq.app.locals.objectorJourneyFeatureFlag = OBJECTIONS_OBJECTOR_ORGANISATION;
+    authenticationMiddleware(dummyReq, dummyRes, dummyNext);
+
+    const expectedConfig = {
+      accountWebUrl: "",
+      returnUrl: OBJECTIONS_OBJECTOR_ORGANISATION,
+    };
+
+    expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
+  });
+
 
   it("should not redirect to signin if loading accessibility statement page", () => {
 

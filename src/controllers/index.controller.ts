@@ -1,7 +1,6 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { Request, Response } from "express";
 import { OBJECTIONS_SESSION_NAME } from "../constants";
-import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import logger from "../utils/logger";
 
@@ -16,7 +15,5 @@ export const post = (req: Request, res: Response) => {
     session.deleteExtraData(OBJECTIONS_SESSION_NAME);
   }
 
-  const redirectUrl = (req.app.locals.showObjectorJourney) ? OBJECTIONS_OBJECTOR_ORGANISATION : OBJECTIONS_OBJECTING_ENTITY_NAME;
-  
-  return res.redirect(redirectUrl);
+  return res.redirect(req.app.locals.objectorJourneyFeatureFlag);
 };

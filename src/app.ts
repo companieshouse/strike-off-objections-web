@@ -31,7 +31,10 @@ env.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
 
-app.locals.showObjectorJourney = isActiveFeature(process.env.OBJECTOR_JOURNEY_FEATURE_FLAG);
+// Feature flag for objector journey
+app.locals.objectorJourneyFeatureFlag = isActiveFeature(process.env.OBJECTOR_JOURNEY_FEATURE_FLAG)
+  ? pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION 
+  : pageURLs.OBJECTIONS_OBJECTING_ENTITY_NAME;
 
 app.enable("trust proxy");
 app.use(express.json());
