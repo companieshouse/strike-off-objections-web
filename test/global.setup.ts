@@ -8,4 +8,5 @@ export default () => {
   process.env.INTERNAL_API_URL = "http://localhost:9333";
   process.env.MAX_FILE_SIZE_BYTES = "10";
   process.env.DOWNLOAD_FILENAME_PREFIX = "CH_SO_OBJ_";
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
 };
