@@ -20,6 +20,21 @@ import ObjectionCompanyProfile from "../model/objection.company.profile";
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
 
+const TEXTS_FIELD = {
+  "myself-or-company": {
+    textFullName: "Tell us your name, or the name of the company you work for",
+    textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
+  },
+  client: {
+    textFullName: "What is the name of your organisation?",
+    textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
+  },
+  generic: {
+    textFullName: "What is your full name or the name of your organisation?",
+    textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
+  },
+};
+
 const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
   check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
@@ -41,6 +56,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
+    ...TEXTS_FIELD.generic
   });
 };
 
@@ -54,6 +70,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
+        ...TEXTS_FIELD.generic
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -154,5 +171,6 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
+    ...TEXTS_FIELD.generic
   });
 };
