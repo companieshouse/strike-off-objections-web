@@ -14,7 +14,11 @@ import { Session } from "@companieshouse/node-session-handler";
 import { Templates } from "../model/template.paths";
 import { getObjection, updateObjectionUserDetails } from "../services/objection.service";
 import logger from "../utils/logger";
-import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE, SESSION_OBJECTION_ID } from "../constants";
+import {
+  CHANGE_ANSWER_KEY,
+  SESSION_OBJECTION_CREATE,
+  SESSION_OBJECTION_ID,
+  SESSION_OBJECTOR } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 
 const FULL_NAME_FIELD = "fullName";
@@ -25,11 +29,11 @@ const TEXTS_FIELD = {
     textFullName: "Tell us your name, or the name of the company you work for",
     textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
   },
-  client: {
+  "client": {
     textFullName: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
   },
-  generic: {
+  "generic": {
     textFullName: "What is your full name or the name of your organisation?",
     textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
   },
@@ -45,6 +49,8 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
+  const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || "generic";
+
   if (objectionCreate) {
     existingName = objectionCreate.full_name;
     const existingSharedIdentity = objectionCreate.share_identity;
@@ -56,8 +62,9 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
-    ...TEXTS_FIELD.generic
+    ...TEXTS_FIELD[objectorOrganisation]
   });
+
 };
 
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
@@ -65,12 +72,14 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.full_name;
     const existingShareIdentity: boolean = objection.created_by.share_identity;
+    const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || "generic";
+
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
-        ...TEXTS_FIELD.generic
+        ...TEXTS_FIELD[objectorOrganisation]
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -89,6 +98,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
  */
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined = req.session as Session;
+
   if (session) {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
       return await showPageWithMongoData(session, res, next);
@@ -96,6 +106,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return showPageWithSessionDataIfPresent(session, res);
     }
   }
+
   return next(new Error("No Session present"));
 };
 
@@ -164,6 +175,8 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     });
 
   const fullNameValue: string = req.body.fullName;
+  const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || "generic";
+
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,
     isYesChecked: req.body.shareIdentity === "yes",
@@ -171,6 +184,6 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
-    ...TEXTS_FIELD.generic
+    ...TEXTS_FIELD[objectorOrganisation]
   });
 };
