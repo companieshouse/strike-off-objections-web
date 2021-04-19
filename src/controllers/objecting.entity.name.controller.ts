@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { check, Result, ValidationError, validationResult } from "express-validator";
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
-import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
+import {
+  OBJECTIONS_CHECK_YOUR_ANSWERS,
+  OBJECTIONS_COMPANY_NUMBER,
+  OBJECTIONS_OBJECTOR_ORGANISATION,
+  STRIKE_OFF_OBJECTIONS } from "../model/page.urls";
 import {
   addObjectionCreateToObjectionSession,
   retrieveAccessTokenFromSession,
@@ -24,18 +28,21 @@ import ObjectionCompanyProfile from "../model/objection.company.profile";
 const FULL_NAME_FIELD = "fullName";
 const DIVULGE_INFO_FIELD = "shareIdentity";
 
-const TEXTS_FIELD = {
+const OBJECTOR_FIELDS = {
   "myself-or-company": {
     textFullName: "Tell us your name, or the name of the company you work for",
     textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
+    backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   "client": {
     textFullName: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
+    backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   "generic": {
     textFullName: "What is your full name or the name of your organisation?",
     textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
+    backLink: STRIKE_OFF_OBJECTIONS
   },
 };
 
@@ -62,7 +69,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
-    ...TEXTS_FIELD[objectorOrganisation]
+    ...OBJECTOR_FIELDS[objectorOrganisation]
   });
 
 };
@@ -79,7 +86,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
-        ...TEXTS_FIELD[objectorOrganisation]
+        ...OBJECTOR_FIELDS[objectorOrganisation]
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -184,6 +191,6 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
-    ...TEXTS_FIELD[objectorOrganisation]
+    ...OBJECTOR_FIELDS[objectorOrganisation]
   });
 };
