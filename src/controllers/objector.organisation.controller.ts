@@ -9,8 +9,21 @@ import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
 import logger from "../utils/logger";
-import { addToObjectionSession } from "../services/objection.session.service";
+import { addToObjectionSession, retrieveFromObjectionSession } from "../services/objection.session.service";
 import { SESSION_OBJECTOR } from "../constants";
+
+export const get = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR);
+    res.render(Templates.OBJECTOR_ORGANISATION_PAGE, {
+      isMyselfOrCompanyChecked: objectorOrganisation === "myself-or-company",
+      isClientChecked: objectorOrganisation === "client"
+    });
+  } catch (e) {
+    logger.error(e.message);
+    return next(e);
+  }
+};
 
 const postObjectorOrganisation = (req: Request, res: Response, next: NextFunction) => {
   try {
