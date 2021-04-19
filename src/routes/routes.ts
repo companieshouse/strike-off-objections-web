@@ -71,3 +71,5 @@ router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBIL
 
 router.get(pageURLs.OBJECTOR_ORGANISATION, renderTemplate(Templates.OBJECTOR_ORGANISATION_PAGE));
 router.post(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.post);
+
+router.get(pageURLs.SESSION_TIMEOUT, renderTemplate(Templates.SESSION_TIMEOUT));

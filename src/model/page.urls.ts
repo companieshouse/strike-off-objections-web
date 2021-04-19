@@ -27,6 +27,7 @@ export const CHANGE_ANSWERS: string = SEPARATOR + "change-answers";
 export const ERROR: string = SEPARATOR + Templates.ERROR;
 export const ACCESSIBILITY_STATEMENT: string = SEPARATOR + Templates.ACCESSIBILITY_STATEMENT;
 export const OBJECTOR_ORGANISATION: string = SEPARATOR + Templates.OBJECTOR_ORGANISATION_PAGE;
+export const SESSION_TIMEOUT: string = SEPARATOR + Templates.SESSION_TIMEOUT;
 
 /**
  * URLs for redirects will need to start with the application name

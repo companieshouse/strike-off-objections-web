@@ -9,4 +9,5 @@ export default () => {
   process.env.MAX_FILE_SIZE_BYTES = "10";
   process.env.DOWNLOAD_FILENAME_PREFIX = "CH_SO_OBJ_";
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
+  process.env.DEFAULT_SESSION_EXPIRATION = "3600";
 };

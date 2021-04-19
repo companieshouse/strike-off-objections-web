@@ -1,6 +1,6 @@
 import { SessionMiddleware, SessionStore } from "@companieshouse/node-session-handler";
 import Redis from "ioredis";
-import { CACHE_SERVER, COOKIE_DOMAIN, COOKIE_NAME, COOKIE_SECRET } from "../utils/properties";
+import { CACHE_SERVER, COOKIE_DOMAIN, COOKIE_NAME, COOKIE_SECRET, DEFAULT_SESSION_EXPIRATION } from "../utils/properties";
 
 const redis = new Redis(CACHE_SERVER);
 const sessionStore = new SessionStore(redis);
@@ -10,5 +10,5 @@ export const sessionMiddleware = SessionMiddleware({
   cookieName: COOKIE_NAME,
   cookieSecret: COOKIE_SECRET,
   cookieSecureFlag: undefined,
-  cookieTimeToLiveInSeconds: undefined,
+  cookieTimeToLiveInSeconds: parseInt(DEFAULT_SESSION_EXPIRATION, 10)
 }, sessionStore, true);

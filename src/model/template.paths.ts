@@ -19,5 +19,6 @@ export enum Templates {
   FILE_ERROR = "file-error",
   ACCESSIBILITY_STATEMENT = "accessibility-statement",
   ERROR_404 = "page-not-found",
-  OBJECTOR_ORGANISATION_PAGE = "objector-organisation"
+  OBJECTOR_ORGANISATION_PAGE = "objector-organisation",
+  SESSION_TIMEOUT = "session-timeout"
 }

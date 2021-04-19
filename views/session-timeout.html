@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  You are now signed out
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      You are now signed out
+    </h1>
+    <p class="govuk-body-m">For your security, we've signed you out because you have not used the service for 60 minutes.</p>
+    <p>We have not saved your information.</p>
+    <p>
+      <a href="/strike-off-objections">Start again</a>
+      to object to a company being struck off.
+    </p>
+  </div>
+</div>
+{% endblock %}

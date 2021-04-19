@@ -32,3 +32,5 @@ export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");
 export const MAX_FILE_SIZE_BYTES = getEnvironmentVariable("MAX_FILE_SIZE_BYTES");
 
 export const DOWNLOAD_FILENAME_PREFIX = getEnvironmentVariable("DOWNLOAD_FILENAME_PREFIX");
+
+export const DEFAULT_SESSION_EXPIRATION = getEnvironmentVariable("DEFAULT_SESSION_EXPIRATION");
