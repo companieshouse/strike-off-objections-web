@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { authMiddleware } from "@companieshouse/web-security-node";
-import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import * as pageURLs from "../model/page.urls";
 
 export const authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
@@ -8,7 +7,7 @@ export const authenticationMiddleware = (req: Request, res: Response, next: Next
     return next();
   }
 
-  const authMiddlewareConfig = getAuthMiddlewareConfig();
+  const authMiddlewareConfig = getAuthMiddlewareConfig(req.app.locals.objectorJourneyFeatureFlag);
 
   if (isADownloadUrl(req.originalUrl)) {
     authMiddlewareConfig.returnUrl = req.originalUrl;
@@ -17,10 +16,10 @@ export const authenticationMiddleware = (req: Request, res: Response, next: Next
   return authMiddleware(authMiddlewareConfig)(req, res, next);
 };
 
-const getAuthMiddlewareConfig = () => {
+const getAuthMiddlewareConfig = (objectorJourneyFeatureFlag) => {
   return {
     accountWebUrl: "",
-    returnUrl: OBJECTIONS_OBJECTING_ENTITY_NAME,
+    returnUrl: objectorJourneyFeatureFlag,
   };
 };
 
