@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { check, Result, ValidationError, validationResult } from "express-validator";
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
-import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
+import {
+  OBJECTIONS_CHECK_YOUR_ANSWERS,
+  OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
 import {
   addObjectionCreateToObjectionSession,
   retrieveAccessTokenFromSession,
@@ -14,15 +16,20 @@ import { Session } from "@companieshouse/node-session-handler";
 import { Templates } from "../model/template.paths";
 import { getObjection, updateObjectionUserDetails } from "../services/objection.service";
 import logger from "../utils/logger";
-import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_CREATE, SESSION_OBJECTION_ID } from "../constants";
+import {
+  CHANGE_ANSWER_KEY,
+  SHARE_IDENTITY_FIELD,
+  FULL_NAME_FIELD,
+  GENERIC_INFO,
+  OBJECTOR_FIELDS,
+  SESSION_OBJECTION_CREATE,
+  SESSION_OBJECTION_ID,
+  SESSION_OBJECTOR } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
-
-const FULL_NAME_FIELD = "fullName";
-const DIVULGE_INFO_FIELD = "shareIdentity";
 
 const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
-  check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
+  check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
 const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
@@ -30,6 +37,8 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
+  const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+
   if (objectionCreate) {
     existingName = objectionCreate.full_name;
     const existingSharedIdentity = objectionCreate.share_identity;
@@ -41,7 +50,9 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
+    ...OBJECTOR_FIELDS[objectorOrganisation]
   });
+
 };
 
 const showPageWithMongoData = async (session: Session, res: Response, next: NextFunction) => {
@@ -49,11 +60,14 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.full_name;
     const existingShareIdentity: boolean = objection.created_by.share_identity;
+    const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
+        ...OBJECTOR_FIELDS[objectorOrganisation]
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -72,6 +86,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
  */
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session | undefined = req.session as Session;
+
   if (session) {
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
       return await showPageWithMongoData(session, res, next);
@@ -79,6 +94,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return showPageWithSessionDataIfPresent(session, res);
     }
   }
+
   return next(new Error("No Session present"));
 };
 
@@ -139,7 +155,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
           case FULL_NAME_FIELD:
             objectingEntityNameErr = govUkErrorData;
             break;
-          case DIVULGE_INFO_FIELD:
+          case SHARE_IDENTITY_FIELD:
             shareIdentityErr = govUkErrorData;
             break;
       }
@@ -147,6 +163,8 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     });
 
   const fullNameValue: string = req.body.fullName;
+  const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || GENERIC_INFO;
+
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,
     isYesChecked: req.body.shareIdentity === "yes",
@@ -154,5 +172,6 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
+    ...OBJECTOR_FIELDS[objectorOrganisation]
   });
 };

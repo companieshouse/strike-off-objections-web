@@ -8,7 +8,7 @@
 
 {% block backLink %}
   {{ govukBackLink({
-    href: "/strike-off-objections",
+    href: backLink,
     text: "Back"
   }) }}
 {% endblock %}
@@ -25,12 +25,9 @@
       <form method="post">
         {{ govukInput({
           label: {
-            text: "What is your full name or the name of your organisation?",
+            text: textFullName,
             isPageHeading: true,
-            classes: "govuk-label--xl"
-          },
-          hint: {
-            text: "If you are making an application to object on behalf of someone else, enter your own full name or the name of your organisation."
+            classes: "govuk-label--l"
           },
           id: "fullName",
           name: "fullName",
@@ -44,7 +41,7 @@
           name: "shareIdentity",
           fieldset: {
             legend: {
-              text: "Can we share your name and email address with the company if they request that information?",
+              text: textSharedIdentity,
               isPageHeading: false,
               classes: "govuk-fieldset__legend--m"
             }

@@ -69,5 +69,5 @@ router.get(pageURLs.CHANGE_ANSWERS, changeAnswersRoute.get);
 
 router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBILITY_STATEMENT));
 
-router.get(pageURLs.OBJECTOR_ORGANISATION, renderTemplate(Templates.OBJECTOR_ORGANISATION_PAGE));
+router.get(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.get);
 router.post(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.post);
