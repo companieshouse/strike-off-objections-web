@@ -14,10 +14,10 @@ import { SESSION_OBJECTOR } from "../constants";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR);
+    const objectorOrganisationField = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR);
     res.render(Templates.OBJECTOR_ORGANISATION_PAGE, {
-      isMyselfOrCompanyChecked: objectorOrganisation === "myself-or-company",
-      isClientChecked: objectorOrganisation === "client"
+      isMyselfOrCompanyChecked: objectorOrganisationField === "myself-or-company",
+      isClientChecked: objectorOrganisationField === "client"
     });
   } catch (e) {
     logger.error(e.message);
