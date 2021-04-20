@@ -18,7 +18,7 @@ import { getObjection, updateObjectionUserDetails } from "../services/objection.
 import logger from "../utils/logger";
 import {
   CHANGE_ANSWER_KEY,
-  DIVULGE_INFO_FIELD,
+  SHARE_IDENTITY_FIELD,
   FULL_NAME_FIELD,
   GENERIC_INFO,
   OBJECTOR_FIELDS,
@@ -29,7 +29,7 @@ import ObjectionCompanyProfile from "../model/objection.company.profile";
 
 const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
-  check(DIVULGE_INFO_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
+  check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
 const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
@@ -155,7 +155,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
           case FULL_NAME_FIELD:
             objectingEntityNameErr = govUkErrorData;
             break;
-          case DIVULGE_INFO_FIELD:
+          case SHARE_IDENTITY_FIELD:
             shareIdentityErr = govUkErrorData;
             break;
       }

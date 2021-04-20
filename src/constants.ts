@@ -12,7 +12,7 @@ export const CHANGE_ANSWER_KEY = "change";
 
 
 export const FULL_NAME_FIELD = "fullName";
-export const DIVULGE_INFO_FIELD = "shareIdentity";
+export const SHARE_IDENTITY_FIELD = "shareIdentity";
 export const GENERIC_INFO = "generic";
 export const OBJECTOR_FIELDS = {
   "myself-or-company": {
