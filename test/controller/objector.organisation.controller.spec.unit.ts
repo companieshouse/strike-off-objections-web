@@ -10,7 +10,7 @@ import request from "supertest";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTOR } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
