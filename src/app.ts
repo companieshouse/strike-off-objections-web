@@ -13,6 +13,7 @@ import { ErrorMessages } from "./model/error.messages";
 import * as pageURLs from "./model/page.urls";
 import { router } from "./routes/routes";
 import logger from "./utils/logger";
+import { sessionTimeout } from "./controllers/session.timeout.controller";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionTimeout);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*(?<!download)$`, objectionSessionMiddleware);
 // apply our default router to /
