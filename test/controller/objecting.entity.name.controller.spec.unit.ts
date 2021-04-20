@@ -75,7 +75,7 @@ describe("objecting entity name tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -92,7 +92,7 @@ describe("objecting entity name tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -109,7 +109,7 @@ describe("objecting entity name tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -126,7 +126,7 @@ describe("objecting entity name tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
@@ -146,7 +146,7 @@ describe("objecting entity name tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
     expect(response.text).toContain("What is your full name");
     expect(response.text).toContain(FULL_NAME);
@@ -382,7 +382,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 
@@ -402,7 +402,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(500);
     expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 });

@@ -2,6 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/middleware/objection.session.middleware");
+jest.mock("../../src/services/objection.session.service");
 
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
@@ -18,10 +19,12 @@ import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } fr
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 import { objectorOrganisation } from "../../src/validation";
+import { addToObjectionSession } from "../../src/services/objection.session.service";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
+const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 
 describe('objector organisation controller tests', () => {
   beforeEach(() => {
@@ -43,6 +46,8 @@ describe('objector organisation controller tests', () => {
   });
 
   it('should render objecting entity name page when option selected', async () => {
+    mockSetObjectionSessionValue.mockReset();
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTOR_ORGANISATION)
       .set("Referer", "/")
