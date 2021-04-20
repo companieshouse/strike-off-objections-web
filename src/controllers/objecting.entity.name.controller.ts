@@ -4,9 +4,7 @@ import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
-  OBJECTIONS_COMPANY_NUMBER,
-  OBJECTIONS_OBJECTOR_ORGANISATION,
-  STRIKE_OFF_OBJECTIONS } from "../model/page.urls";
+  OBJECTIONS_COMPANY_NUMBER } from "../model/page.urls";
 import {
   addObjectionCreateToObjectionSession,
   retrieveAccessTokenFromSession,
@@ -20,31 +18,14 @@ import { getObjection, updateObjectionUserDetails } from "../services/objection.
 import logger from "../utils/logger";
 import {
   CHANGE_ANSWER_KEY,
+  DIVULGE_INFO_FIELD,
+  FULL_NAME_FIELD,
+  GENERIC_INFO,
+  OBJECTOR_FIELDS,
   SESSION_OBJECTION_CREATE,
   SESSION_OBJECTION_ID,
   SESSION_OBJECTOR } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
-
-const FULL_NAME_FIELD = "fullName";
-const DIVULGE_INFO_FIELD = "shareIdentity";
-
-const OBJECTOR_FIELDS = {
-  "myself-or-company": {
-    textFullName: "Tell us your name, or the name of the company you work for",
-    textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
-    backLink: OBJECTIONS_OBJECTOR_ORGANISATION
-  },
-  "client": {
-    textFullName: "What is the name of your organisation?",
-    textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
-    backLink: OBJECTIONS_OBJECTOR_ORGANISATION
-  },
-  "generic": {
-    textFullName: "What is your full name or the name of your organisation?",
-    textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
-    backLink: STRIKE_OFF_OBJECTIONS
-  },
-};
 
 const validators = [
   check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
@@ -56,7 +37,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
-  const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || "generic";
+  const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
 
   if (objectionCreate) {
     existingName = objectionCreate.full_name;
@@ -79,7 +60,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.full_name;
     const existingShareIdentity: boolean = objection.created_by.share_identity;
-    const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || "generic";
+    const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
 
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
@@ -182,7 +163,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     });
 
   const fullNameValue: string = req.body.fullName;
-  const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || "generic";
+  const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || GENERIC_INFO;
 
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,
