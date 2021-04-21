@@ -16,17 +16,17 @@ export const SHARE_IDENTITY_FIELD = "shareIdentity";
 export const GENERIC_INFO = "generic";
 export const OBJECTOR_FIELDS = {
   "myself-or-company": {
-    textFullName: "Tell us your name, or the name of the company you work for",
+    objectingEntityNamePageText: "Tell us your name, or the name of the company you work for",
     textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   "client": {
-    textFullName: "What is the name of your organisation?",
+    objectingEntityNamePageText: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   [GENERIC_INFO]: {
-    textFullName: "What is your full name or the name of your organisation?",
+    objectingEntityNamePageText: "What is your full name or the name of your organisation?",
     textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
     backLink: STRIKE_OFF_OBJECTIONS
   },
