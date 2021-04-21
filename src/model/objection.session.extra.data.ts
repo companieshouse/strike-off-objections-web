@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {
   SESSION_COMPANY_PROFILE,
   SESSION_OBJECTION_CREATE,
