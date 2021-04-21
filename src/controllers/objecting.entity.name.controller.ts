@@ -37,7 +37,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
-  const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+  const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
 
   if (objectionCreate) {
     existingName = objectionCreate.full_name;
@@ -50,7 +50,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
     fullNameValue: existingName,
     isYesChecked: yesChecked,
     isNoChecked: noChecked,
-    ...OBJECTOR_FIELDS[objectorOrganisation]
+    ...OBJECTOR_FIELDS[objectorOrganisationValue]
   });
 
 };
@@ -60,14 +60,14 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.full_name;
     const existingShareIdentity: boolean = objection.created_by.share_identity;
-    const objectorOrganisation = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+    const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
 
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
         fullNameValue: existingName,
         isYesChecked: existingShareIdentity,
         isNoChecked: !existingShareIdentity,
-        ...OBJECTOR_FIELDS[objectorOrganisation]
+        ...OBJECTOR_FIELDS[objectorOrganisationValue]
       });
     } else {
       return next(new Error("Existing data not present"));
@@ -122,11 +122,19 @@ export const post = [...validators, async (req: Request, res: Response, next: Ne
   if (!errors.isEmpty()) {
     return showErrorsOnScreen(errors, req, res);
   }
+
+  const session: Session | undefined  = req.session as Session;
+
   const fullNameValue: string = req.body.fullName;
   const shareIdentityValue: boolean = req.body.shareIdentity === "yes";
   const objectionCreate: ObjectionCreate = { share_identity: shareIdentityValue, full_name: fullNameValue };
-  const session: Session | undefined  = req.session;
+  const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR);
+
   if (session) {
+    if (objectorOrganisationValue) {
+      objectionCreate[SESSION_OBJECTOR] = objectorOrganisationValue;
+    }
+
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
       try {
         await updateMongoWithChangedUserDetails(session, objectionCreate);
@@ -163,7 +171,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     });
 
   const fullNameValue: string = req.body.fullName;
-  const objectorOrganisation = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || GENERIC_INFO;
+  const objectorOrganisationValue = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || GENERIC_INFO;
 
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,
@@ -172,6 +180,6 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     shareIdentityErr,
     errorList: errorListData,
     objectingEntityNameErr,
-    ...OBJECTOR_FIELDS[objectorOrganisation]
+    ...OBJECTOR_FIELDS[objectorOrganisationValue]
   });
 };
