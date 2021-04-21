@@ -213,7 +213,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
@@ -233,7 +233,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(1);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
@@ -319,6 +319,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveCompanyProfileFromSession.mockReset();
     mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
     mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined); // tbc
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
@@ -333,7 +334,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_CHECK_YOUR_ANSWERS);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
   });
@@ -344,6 +345,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveCompanyProfileFromSession.mockReset();
     mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
     mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
@@ -360,7 +362,7 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(500);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
     expect(mockUpdateObjectionUserDetails).toThrow(Error("Test"));
