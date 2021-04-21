@@ -6,7 +6,11 @@ import {
   retrieveUserEmailFromSession,
 } from "../../src/services/objection.session.service";
 import { ObjectionCreate } from "../../src/modules/sdk/objections";
-import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import {
+  CHANGE_ANSWER_KEY,
+  OBJECTIONS_SESSION_NAME,
+  SESSION_OBJECTION_CREATE,
+  SESSION_OBJECTOR } from "../../src/constants";
 
 const accessTokenValue = "tokenABC123";
 const testEmail = "demo@ch.gov.uk";
@@ -130,6 +134,20 @@ describe ("objections session service tests", () => {
 
     deleteFromObjectionSession(session, CHANGE_ANSWER_KEY);
     expect(session.data.extra_data[OBJECTIONS_SESSION_NAME][CHANGE_ANSWER_KEY]).toBeFalsy();
+  });
+
+  it("should retrieve objection create when present and verify objector", () => {
+    const objectorValue =  "client";
+    const session: Session = new Session();
+    const dummyFullObjectionCreate = { ... dummyObjectionCreate, [SESSION_OBJECTOR]: objectorValue };
+
+    session.data.extra_data[OBJECTIONS_SESSION_NAME] = {};
+
+    addObjectionCreateToObjectionSession(session, dummyFullObjectionCreate);
+
+    const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
+    expect(objectionCreate).not.toBeUndefined();
+    expect(objectionCreate[SESSION_OBJECTOR]).toEqual(objectorValue);
   });
 });
 

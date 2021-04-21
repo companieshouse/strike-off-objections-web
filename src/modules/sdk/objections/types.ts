@@ -49,6 +49,7 @@ export interface CompanyEligibility {
  * @interface
  */
 export interface ObjectionCreate {
+  objector?: string;
   full_name: string;
   share_identity: boolean;
 }
@@ -58,6 +59,7 @@ export interface ObjectionCreate {
  * @interface
  */
 export interface ObjectionPatch {
+  objector?: string;
   full_name?: string;
   share_identity?: boolean;
   reason?: string;
@@ -86,6 +88,7 @@ export interface Objection {
 }
 
 export interface CreatedBy {
+  objector?: string,
   full_name: string,
   share_identity: boolean
 }
