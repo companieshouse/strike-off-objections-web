@@ -3,7 +3,7 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Your full name or the name of your organisation
+  {{ objectingEntityNamePageText }}
 {% endblock %}
 
 {% block backLink %}
@@ -25,7 +25,7 @@
       <form method="post">
         {{ govukInput({
           label: {
-            text: textFullName,
+            text: objectingEntityNamePageText,
             isPageHeading: true,
             classes: "govuk-label--l"
           },
