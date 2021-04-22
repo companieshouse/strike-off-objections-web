@@ -5,7 +5,7 @@ import { Templates } from "../model/template.paths";
 import logger from "../utils/logger";
 
 export const get = (req: Request, res: Response) => {
-  return res.render(Templates.INDEX);
+  return res.render(Templates.INDEX, { templateName: Templates.INDEX });
 };
 
 export const post = (req: Request, res: Response) => {

@@ -9,7 +9,7 @@ import { ErrorMessages } from "../model/error.messages";
  */
 const notFoundHandler = (req: Request, res: Response) => {
   logger.error(ErrorMessages.ERROR_404 + `${req.path}`);
-  return res.status(404).render(Templates.ERROR_404);
+  return res.status(404).render(Templates.ERROR_404, { templateName: Templates.ERROR_404 });
 };
 
 /**
@@ -18,7 +18,7 @@ const notFoundHandler = (req: Request, res: Response) => {
  */
 const errorHandler = (err, req: Request, res: Response, _next: NextFunction) => {
   logger.errorRequest(req, "An error has occurred. Re-routing to the error screen - " + err.stack);
-  res.status(err.status || 500).render(Templates.ERROR);
+  res.status(err.status || 500).render(Templates.ERROR, { templateName: Templates.ERROR });
 };
 
 export default [notFoundHandler, errorHandler];

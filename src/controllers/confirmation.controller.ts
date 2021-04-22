@@ -22,6 +22,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.CONFIRMATION, {
       email,
       objectionId,
+      templateName: Templates.CONFIRMATION
     });
   } else {
     return next(new Error("No Session present"));
