@@ -32,7 +32,7 @@ const postObjectorOrganisation = (req: Request, res: Response, next: NextFunctio
 
     if (errors.isEmpty()) {
       addToObjectionSession(req.session as Session, SESSION_OBJECTOR, req.body["objector-organisation"]);
-      return res.redirect(OBJECTIONS_OBJECTING_ENTITY_NAME), { templateName: Templates.OBJECTOR_ORGANISATION_PAGE };
+      return res.redirect(OBJECTIONS_OBJECTING_ENTITY_NAME);
     }
 
     const selectObjectorOrganisation: GovUkErrorData = objectorOrganisation.createErrorData(errors);
