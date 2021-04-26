@@ -12,5 +12,6 @@ export const get = (req: Request, res: Response) => {
 
   return res.render(Templates.NO_STRIKE_OFF, {
     companyName,
+    templateName: Templates.NO_STRIKE_OFF
   });
 };

@@ -54,6 +54,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return res.render(Templates.CONFIRM_COMPANY, {
         company,
         latestGaz1Date,
+        templateName: Templates.CONFIRM_COMPANY
       });
     } catch (e) {
       logger.errorRequest(req, "Error retrieving company profile from session");

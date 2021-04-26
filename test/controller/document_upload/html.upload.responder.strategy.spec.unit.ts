@@ -59,6 +59,7 @@ describe("html upload responder tests", () => {
       attachments,
       documentUploadErr: errorData,
       errorList: [errorData],
+      templateName: Templates.DOCUMENT_UPLOAD
     });
   });
 });

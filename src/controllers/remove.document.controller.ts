@@ -29,6 +29,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.REMOVE_DOCUMENT, {
       attachmentId,
       fileName: attachment.name,
+      templateName: Templates.REMOVE_DOCUMENT
     });
   } catch (e) {
     logger.errorRequest(req, e.message);
@@ -77,5 +78,6 @@ const showErrorsOnScreen = async (errors: Result, req: Request, res: Response) =
     errorList: [removeDocumentError],
     fileName: attachment.name,
     removeDocumentError,
+    templateName: Templates.REMOVE_DOCUMENT
   });
 };

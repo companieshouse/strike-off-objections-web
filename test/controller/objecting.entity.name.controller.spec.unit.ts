@@ -237,7 +237,7 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
-  
+
   it("should render company number page when posting entered details and objector value, change answers flag is false", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce("client");
