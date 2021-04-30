@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  {% if errorList.length > 0 %}
-    Error:
-  {% endif %}
   Tell us why you're objecting to the company being struck off
 {% endblock %}
 
@@ -17,50 +14,49 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {% if errorList.length > 0 %}
-        {{ govukErrorSummary({
-          titleText: "ERROR_SUMMARY_TITLE",
-          errorList: errorList
-        }) }}
-      {% endif %}
-
-      {% set titleHTML %}
-      <h1 class="govuk-heading-xl">Tell us why you're objecting to the company being struck off</h1>
-      {% endset %}
-
-      <form method="post">
-
-        {% if errInformation.flag %}
-          {% set informationError = {
-            text: errInformation.text
-          } %}
-        {% else %}
-          {% set informationError = false %}
+     
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: ERROR_SUMMARY_TITLE,
+            errorList: errorList
+          }) }}
         {% endif %}
 
-        {{ govukTextarea({
-          name: "information",
-          id: "information",
-          classes: "govuk-body",
-          value: information,
-          hint: {
-            text: "Include any information that supports your objection application. You can upload documents on the next screen."
-          },
-          errorMessage: informationError,
-          rows: '8',
-          label: {
-            text: "Tell us why you're objecting to the company being struck off",
-            isPageHeading: true,
-            classes: 'govuk-label--xl'
-          }
-        }) }}
+        {% set titleHTML %}
+        <h1 class="govuk-heading-xl">Tell us why you're objecting to the company being struck off</h1>
+        {% endset %}
+        <form method="post">
+          {% if errInformation.flag %}
+            {% set enterInformationErrorMessage = {
+              text: errInformation.text
+            } %}
+          {% else %}
+            {% set enterInformationErrorMessage = false %}
+          {% endif %}
 
-        {{ govukButton({
-          text: "Continue",
-          attributes: {
-            id: "submit"
-          }
-        }) }}
+          {{ govukTextarea({
+            name: "information",
+            id: "information",
+            classes: "govuk-body",
+            value: information,
+            hint: {
+              text: "Include any information that supports your objection application. You can upload documents on the next screen."
+            },
+            errorMessage: enterObjectionInformationDetails,
+            rows: '8',
+            label: {
+              text: "Tell us why you're objecting to the company being struck off",
+              isPageHeading: true,
+              classes: 'govuk-label--xl'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              id: "submit"
+            }
+          }) }}
       </form>
     </div>
   </div>
