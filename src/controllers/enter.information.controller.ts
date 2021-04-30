@@ -1,5 +1,6 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
 import ObjectionCompanyProfile from "model/objection.company.profile";
 import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
@@ -33,7 +34,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const reason: string = removeNonPrintableChars(req.body.information);
 
-    await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+      await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+    }
+
   } catch (e) {
     return next(e);
   }

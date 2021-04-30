@@ -18,6 +18,7 @@ export enum ErrorMessages {
   SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
   SELECT_TO_REMOVE = "You must tell us if you want to remove the document",
   SELECT_OBJECTOR_ORGANISATION = "Select if you are objecting on behalf of yourself or a client",
+  REASON_TEXT_BOX_EMPTY = "Enter a reason for your objection",
 }
 
 export enum HttpStatusCodes {
