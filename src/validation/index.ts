@@ -7,7 +7,7 @@ import { OBJECTOR_ORGANISATION, ENTER_INFORMATION } from "../constants";
 
 export const validators = {
   [OBJECTOR_ORGANISATION]: [check(OBJECTOR_ORGANISATION).not().isEmpty().withMessage(ErrorMessages.SELECT_OBJECTOR_ORGANISATION)],
-  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty().withMessage(ErrorMessages.ERROR_TEXT_BOX_EMPTY)],
+  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty().withMessage(ErrorMessages.EMPTY_REASON)],
 };
 
 export const createErrorData = (errors: Result, id: string) => {

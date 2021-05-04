@@ -92,7 +92,7 @@ describe("enter information tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ERROR_TEXT_BOX_EMPTY);
+    expect(response.text).toContain(ErrorMessages.EMPTY_REASON);
   });
 
   it("should render the page with existing information when present", async () => {
