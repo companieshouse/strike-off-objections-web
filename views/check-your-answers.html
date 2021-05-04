@@ -25,55 +25,43 @@
         Your details
       </h2>
 
-      {# Note that empty actions are added to the non-changeable rows below, to ensure that a `<span>` element isn't added to the list which will violate accessibility rules #}
-
-      {{ govukSummaryList({
-        rows: [
-          {
-            key: {
-              text: "Email address"
-            },
-            value: {
-              text: objection.created_by.email
-            }
-          },
-          {
-            key: {
-              text: "Name"
-            },
-            value: {
-              text: objection.created_by.full_name
-            },
-            actions: {
-              items: [
-                {
-                  href: "/strike-off-objections/change-answers?changePage=objecting-entity-name",
-                  text: "Change",
-                  visuallyHiddenText: "change name"
-                }
-              ]
-            }
-          },
-          {
-            key: {
-              text: "Share identity if company requests it?"
-            },
-            value: {
-              text: shareIdentity
-            },
-
-            actions: {
-              items: [
-                {
-                  href: "/strike-off-objections/change-answers?changePage=objecting-entity-name",
-                  text: "Change",
-                  visuallyHiddenText: "change share identity"
-                }
-              ]
-            }
-          }
-        ]
-      })}}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Email address
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ objection.created_by.email }}
+          </dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ objection.created_by.full_name }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name">
+              Change<span class="govuk-visually-hidden"> change name</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Share identity if company requests it?
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ shareIdentity }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name">
+              Change<span class="govuk-visually-hidden"> change share identity</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
 
       <h2 class="govuk-heading-m">
         Company details
