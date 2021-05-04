@@ -14,6 +14,7 @@ export enum ErrorMessages {
   ERROR_404 =  "Page not found",
   ERROR_500 = "An internal server error has occurred",
   ERROR_SUMMARY_TITLE = "There is a problem",
+  EMPTY_REASON = "Enter a reason for your objection",
   ENTER_NAME = "Enter your full name or organisation name",
   SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
   SELECT_TO_REMOVE = "You must tell us if you want to remove the document",

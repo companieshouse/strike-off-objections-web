@@ -1,7 +1,10 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
 import ObjectionCompanyProfile from "model/objection.company.profile";
-import { CHANGE_ANSWER_KEY, SESSION_OBJECTION_ID } from "../constants";
+import { CHANGE_ANSWER_KEY, ENTER_INFORMATION, SESSION_OBJECTION_ID } from "../constants";
+import { GovUkErrorData } from "model/govuk.error.data";
+import { createErrorData, validators } from "../validation";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import { Objection } from "../modules/sdk/objections";
@@ -23,9 +26,22 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const post = async (req: Request, res: Response, next: NextFunction) => {
+const postEnterInformation = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const informationError: GovUkErrorData = createErrorData(errors, ENTER_INFORMATION);
+
+      return res.render(Templates.ENTER_INFORMATION, {
+        errorList: [informationError],
+        informationError,
+        templateName: Templates.ENTER_INFORMATION
+      });
+
+    }
+
     const token: string = retrieveAccessTokenFromSession(session);
 
     const company: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
@@ -34,6 +50,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const reason: string = removeNonPrintableChars(req.body.information);
 
     await updateObjectionReason(company.companyNumber, objectionId, token, reason);
+
   } catch (e) {
     return next(e);
   }
@@ -45,6 +62,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return res.redirect(OBJECTIONS_DOCUMENT_UPLOAD);
   }
 };
+
+export const post = [...validators[ENTER_INFORMATION], postEnterInformation];
 
 const renderPageWithSessionDataIfPresent = async (req: Request, res: Response) => {
   const objection: Objection = await getObjectionFromSession(req);
