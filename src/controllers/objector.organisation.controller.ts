@@ -4,20 +4,25 @@ import { GovUkErrorData } from "model/govuk.error.data";
 
 import { Session } from "@companieshouse/node-session-handler";
 
-import { objectorOrganisation } from "../validation";
+import { createErrorData, validators } from "../validation";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 
 import logger from "../utils/logger";
 import { addToObjectionSession, retrieveFromObjectionSession } from "../services/objection.session.service";
-import { SESSION_OBJECTOR } from "../constants";
+import {
+  OBJECTOR_ORGANISATION,
+  SESSION_OBJECTOR,
+  MYSELF_OR_COMPANY,
+  CLIENT
+} from "../constants";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
   try {
     const objectorOrganisationField = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR);
     res.render(Templates.OBJECTOR_ORGANISATION_PAGE, {
-      isMyselfOrCompanyChecked: objectorOrganisationField === "myself-or-company",
-      isClientChecked: objectorOrganisationField === "client",
+      isMyselfOrCompanyChecked: objectorOrganisationField === MYSELF_OR_COMPANY,
+      isClientChecked: objectorOrganisationField === CLIENT,
       templateName: Templates.OBJECTOR_ORGANISATION_PAGE
     });
   } catch (e) {
@@ -31,11 +36,11 @@ const postObjectorOrganisation = (req: Request, res: Response, next: NextFunctio
     const errors = validationResult(req);
 
     if (errors.isEmpty()) {
-      addToObjectionSession(req.session as Session, SESSION_OBJECTOR, req.body["objector-organisation"]);
+      addToObjectionSession(req.session as Session, SESSION_OBJECTOR, req.body[OBJECTOR_ORGANISATION]);
       return res.redirect(OBJECTIONS_OBJECTING_ENTITY_NAME);
     }
 
-    const selectObjectorOrganisation: GovUkErrorData = objectorOrganisation.createErrorData(errors);
+    const selectObjectorOrganisation: GovUkErrorData = createErrorData(errors, OBJECTOR_ORGANISATION);
 
     return res.render(Templates.OBJECTOR_ORGANISATION_PAGE, {
       errorList: [selectObjectorOrganisation],
@@ -49,4 +54,4 @@ const postObjectorOrganisation = (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const post = [...objectorOrganisation.validators, postObjectorOrganisation];
+export const post = [...validators[OBJECTOR_ORGANISATION], postObjectorOrganisation];

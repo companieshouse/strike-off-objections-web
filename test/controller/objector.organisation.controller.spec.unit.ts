@@ -18,7 +18,7 @@ import { ErrorMessages } from "../../src/model/error.messages";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-import { objectorOrganisation } from "../../src/validation";
+import * as objectorOrganisation from "../../src/validation";
 import { addToObjectionSession, retrieveFromObjectionSession } from "../../src/services/objection.session.service";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;

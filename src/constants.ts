@@ -13,14 +13,16 @@ export const CHANGE_ANSWER_KEY = "change";
 
 export const FULL_NAME_FIELD = "fullName";
 export const SHARE_IDENTITY_FIELD = "shareIdentity";
+export const MYSELF_OR_COMPANY = "myself-or-company";
+export const CLIENT = "client";
 export const GENERIC_INFO = "generic";
 export const OBJECTOR_FIELDS = {
-  "myself-or-company": {
+  [MYSELF_OR_COMPANY]: {
     objectingEntityNamePageText: "Tell us your name, or the name of the company you work for",
     textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
-  "client": {
+  [CLIENT]: {
     objectingEntityNamePageText: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
@@ -31,3 +33,5 @@ export const OBJECTOR_FIELDS = {
     backLink: STRIKE_OFF_OBJECTIONS
   },
 };
+export const OBJECTOR_ORGANISATION = "objector-organisation";
+export const ENTER_INFORMATION = "information";
