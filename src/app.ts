@@ -30,6 +30,7 @@ env.addGlobal("assetPath", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
+env.addGlobal("ERROR_TEXT_BOX_EMPTY", ErrorMessages.ERROR_TEXT_BOX_EMPTY);
 
 // Feature flag for objector journey
 app.locals.objectorJourneyFeatureFlag = isActiveFeature(process.env.OBJECTOR_JOURNEY_FEATURE_FLAG)
