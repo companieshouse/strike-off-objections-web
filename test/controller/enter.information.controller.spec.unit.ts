@@ -13,6 +13,7 @@ import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
+import { ErrorMessages } from "../../src/model/error.messages";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
@@ -77,6 +78,21 @@ describe("enter information tests", () => {
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Tell us why");
     expect(response.text).not.toContain(REASON);
+  });
+
+  it("should receive error messages when no information entered", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        information: ""
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ERROR_TEXT_BOX_EMPTY);
   });
 
   it("should render the page with existing information when present", async () => {
