@@ -95,6 +95,21 @@ describe("enter information tests", () => {
     expect(response.text).toContain(ErrorMessages.EMPTY_REASON);
   });
 
+  it("should receive error messages when only whitespace entered", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
+    const response = await request(app).post(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        information: " "
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.EMPTY_REASON);
+  });
+
   it("should render the page with existing information when present", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockGetObjection.mockReset().mockResolvedValueOnce(mockObjectionWithReason);

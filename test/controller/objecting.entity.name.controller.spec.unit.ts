@@ -270,6 +270,54 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(SELECT_TO_DIVULGE);
   });
 
+  it("should receive error message when whitespace is provided and no divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " "
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).toContain(SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error messages when only whitespace is provided but a yes divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " ",
+        shareIdentity: "yes"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"yes\" checked");
+    expect(response.text).not.toContain("value=\"no\" checked");
+  });
+
+  it("should receive error messages when only whitespace is provided but a no divulge option is selected", async () => {
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " ",
+        shareIdentity: "no"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ENTER_FULL_NAME);
+    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"no\" checked");
+    expect(response.text).not.toContain("value=\"yes\" checked");
+  });
+
   it("should receive error message when no name is provided but a yes divulge option is selected", async () => {
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
