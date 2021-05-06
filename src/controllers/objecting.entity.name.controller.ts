@@ -28,7 +28,7 @@ import {
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 
 const validators = [
-  check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
+  check(FULL_NAME_FIELD).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.ENTER_NAME),
   check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
 
