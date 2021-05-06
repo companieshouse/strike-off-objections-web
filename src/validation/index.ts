@@ -6,8 +6,8 @@ import { ErrorMessages } from "../model/error.messages";
 import { OBJECTOR_ORGANISATION, ENTER_INFORMATION } from "../constants";
 
 export const validators = {
-  [OBJECTOR_ORGANISATION]: [check(OBJECTOR_ORGANISATION).not().isEmpty().withMessage(ErrorMessages.SELECT_OBJECTOR_ORGANISATION)],
-  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty().withMessage(ErrorMessages.EMPTY_REASON)],
+  [OBJECTOR_ORGANISATION]: [check(OBJECTOR_ORGANISATION).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.SELECT_OBJECTOR_ORGANISATION)],
+  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.EMPTY_REASON)],
 };
 
 export const createErrorData = (errors: Result, id: string) => {
