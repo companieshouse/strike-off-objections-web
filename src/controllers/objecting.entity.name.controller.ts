@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, request, Request, Response } from "express";
 import { check, Result, ValidationError, validationResult } from "express-validator";
 import { ErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
@@ -24,13 +24,33 @@ import {
   OBJECTOR_FIELDS,
   SESSION_OBJECTION_CREATE,
   SESSION_OBJECTION_ID,
-  SESSION_OBJECTOR } from "../constants";
+  SESSION_OBJECTOR, 
+  MYSELF_OR_COMPANY,
+  CLIENT} from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 
 const validators = [
-  check(FULL_NAME_FIELD).not().isEmpty().withMessage(ErrorMessages.ENTER_NAME),
+  
+  check(FULL_NAME_FIELD).custom((session,{req}) => {
+    
+    const objectorOrganisationField = retrieveFromObjectionSession(req.session, SESSION_OBJECTOR) || GENERIC_INFO;
+    const noTextOrOnlyWhitespacesEntered = req.body.fullName.trim() === "";
+
+    if (objectorOrganisationField === MYSELF_OR_COMPANY && noTextOrOnlyWhitespacesEntered) {
+      throw Error(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    } else if(objectorOrganisationField === CLIENT && noTextOrOnlyWhitespacesEntered) {
+      throw(ErrorMessages.ENTER_ORGANISATION_NAME);
+    } else if (objectorOrganisationField === GENERIC_INFO && noTextOrOnlyWhitespacesEntered) {
+      throw Error(ErrorMessages.ENTER_NAME);
+    }
+
+    // From express-validator documentation: Indicates the success of this synchronous custom validator
+    return true;
+  }),
+
   check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
 ];
+
 
 const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let existingName;
