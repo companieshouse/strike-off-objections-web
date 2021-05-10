@@ -27,7 +27,7 @@ export const validators = {
       if (objectorOrganisationField === MYSELF_OR_COMPANY && noTextOrOnlyWhitespacesEntered) {
         throw Error(ErrorMessages.ENTER_NAME_OR_COMPANY);
       } else if (objectorOrganisationField === CLIENT && noTextOrOnlyWhitespacesEntered) {
-        throw (ErrorMessages.ENTER_ORGANISATION_NAME);
+        throw Error(ErrorMessages.ENTER_ORGANISATION_NAME);
       } else if (!value || (objectorOrganisationField === GENERIC_INFO && noTextOrOnlyWhitespacesEntered)) {
         throw Error(ErrorMessages.ENTER_NAME);
       }
