@@ -45,11 +45,11 @@ const ERROR_SCREEN_MESSAGE = "Sorry, there is a problem with the service";
 
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
-afterAll(() => {
-  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
-})
-
 describe("objecting entity name tests", () => {
+
+  afterAll(() => {
+    process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
+  })
 
   beforeEach(() => {
     mockSessionMiddleware.mockReset();
