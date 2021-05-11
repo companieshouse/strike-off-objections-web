@@ -35,3 +35,4 @@ export const OBJECTOR_FIELDS = {
 };
 export const OBJECTOR_ORGANISATION = "objector-organisation";
 export const ENTER_INFORMATION = "information";
+export const OBJECTING_ENTITY_NAME = "objectingEntityName";

@@ -16,7 +16,9 @@ export enum ErrorMessages {
   ERROR_SUMMARY_TITLE = "There is a problem",
   EMPTY_REASON = "Enter a reason for your objection",
   ENTER_NAME = "Enter your full name or organisation name",
-  SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information",
+  ENTER_NAME_OR_COMPANY = "Enter your name, or the name of the company you work for",
+  ENTER_ORGANISATION_NAME = "Enter the name of your organisation",
+  SELECT_TO_DIVULGE = "Select yes if we can share your details",
   SELECT_TO_REMOVE = "You must tell us if you want to remove the document",
   SELECT_OBJECTOR_ORGANISATION = "Select if you are objecting on behalf of yourself or a client",
 }

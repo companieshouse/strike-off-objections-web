@@ -13,7 +13,7 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
@@ -25,6 +25,7 @@ import {
 import { COOKIE_NAME } from "../../src/utils/properties";
 import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionUserDetails } from "../../src/services/objection.service";
+import { ErrorMessages } from "../../src/model/error.messages";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
@@ -37,8 +38,6 @@ const mockRetrieveCompanyProfileFromSession = retrieveCompanyProfileFromObjectio
 const mockUpdateObjectionUserDetails = updateObjectionUserDetails as jest.Mock;
 
 const FULL_NAME = "Bob Lawblaw";
-const ENTER_FULL_NAME = "Enter your full name";
-const SELECT_TO_DIVULGE = "Select if we can share your name and email address with the company if they request that information";
 const ERROR_500 = "Sorry, there is a problem with the service";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
@@ -47,6 +46,10 @@ const ERROR_SCREEN_MESSAGE = "Sorry, there is a problem with the service";
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 describe("objecting entity name tests", () => {
+
+  afterAll(() => {
+    process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
+  });
 
   beforeEach(() => {
     mockSessionMiddleware.mockReset();
@@ -213,7 +216,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
@@ -233,7 +236,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
@@ -254,7 +257,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
     expect(mockRetrieveAccessToken).not.toBeCalled();
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
@@ -266,8 +269,8 @@ describe("objecting entity name tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
   });
 
   it("should receive error message when whitespace is provided and no divulge option is selected", async () => {
@@ -280,8 +283,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
   });
 
   it("should receive error messages when only whitespace is provided but a yes divulge option is selected", async () => {
@@ -295,8 +298,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
     expect(response.text).not.toContain("value=\"no\" checked");
   });
@@ -312,8 +315,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
     expect(response.text).not.toContain("value=\"yes\" checked");
   });
@@ -328,8 +331,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
     expect(response.text).not.toContain("value=\"no\" checked");
   });
@@ -344,8 +347,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
     expect(response.text).not.toContain("value=\"yes\" checked");
   });
@@ -360,8 +363,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).not.toContain(ENTER_FULL_NAME);
-    expect(response.text).toContain(SELECT_TO_DIVULGE);
+    expect(response.text).not.toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain(FULL_NAME);
   });
 
@@ -389,6 +392,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
@@ -403,7 +407,7 @@ describe("objecting entity name tests", () => {
 
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_CHECK_YOUR_ANSWERS);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(4);
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
   });
@@ -415,6 +419,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
@@ -431,7 +436,7 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(500);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(4);
     expect(mockRetrieveAccessToken).toHaveBeenCalledTimes(1);
     expect(mockRetrieveCompanyProfileFromSession).toHaveBeenCalledTimes(1);
     expect(mockUpdateObjectionUserDetails).toThrow(Error("Test"));
@@ -476,6 +481,86 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
+});
+
+it("should receive error messages when no name or company name is entered when the feature flag is set to true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+});
+
+it("should receive error messages when no organisation name is entered when the feature flag is set to true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
+});
+
+it("should receive error messages when name or company name text field contains only whitespaces when the feature flag is set to true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "    ",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+});
+
+it("should receive error messages when organisation name text field contains only whitespaces when the feature flag is set to true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "    ",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
 });
 
 const mockObjection: Objection = {
