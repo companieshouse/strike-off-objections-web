@@ -15,8 +15,8 @@ import {
 import { retrieveFromObjectionSession } from "../services/objection.session.service";
 
 export const validators = {
-  [OBJECTOR_ORGANISATION]: [check(OBJECTOR_ORGANISATION).not().isEmpty().withMessage(ErrorMessages.SELECT_OBJECTOR_ORGANISATION)],
-  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty().withMessage(ErrorMessages.EMPTY_REASON)],
+  [OBJECTOR_ORGANISATION]: [check(OBJECTOR_ORGANISATION).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.SELECT_OBJECTOR_ORGANISATION)],
+  [ENTER_INFORMATION]: [check(ENTER_INFORMATION).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.EMPTY_REASON)],
   [OBJECTING_ENTITY_NAME]: [
     check(FULL_NAME_FIELD).custom((value, { req }) => {
 
@@ -33,7 +33,7 @@ export const validators = {
 
       return true;
     }),
-    check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
+    check(SHARE_IDENTITY_FIELD).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.SELECT_TO_DIVULGE),
   ]
 };
 

@@ -283,8 +283,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
   });
 
   it("should receive error messages when only whitespace is provided but a yes divulge option is selected", async () => {
@@ -298,8 +298,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
     expect(response.text).not.toContain("value=\"no\" checked");
   });
@@ -315,8 +315,8 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ENTER_FULL_NAME);
-    expect(response.text).not.toContain(SELECT_TO_DIVULGE);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
     expect(response.text).not.toContain("value=\"yes\" checked");
   });
