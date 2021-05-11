@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { check, Result, ValidationError } from "express-validator";
 
 import { createGovUkErrorData } from "../model/govuk.error.data";
