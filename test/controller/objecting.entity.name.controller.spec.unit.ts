@@ -13,7 +13,7 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { CLIENT, GENERIC_INFO, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
@@ -435,7 +435,7 @@ describe("objecting entity name tests", () => {
   });
 });
 
-it("should receive error messages when no company or organisation name is entered", async () => {
+it("should receive error messages when no company name is entered with feature flag true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
@@ -455,7 +455,27 @@ it("should receive error messages when no company or organisation name is entere
   expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY)
 });
 
-it("should receive error messages when company or organisation name contains only whitespaces", async () => {
+it("should receive error messages when no organisation name is entered with feature flag true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+  
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME)
+});
+
+it("should receive error messages when company name contains only whitespaces with feature flag true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
@@ -474,6 +494,27 @@ it("should receive error messages when company or organisation name contains onl
   expect(response.status).toEqual(200);
   expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
   expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY)
+});
+
+it("should receive error messages when organisation name contains only whitespaces with feature flag true", async () => {
+  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
+  mockRetrieveAccessToken.mockReset();
+  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+  mockRetrieveFromObjectionSession.mockReset();
+  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+  
+
+  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .send({
+      fullName: "    ",
+      shareIdentity: "yes"
+    });
+
+  expect(response.status).toEqual(200);
+  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME)
 });
 
 const mockObjection: Objection = {
