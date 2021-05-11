@@ -49,7 +49,7 @@ describe("objecting entity name tests", () => {
 
   afterAll(() => {
     process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
-  })
+  });
 
   beforeEach(() => {
     mockSessionMiddleware.mockReset();
@@ -441,7 +441,7 @@ it("should receive error messages when no company name is entered with feature f
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
   mockRetrieveFromObjectionSession.mockReset();
   mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
-  
+
   const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
     .set("Referer", "/")
     .set("Cookie", [`${COOKIE_NAME}=123`])
@@ -452,7 +452,7 @@ it("should receive error messages when no company name is entered with feature f
 
   expect(response.status).toEqual(200);
   expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY)
+  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
 });
 
 it("should receive error messages when no organisation name is entered with feature flag true", async () => {
@@ -461,7 +461,7 @@ it("should receive error messages when no organisation name is entered with feat
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
   mockRetrieveFromObjectionSession.mockReset();
   mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
-  
+
   const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
     .set("Referer", "/")
     .set("Cookie", [`${COOKIE_NAME}=123`])
@@ -472,7 +472,7 @@ it("should receive error messages when no organisation name is entered with feat
 
   expect(response.status).toEqual(200);
   expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME)
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
 });
 
 it("should receive error messages when company name contains only whitespaces with feature flag true", async () => {
@@ -481,7 +481,6 @@ it("should receive error messages when company name contains only whitespaces wi
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
   mockRetrieveFromObjectionSession.mockReset();
   mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
-  
 
   const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
     .set("Referer", "/")
@@ -493,7 +492,7 @@ it("should receive error messages when company name contains only whitespaces wi
 
   expect(response.status).toEqual(200);
   expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY)
+  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
 });
 
 it("should receive error messages when organisation name contains only whitespaces with feature flag true", async () => {
@@ -502,7 +501,6 @@ it("should receive error messages when organisation name contains only whitespac
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
   mockRetrieveFromObjectionSession.mockReset();
   mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
-  
 
   const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
     .set("Referer", "/")
@@ -514,7 +512,7 @@ it("should receive error messages when organisation name contains only whitespac
 
   expect(response.status).toEqual(200);
   expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME)
+  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
 });
 
 const mockObjection: Objection = {
