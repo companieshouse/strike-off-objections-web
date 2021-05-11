@@ -371,7 +371,7 @@ describe("objecting entity name tests", () => {
     mockRetrieveCompanyProfileFromSession.mockReturnValueOnce(COMPANY_NUMBER);
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockUpdateObjectionUserDetails.mockReset();
