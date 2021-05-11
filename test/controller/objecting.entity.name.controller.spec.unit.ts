@@ -483,7 +483,7 @@ describe("objecting entity name tests", () => {
   });
 });
 
-it("should receive error messages when no company name is entered with feature flag true", async () => {
+it("should receive error messages when no name or company name is entered when the feature flag is set to true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
@@ -503,7 +503,7 @@ it("should receive error messages when no company name is entered with feature f
   expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
 });
 
-it("should receive error messages when no organisation name is entered with feature flag true", async () => {
+it("should receive error messages when no organisation name is entered when the feature flag is set to true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
@@ -523,7 +523,7 @@ it("should receive error messages when no organisation name is entered with feat
   expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
 });
 
-it("should receive error messages when company name contains only whitespaces with feature flag true", async () => {
+it("should receive error messages when name or company name text field contains only whitespaces when the feature flag is set to true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
@@ -543,7 +543,7 @@ it("should receive error messages when company name contains only whitespaces wi
   expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
 });
 
-it("should receive error messages when organisation name contains only whitespaces with feature flag true", async () => {
+it("should receive error messages when organisation name text field contains only whitespaces when the feature flag is set to true", async () => {
   process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
   mockRetrieveAccessToken.mockReset();
   mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);

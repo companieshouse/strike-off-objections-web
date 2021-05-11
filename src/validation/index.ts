@@ -33,7 +33,7 @@ export const validators = {
 
       return true;
     }),
-    check(SHARE_IDENTITY_FIELD).not().isEmpty({ ignore_whitespace: true }).withMessage(ErrorMessages.SELECT_TO_DIVULGE),
+    check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
   ]
 };
 
