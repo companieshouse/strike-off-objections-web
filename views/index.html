@@ -22,17 +22,20 @@
       <p>You can only object to a company being struck off after the notice has been published in The Gazette.</p>
 
       {{ govukDetails({
+        attributes: {
+            "data-event-id": "what is the gazette dropdown"
+        },
         summaryText: "What is The Gazette?",
         html: '<p>Official notices about insolvency or companies being struck off are published in
-          <a href="https://www.thegazette.co.uk/">The London, Edinburgh and Belfast Gazettes</a>.
+          <a href="https://www.thegazette.co.uk/" data-event-id="the gazette link">The London, Edinburgh and Belfast Gazettes</a>.
           You can search The Gazettes online, and get help using their
-          <a href="https://www.thegazette.co.uk/all-notices/content/116">guide to searching</a>.</p>'
+          <a href="https://www.thegazette.co.uk/all-notices/content/116" data-event-id="guide to searching link">guide to searching</a>.</p>'
       }) }}
 
       <p>We must receive the objection within 2 months of the publish date.</p>
 
       <p>We cannot register your objection if the company has already been dissolved and struck off. If you have a legal claim to pursue, the company must be restored first.
-        <a href="https://www.gov.uk/guidance/company-restoration-guide#who-makes-the-application">Read the company restoration guidance</a>
+        <a href="https://www.gov.uk/guidance/company-restoration-guide#who-makes-the-application" data-event-id="restoration guidance link">Read the company restoration guidance</a>
         for more information.
 
       <p>This service takes around 15 minutes. The service will time out after 60 minutes. Your answers will not be saved.</p>
