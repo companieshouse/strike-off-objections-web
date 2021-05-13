@@ -47,7 +47,10 @@
 
         {{ govukDetails({
           summaryText: "Help with company number",
-          html: '<p>Use the <a target="blank" data-event-id="help-with-company-number-link" href="https://beta.companieshouse.gov.uk/">Companies House service (opens in a new tab)</a> to find it.</p>'
+          attributes: {
+            "data-event-id": "help with company number dropdown"
+          },
+          html: '<p>Use the <a target="blank" data-event-id="help with company number link" href="https://beta.companieshouse.gov.uk/">Companies House service (opens in a new tab)</a> to find it.</p>'
          }) }}
 
          {{ govukButton({
