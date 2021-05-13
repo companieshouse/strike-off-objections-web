@@ -43,7 +43,7 @@
             {{ objection.created_by.full_name }}
           </dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name">
+            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name" data-event-id="change name">
               Change<span class="govuk-visually-hidden"> change name</span>
             </a>
           </dd>
@@ -56,7 +56,7 @@
             {{ shareIdentity }}
           </dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name">
+            <a class="govuk-link" href="/strike-off-objections/change-answers?changePage=objecting-entity-name" data-event-id="change share identity">
               Change<span class="govuk-visually-hidden"> change share identity</span>
             </a>
           </dd>
@@ -106,7 +106,10 @@
                 {
                   href: "/strike-off-objections/change-answers?changePage=enter-information",
                   text: "Change",
-                  visuallyHiddenText: "change objection information"
+                  visuallyHiddenText: "change objection information",
+                  attributes: {
+                    "data-event-id": "change objection information"
+                  }
                 }
               ]
             }
@@ -123,7 +126,10 @@
                 {
                   href: "/strike-off-objections/change-answers?changePage=document-upload",
                   text: "Change",
-                  visuallyHiddenText: "change uploaded documents"
+                  visuallyHiddenText: "change uploaded documents",
+                  attributes: {
+                    "data-event-id": "change uploaded documents"
+                  }
                 }
               ]
             }
