@@ -14,7 +14,7 @@ import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
-import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
+import { OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const testEmail = "testEmail";
