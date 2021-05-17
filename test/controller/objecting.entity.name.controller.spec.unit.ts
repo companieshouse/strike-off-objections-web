@@ -65,6 +65,42 @@ describe("objecting entity name tests", () => {
     });
   });
 
+  it("should render empty objecting entity name page if session object create present and the objector is 'client'", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain([OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText]);
+    expect(response.text).toContain(FULL_NAME);
+  });
+
+  it("should render empty objecting entity name page if session object create present and the objector is 'myself or company'", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
+    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
+    expect(mockGetObjection).not.toBeCalled();
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain([OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText]);
+    expect(response.text).toContain(FULL_NAME);
+  });
+
   it("should render full objecting entity name page when objector is 'client'", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
