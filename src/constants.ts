@@ -18,16 +18,19 @@ export const CLIENT = "client";
 export const GENERIC_INFO = "generic";
 export const OBJECTOR_FIELDS = {
   [MYSELF_OR_COMPANY]: {
+    objectingEntityNamePageTitleText: "Tell us your name, or the name of the company you work for - Companies House - GOV.UK",
     objectingEntityNamePageText: "Tell us your name, or the name of the company you work for",
     textSharedIdentity: "Can we share the name and email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   [CLIENT]: {
+    objectingEntityNamePageTitleText: "What is the name of your organisation? - Companies House - GOV.UK",
     objectingEntityNamePageText: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
   },
   [GENERIC_INFO]: {
+    objectingEntityNamePageTitleText: "What is your full name or the name of your organisation? - Companies House - GOV.UK",
     objectingEntityNamePageText: "What is your full name or the name of your organisation?",
     textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
     backLink: STRIKE_OFF_OBJECTIONS
