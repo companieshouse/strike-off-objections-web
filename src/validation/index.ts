@@ -20,7 +20,7 @@ export const validators = {
     check(FULL_NAME_FIELD).custom((value, { req }) => {
 
       const objectorOrganisationField = retrieveFromObjectionSession(req.session, SESSION_OBJECTOR);
-      const noTextOrOnlyWhitespacesEntered = value?.trim() === "";
+      const noTextOrOnlyWhitespacesEntered = value.trim() === "";
 
       if (objectorOrganisationField === MYSELF_OR_COMPANY && noTextOrOnlyWhitespacesEntered) {
         throw Error(ErrorMessages.ENTER_NAME_OR_COMPANY);
