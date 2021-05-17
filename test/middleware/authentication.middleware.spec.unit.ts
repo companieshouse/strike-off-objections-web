@@ -6,7 +6,6 @@ import { authenticationMiddleware } from "../../src/middleware/authentication.mi
 import {
   ACCESSIBILITY_STATEMENT,
   OBJECTIONS_ENTER_INFORMATION,
-  OBJECTIONS_OBJECTING_ENTITY_NAME,
   OBJECTIONS_OBJECTOR_ORGANISATION
 } from "../../src/model/page.urls";
 
@@ -31,9 +30,6 @@ describe("authentication middleware tests", () => {
   beforeEach(() => {
     mockWebSecurityNodeAuthMiddleware.mockClear();
     dummyReq.originalUrl = "";
-    dummyReq.app = {
-      locals: { objectorJourneyFeatureFlag: OBJECTIONS_OBJECTING_ENTITY_NAME }
-    } as any;
   });
 
   it("should set return url to download landing page", () => {
@@ -60,21 +56,8 @@ describe("authentication middleware tests", () => {
     expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
   });
 
-  it("should set return url to objecting entity name page if the objector journey feature flag is false", () => {
+  it("should set return url to objector organisation page", () => {
     dummyReq.originalUrl = OBJECTIONS_ENTER_INFORMATION;
-    authenticationMiddleware(dummyReq, dummyRes, dummyNext);
-
-    const expectedConfig = {
-      accountWebUrl: "",
-      returnUrl: OBJECTIONS_OBJECTING_ENTITY_NAME,
-    };
-
-    expect(mockWebSecurityNodeAuthMiddleware).toBeCalledWith(expectedConfig);
-  });
-
-  it("should set return url to objector organisation page if the objector journey feature flag is true", () => {
-    dummyReq.originalUrl = OBJECTIONS_ENTER_INFORMATION;
-    dummyReq.app.locals.objectorJourneyFeatureFlag = OBJECTIONS_OBJECTOR_ORGANISATION;
     authenticationMiddleware(dummyReq, dummyRes, dummyNext);
 
     const expectedConfig = {

@@ -13,7 +13,7 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, OBJECTOR_FIELDS, SESSION_OBJECTION_CREATE, SESSION_OBJECTOR } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
@@ -47,10 +47,6 @@ mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, ne
 
 describe("objecting entity name tests", () => {
 
-  afterAll(() => {
-    process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "false";
-  });
-
   beforeEach(() => {
     mockSessionMiddleware.mockReset();
     mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -69,77 +65,10 @@ describe("objecting entity name tests", () => {
     });
   });
 
-  it("should render empty objecting entity name page if no change answer flag is set in session, session object create empty", async() => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
-
-    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
-    expect(mockGetObjection).not.toBeCalled();
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("What is your full name");
-    expect(response.text).not.toContain(FULL_NAME);
-  });
-
-  it("should render empty objecting entity name page if change answer flag is set to false, session object create empty", async() => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
-
-    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
-    expect(mockGetObjection).not.toBeCalled();
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("What is your full name");
-    expect(response.text).not.toContain(FULL_NAME);
-  });
-
-  it("should render empty objecting entity name page if no change answer flag is set in session, session object create present", async() => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
-
-    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
-    expect(mockGetObjection).not.toBeCalled();
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("What is your full name");
-    expect(response.text).toContain(FULL_NAME);
-  });
-
-  it("should render empty objecting entity name page if change answer flag is set to false, session object create present", async() => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(mockObjectionCreate);
-
-    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
-    expect(mockGetObjection).not.toBeCalled();
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("What is your full name");
-    expect(response.text).toContain(FULL_NAME);
-  });
-
-  it("should render full objecting entity name page if change answer flag is set to true", async() => {
+  it("should render full objecting entity name page when objector is 'client'", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
     mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
@@ -151,11 +80,30 @@ describe("objecting entity name tests", () => {
     expect(response.status).toEqual(200);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
-    expect(response.text).toContain("What is your full name");
+    expect(response.text).toContain([OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText]);
     expect(response.text).toContain(FULL_NAME);
   });
 
-  it("should throw exception when objection not found when change answer flag is set to true", async() => {
+  it("should render full objecting entity name page when the objector is 'myself-or-company'", async() => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+    mockRetrieveObjectionSessionFromSession.mockReset();
+    mockRetrieveObjectionSessionFromSession.mockReturnValueOnce(mockObjection);
+    mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
+
+    const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(response.status).toEqual(200);
+    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(response.text).toContain([OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText]);
+    expect(response.text).toContain(FULL_NAME);
+  });
+
+  it("should throw exception when objection not found", async() => {
     mockRetrieveFromObjectionSession.mockReset();
     mockRetrieveFromObjectionSession.mockReturnValueOnce(true);
     mockRetrieveObjectionSessionFromSession.mockReset();
@@ -202,8 +150,9 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ERROR_SCREEN_MESSAGE);
   });
 
-  it("should render company number page when posting entered details, change answer flag not present", async () => {
+  it("should render company number page when posting entered details and objector value", async () => {
     mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
     mockRetrieveObjectionSessionFromSession.mockReset();
 
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
@@ -221,73 +170,92 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
   });
 
-  it("should render company number page when posting entered details, change answers flag is false", async () => {
+  it("should receive error messages when no information is provided and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
     mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
-    mockRetrieveObjectionSessionFromSession.mockReset();
-
-    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({
-        fullName: FULL_NAME,
-        shareIdentity: "yes"
-      });
-
-    expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveAccessToken).not.toBeCalled();
-    expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
-  });
-
-  it("should render company number page when posting entered details and objector value, change answers flag is false", async () => {
-    mockRetrieveFromObjectionSession.mockReset();
-    mockRetrieveFromObjectionSession.mockReturnValueOnce("client");
-    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
-    mockRetrieveObjectionSessionFromSession.mockReset();
-
-    const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({
-        fullName: FULL_NAME,
-        shareIdentity: "yes"
-      });
-
-    expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual(OBJECTIONS_COMPANY_NUMBER);
-    expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(3);
-    expect(mockRetrieveAccessToken).not.toBeCalled();
-    expect(mockRetrieveCompanyProfileFromSession).not.toBeCalled();
-  });
-
-  it("should receive error messages when no information is provided", async () => {
-    const response = await request(app)
-      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
-    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
-  });
-
-  it("should receive error message when whitespace is provided and no divulge option is selected", async () => {
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+    
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .send({
-        fullName: " "
-      });
+        fullName: "",
+        shareIdentity: ""
+      });;
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
     expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
   });
 
-  it("should receive error messages when only whitespace is provided but a yes divulge option is selected", async () => {
+  it("should receive error messages when no information is provided and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+    
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: "",
+        shareIdentity: ""
+      });;
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when whitespace is provided and no divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " ",
+        shareIdentity: ""
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error message when whitespace is provided and no divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " ",
+        shareIdentity: ""
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
+  });
+
+  it("should receive error messages when only whitespace is provided but a yes divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
@@ -298,13 +266,40 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
     expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
     expect(response.text).not.toContain("value=\"no\" checked");
   });
 
-  it("should receive error messages when only whitespace is provided but a no divulge option is selected", async () => {
+  it("should receive error messages when only whitespace is provided but a yes divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: " ",
+        shareIdentity: "yes"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"yes\" checked");
+    expect(response.text).not.toContain("value=\"no\" checked");
+  });
+
+  it("should receive error messages when only whitespace is provided but a no divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
@@ -315,55 +310,160 @@ describe("objecting entity name tests", () => {
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
     expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
     expect(response.text).not.toContain("value=\"yes\" checked");
   });
 
-  it("should receive error message when no name is provided but a yes divulge option is selected", async () => {
+  it("should receive error messages when only whitespace is provided but a no divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .send({
+        fullName: " ",
+        shareIdentity: "no"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"no\" checked");
+    expect(response.text).not.toContain("value=\"yes\" checked");
+  });
+
+  it("should receive error message when no name is provided but a yes divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: "",
         shareIdentity: "yes"
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
     expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"yes\" checked");
     expect(response.text).not.toContain("value=\"no\" checked");
   });
 
-  it("should receive error message when no name is provided but a no divulge option is selected", async () => {
+  it("should receive error message when no name is provided but a yes divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .send({
+        fullName: "",
+        shareIdentity: "yes"
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"yes\" checked");
+    expect(response.text).not.toContain("value=\"no\" checked");
+  });
+
+  it("should receive error message when no name is provided but a no divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: "",
         shareIdentity: "no"
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
     expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain("value=\"no\" checked");
     expect(response.text).not.toContain("value=\"yes\" checked");
   });
 
-  it("should receive error message when name is provided but no divulge option is selected", async () => {
+  it("should receive error message when no name is provided but a no divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
     const response = await request(app)
       .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
       .send({
-        fullName: FULL_NAME
+        fullName: "",
+        shareIdentity: "no"
       });
 
     expect(response.status).toEqual(200);
-    expect(response.text).not.toContain(ErrorMessages.ENTER_NAME);
+    expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
+    expect(response.text).not.toContain(ErrorMessages.SELECT_TO_DIVULGE);
+    expect(response.text).toContain("value=\"no\" checked");
+    expect(response.text).not.toContain("value=\"yes\" checked");
+  });
+
+  it("should receive error message when name is provided but no divulge option is selected and the objector is 'client'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: ""
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).not.toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
+    expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
+    expect(response.text).toContain(FULL_NAME);
+  });
+
+  it("should receive error message when name is provided but no divulge option is selected and the objector is 'myself or company'", async () => {
+    mockRetrieveAccessToken.mockReset();
+    mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+    const response = await request(app)
+      .post(OBJECTIONS_OBJECTING_ENTITY_NAME)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`])
+      .send({
+        fullName: FULL_NAME,
+        shareIdentity: ""
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.text).not.toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
     expect(response.text).toContain(ErrorMessages.SELECT_TO_DIVULGE);
     expect(response.text).toContain(FULL_NAME);
   });
@@ -385,7 +485,7 @@ describe("objecting entity name tests", () => {
     expect(response.text).toContain(ERROR_500);
   });
 
-  it("should navigate to check your answers when posting entered details, change answers flag is true", async () => {
+  it("should navigate to check your answers when posting entered details", async () => {
     mockRetrieveAccessToken.mockReset();
     mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
     mockRetrieveCompanyProfileFromSession.mockReset();
@@ -442,7 +542,7 @@ describe("objecting entity name tests", () => {
     expect(mockUpdateObjectionUserDetails).toThrow(Error("Test"));
   });
 
-  it("should return error page when change answer flag is set to true, objection returned from mongo but name missing", async () => {
+  it("should return error page when objection returned from mongo but name missing", async () => {
     mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce(true);
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
@@ -462,7 +562,7 @@ describe("objecting entity name tests", () => {
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
 
-  it("should return error page when change answer flag is set to true, objection returned from mongo but shareIdentity missing", async () => {
+  it("should return error page when objection returned from mongo but shareIdentity missing", async () => {
     mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce(true);
     mockGetObjection.mockReset().mockResolvedValueOnce(
       {
@@ -481,86 +581,6 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
   });
-});
-
-it("should receive error messages when no name or company name is entered when the feature flag is set to true", async () => {
-  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
-  mockRetrieveAccessToken.mockReset();
-  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
-  mockRetrieveFromObjectionSession.mockReset();
-  mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
-
-  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-    .set("Referer", "/")
-    .set("Cookie", [`${COOKIE_NAME}=123`])
-    .send({
-      fullName: "",
-      shareIdentity: "yes"
-    });
-
-  expect(response.status).toEqual(200);
-  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
-});
-
-it("should receive error messages when no organisation name is entered when the feature flag is set to true", async () => {
-  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
-  mockRetrieveAccessToken.mockReset();
-  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
-  mockRetrieveFromObjectionSession.mockReset();
-  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
-
-  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-    .set("Referer", "/")
-    .set("Cookie", [`${COOKIE_NAME}=123`])
-    .send({
-      fullName: "",
-      shareIdentity: "yes"
-    });
-
-  expect(response.status).toEqual(200);
-  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
-});
-
-it("should receive error messages when name or company name text field contains only whitespaces when the feature flag is set to true", async () => {
-  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
-  mockRetrieveAccessToken.mockReset();
-  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
-  mockRetrieveFromObjectionSession.mockReset();
-  mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
-
-  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-    .set("Referer", "/")
-    .set("Cookie", [`${COOKIE_NAME}=123`])
-    .send({
-      fullName: "    ",
-      shareIdentity: "yes"
-    });
-
-  expect(response.status).toEqual(200);
-  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_NAME_OR_COMPANY);
-});
-
-it("should receive error messages when organisation name text field contains only whitespaces when the feature flag is set to true", async () => {
-  process.env.OBJECTOR_JOURNEY_FEATURE_FLAG = "true";
-  mockRetrieveAccessToken.mockReset();
-  mockRetrieveAccessToken.mockReturnValueOnce(ACCESS_TOKEN);
-  mockRetrieveFromObjectionSession.mockReset();
-  mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
-
-  const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
-    .set("Referer", "/")
-    .set("Cookie", [`${COOKIE_NAME}=123`])
-    .send({
-      fullName: "    ",
-      shareIdentity: "yes"
-    });
-
-  expect(response.status).toEqual(200);
-  expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
-  expect(response.text).toContain(ErrorMessages.ENTER_ORGANISATION_NAME);
 });
 
 const mockObjection: Objection = {
