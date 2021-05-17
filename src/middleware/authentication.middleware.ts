@@ -7,7 +7,7 @@ export const authenticationMiddleware = (req: Request, res: Response, next: Next
     return next();
   }
 
-  const authMiddlewareConfig = getAuthMiddlewareConfig(req.app.locals.objectorJourneyFeatureFlag);
+  const authMiddlewareConfig = getAuthMiddlewareConfig();
 
   if (isADownloadUrl(req.originalUrl)) {
     authMiddlewareConfig.returnUrl = req.originalUrl;
@@ -16,10 +16,10 @@ export const authenticationMiddleware = (req: Request, res: Response, next: Next
   return authMiddleware(authMiddlewareConfig)(req, res, next);
 };
 
-const getAuthMiddlewareConfig = (objectorJourneyFeatureFlag) => {
+const getAuthMiddlewareConfig = () => {
   return {
     accountWebUrl: "",
-    returnUrl: objectorJourneyFeatureFlag,
+    returnUrl: pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION,
   };
 };
 

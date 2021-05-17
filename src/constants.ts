@@ -1,6 +1,4 @@
-import {
-  OBJECTIONS_OBJECTOR_ORGANISATION,
-  STRIKE_OFF_OBJECTIONS } from "./model/page.urls";
+import { OBJECTIONS_OBJECTOR_ORGANISATION } from "./model/page.urls";
 
 export const APP_NAME = "strike-off-objections-web";
 export const OBJECTIONS_SESSION_NAME = "strike_off_objections_session";
@@ -15,7 +13,6 @@ export const FULL_NAME_FIELD = "fullName";
 export const SHARE_IDENTITY_FIELD = "shareIdentity";
 export const MYSELF_OR_COMPANY = "myself-or-company";
 export const CLIENT = "client";
-export const GENERIC_INFO = "generic";
 export const OBJECTOR_FIELDS = {
   [MYSELF_OR_COMPANY]: {
     objectingEntityNamePageTitleText: "Tell us your name, or the name of the company you work for - Companies House - GOV.UK",
@@ -28,13 +25,7 @@ export const OBJECTOR_FIELDS = {
     objectingEntityNamePageText: "What is the name of your organisation?",
     textSharedIdentity: "Can we share the name of your organisation and your email address with the company if they request that information?",
     backLink: OBJECTIONS_OBJECTOR_ORGANISATION
-  },
-  [GENERIC_INFO]: {
-    objectingEntityNamePageTitleText: "What is your full name or the name of your organisation? - Companies House - GOV.UK",
-    objectingEntityNamePageText: "What is your full name or the name of your organisation?",
-    textSharedIdentity: "Can we share your name and email address with the company if they request that information?",
-    backLink: STRIKE_OFF_OBJECTIONS
-  },
+  }
 };
 export const OBJECTOR_ORGANISATION = "objector-organisation";
 export const ENTER_INFORMATION = "information";

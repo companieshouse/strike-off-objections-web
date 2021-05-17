@@ -8,7 +8,6 @@ import {
   FULL_NAME_FIELD,
   MYSELF_OR_COMPANY,
   CLIENT,
-  GENERIC_INFO,
   SHARE_IDENTITY_FIELD,
   SESSION_OBJECTOR,
   OBJECTING_ENTITY_NAME } from "../constants";
@@ -20,17 +19,14 @@ export const validators = {
   [OBJECTING_ENTITY_NAME]: [
     check(FULL_NAME_FIELD).custom((value, { req }) => {
 
-      const objectorOrganisationField = retrieveFromObjectionSession(req.session, SESSION_OBJECTOR) || GENERIC_INFO;
+      const objectorOrganisationField = retrieveFromObjectionSession(req.session, SESSION_OBJECTOR);
       const noTextOrOnlyWhitespacesEntered = value?.trim() === "";
 
       if (objectorOrganisationField === MYSELF_OR_COMPANY && noTextOrOnlyWhitespacesEntered) {
         throw Error(ErrorMessages.ENTER_NAME_OR_COMPANY);
       } else if (objectorOrganisationField === CLIENT && noTextOrOnlyWhitespacesEntered) {
         throw Error(ErrorMessages.ENTER_ORGANISATION_NAME);
-      } else if (!value || (objectorOrganisationField === GENERIC_INFO && noTextOrOnlyWhitespacesEntered)) {
-        throw Error(ErrorMessages.ENTER_NAME);
       }
-
       return true;
     }),
     check(SHARE_IDENTITY_FIELD).not().isEmpty().withMessage(ErrorMessages.SELECT_TO_DIVULGE),
