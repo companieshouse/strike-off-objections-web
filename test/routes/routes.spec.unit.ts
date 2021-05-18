@@ -10,18 +10,19 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { CompanyEligibility, EligibilityStatus, Objection } from "../../src/modules/sdk/objections";
 import { getCompanyEligibility, getObjection } from "../../src/services/objection.service";
-import { retrieveCompanyProfileFromObjectionSession } from "../../src/services/objection.session.service";
+import { retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockGetCompanyEligibility = getCompanyEligibility as jest.Mock;
+const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -75,12 +76,30 @@ describe("Basic URL Tests", () => {
     expect(response.text).toMatch(/Who is applying to object/);
   });
 
-  it("should find the objecting entity name page", async () => {
+  it("should find the objecting entity name page when the objector is 'client'", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(CLIENT);
+
     const response = await request(app)
       .get("/strike-off-objections/objecting-entity-name");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/What is your full name/);
+    expect(response.text).toMatch(/What is the name of your organisation?/);
+  });
+
+  it("should find the objecting entity name page when the objector is 'myself or company'", async () => {
+    mockRetrieveFromObjectionSession.mockReset();
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(false);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(undefined);
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(MYSELF_OR_COMPANY);
+
+    const response = await request(app)
+      .get("/strike-off-objections/objecting-entity-name");
+
+    expect(response.status).toEqual(200);
+    expect(response.text).toMatch(/Tell us your name, or the name of the company you work for/);
   });
 
   it("should find the company number page", async () => {

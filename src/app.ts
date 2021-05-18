@@ -2,7 +2,6 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
-import { isActiveFeature } from "./utils/feature.flag";
 import { APP_NAME } from "./constants";
 import  errorHandlers from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
@@ -30,11 +29,6 @@ env.addGlobal("assetPath", process.env.CDN_HOST);
 env.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 env.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
-
-// Feature flag for objector journey
-app.locals.objectorJourneyFeatureFlag = isActiveFeature(process.env.OBJECTOR_JOURNEY_FEATURE_FLAG)
-  ? pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION
-  : pageURLs.OBJECTIONS_OBJECTING_ENTITY_NAME;
 
 app.enable("trust proxy");
 app.use(express.json());

@@ -19,7 +19,6 @@ import {
   CHANGE_ANSWER_KEY,
   SHARE_IDENTITY_FIELD,
   FULL_NAME_FIELD,
-  GENERIC_INFO,
   OBJECTOR_FIELDS,
   SESSION_OBJECTION_CREATE,
   SESSION_OBJECTION_ID,
@@ -35,7 +34,7 @@ const showPageWithSessionDataIfPresent = (session: Session, res: Response) => {
   let yesChecked: boolean = false;
   let noChecked: boolean = false;
   const objectionCreate: ObjectionCreate = retrieveFromObjectionSession(session, SESSION_OBJECTION_CREATE);
-  const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+  const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR);
 
   if (objectionCreate) {
     existingName = objectionCreate.full_name;
@@ -59,7 +58,7 @@ const showPageWithMongoData = async (session: Session, res: Response, next: Next
     const objection: Objection = await getObjection(session);
     const existingName: string = objection.created_by.full_name;
     const existingShareIdentity: boolean = objection.created_by.share_identity;
-    const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR) || GENERIC_INFO;
+    const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR);
 
     if (existingName && existingShareIdentity !== undefined) {
       return res.render(Templates.OBJECTING_ENTITY_NAME, {
@@ -171,7 +170,7 @@ const showErrorsOnScreen = (errors: Result, req: Request, res: Response) => {
     });
 
   const fullNameValue: string = req.body.fullName;
-  const objectorOrganisationValue = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR) || GENERIC_INFO;
+  const objectorOrganisationValue = retrieveFromObjectionSession(req.session as Session, SESSION_OBJECTOR);
 
   return res.render(Templates.OBJECTING_ENTITY_NAME, {
     fullNameValue,

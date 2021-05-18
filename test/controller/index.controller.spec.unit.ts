@@ -14,7 +14,7 @@ import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
-import { OBJECTIONS_OBJECTING_ENTITY_NAME } from "../../src/model/page.urls";
+import { OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const testEmail = "testEmail";
@@ -69,7 +69,7 @@ describe("Index page post tests", () => {
 
     expect(response.status).toEqual(302);
     expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
-    expect(response.header.location).toEqual(OBJECTIONS_OBJECTING_ENTITY_NAME);
+    expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
   });
 
   it("shouldn't call deleteExtraData when posting index page with no session data", async () => {
@@ -82,6 +82,6 @@ describe("Index page post tests", () => {
 
     expect(response.status).toEqual(302);
     expect(mockDeleteExtraData).not.toHaveBeenCalled();
-    expect(response.header.location).toEqual(OBJECTIONS_OBJECTING_ENTITY_NAME);
+    expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
   });
 });
