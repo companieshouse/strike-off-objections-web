@@ -210,7 +210,8 @@ const mockObjection: Objection = {
     }],
   created_by: {
     full_name: "name",
-    share_identity: false
+    share_identity: false,
+    objector: "client"
   },
   reason: "Reason",
 };

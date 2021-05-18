@@ -629,7 +629,8 @@ const mockObjection: Objection = {
     }],
   created_by: {
     full_name: FULL_NAME,
-    share_identity: false
+    share_identity: false,
+    objector: ""
   },
   reason: "Owed some money",
 };
@@ -637,4 +638,5 @@ const mockObjection: Objection = {
 const mockObjectionCreate: ObjectionCreate = {
   full_name: FULL_NAME,
   share_identity: false,
+  objector: ""
 };
