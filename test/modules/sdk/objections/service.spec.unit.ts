@@ -41,6 +41,7 @@ const dummyObjection: Objection = {
   created_by: {
     full_name: "bob",
     share_identity: true,
+    objector: "client"
   },
   reason: "Owed some money",
 };
@@ -295,5 +296,6 @@ const testCorrectApiValuesAreUsed = (expectedUrlEnding: string, expectedHttpMeth
 const dummyObjectionCreate: ObjectionCreate = {
   full_name: "Joe Bloggs",
   share_identity: false,
+  objector: "myself-or-company"
 };
 

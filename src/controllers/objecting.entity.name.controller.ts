@@ -126,14 +126,10 @@ export const post = [...validators[OBJECTING_ENTITY_NAME], async (req: Request, 
 
   const fullNameValue: string = req.body.fullName;
   const shareIdentityValue: boolean = req.body.shareIdentity === "yes";
-  const objectionCreate: ObjectionCreate = { share_identity: shareIdentityValue, full_name: fullNameValue };
   const objectorOrganisationValue = retrieveFromObjectionSession(session, SESSION_OBJECTOR);
+  const objectionCreate: ObjectionCreate = { share_identity: shareIdentityValue, full_name: fullNameValue, objector: objectorOrganisationValue };
 
   if (session) {
-    if (objectorOrganisationValue) {
-      objectionCreate[SESSION_OBJECTOR] = objectorOrganisationValue;
-    }
-
     if (retrieveFromObjectionSession(session, CHANGE_ANSWER_KEY)) {
       try {
         await updateMongoWithChangedUserDetails(session, objectionCreate);

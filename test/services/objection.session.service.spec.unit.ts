@@ -154,4 +154,5 @@ describe ("objections session service tests", () => {
 const dummyObjectionCreate: ObjectionCreate = {
   full_name: "Joe Bloggs",
   share_identity: false,
+  objector: "client"
 };
