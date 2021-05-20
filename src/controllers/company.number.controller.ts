@@ -106,6 +106,7 @@ const buildError = (res: Response, errorMessage: string): void => {
   return res.render(Templates.COMPANY_NUMBER, {
     companyNumberErr: companyNumberErrorData,
     errorList: [companyNumberErrorData],
+    templateName: Templates.COMPANY_NUMBER
   });
 };
 
