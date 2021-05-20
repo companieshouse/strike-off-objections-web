@@ -13,7 +13,6 @@ import { CompanySearchErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { Templates } from "../model/template.paths";
 import { ValidationError } from "../model/validation.error";
-import { Template } from "nunjucks";
 
 const companyNumberFieldName: string = "companyNumber";
 
