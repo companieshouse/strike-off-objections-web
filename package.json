@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@companieshouse/api-sdk-node": "^1.0.5",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bufferutil": "^4.0.1",
     "busboy": "^0.3.1",
     "@companieshouse/structured-logging-node": "^1.0.4",
