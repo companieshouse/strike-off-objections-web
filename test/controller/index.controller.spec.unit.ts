@@ -48,40 +48,51 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
-describe("Index page post tests", () => {
+describe("Index page Tests", () => {
   beforeEach(() => {
     mockSessionMiddleware.mockClear();
     mockDeleteExtraData.mockClear();
   });
 
-  it("should contain a cookie banner", async() => {
-    const response = await request(app)
-      .get("/strike-off-objections");
+  describe('GET', () => {
+    it("should contain a cookie banner", async () => {
+      const response = await request(app).get("/strike-off-objections");
 
-    expect(response.status).toEqual(200);
-    expect(response.text).toContain("govuk-cookie-banner");
+      expect(response.status).toEqual(200);
+      expect(mockDeleteExtraData).not.toHaveBeenCalled();
+      expect(response.text).toContain("govuk-cookie-banner");
+    });
+    it("should redirect to objector-organisation page", async () => {
+      const response = await request(app).get("/strike-off-objections?start=0");
+
+      expect(response.status).toEqual(302);
+      expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
+      expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
+    });
   });
 
-  it("should post index page and wipe session data", async () => {
-    const response = await request(app)
-      .post("/strike-off-objections")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+  describe('POST', () => {
+    it("should post index page and wipe session data", async () => {
+      const response = await request(app)
+        .post("/strike-off-objections")
+        .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(response.status).toEqual(302);
-    expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
-    expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
-  });
+      expect(response.status).toEqual(302);
+      expect(mockDeleteExtraData).toHaveBeenCalledWith(OBJECTIONS_SESSION_NAME);
+      expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
+    });
 
-  it("shouldn't call deleteExtraData when posting index page with no session data", async () => {
-    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
-    mockObjectionSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
+    it("shouldn't call deleteExtraData when posting index page with no session data", async () => {
+      mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
+      mockObjectionSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
 
-    const response = await request(app)
-      .post("/strike-off-objections")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
+      const response = await request(app)
+        .post("/strike-off-objections")
+        .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(response.status).toEqual(302);
-    expect(mockDeleteExtraData).not.toHaveBeenCalled();
-    expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
+      expect(response.status).toEqual(302);
+      expect(mockDeleteExtraData).not.toHaveBeenCalled();
+      expect(response.header.location).toEqual(OBJECTIONS_OBJECTOR_ORGANISATION);
+    });
   });
 });
