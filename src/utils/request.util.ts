@@ -34,7 +34,7 @@ export const getWhitelistedReturnToURL = (returnToUrl: string) => {
 // Extracting a value from a field from the incoming request in this way appears to allay SonarQube's fears that
 // any redirect using the value is doing so using user-controlled data.
 // Returns null if no match found.
-export const extractValueIfPresentFromRequestField = (requestField: String, expression: RegExp) => {
+export const extractValueIfPresentFromRequestField = (requestField: string, expression: RegExp) => {
   if (requestField) {
     const extractedMatches = requestField.match(expression);
     if (extractedMatches !== null && extractedMatches.length > 0) {
