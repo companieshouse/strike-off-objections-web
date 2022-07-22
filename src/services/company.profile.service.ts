@@ -23,9 +23,7 @@ export const getCompanyProfile = async (companyNumber: string, token: string): P
     await api.companyProfile.getCompanyProfile(companyNumber.toUpperCase());
 
   if (sdkResponse.httpStatusCode >= 400) {
-    throw {
-      status: sdkResponse.httpStatusCode,
-    };
+    throw new Error("Status: " + sdkResponse.httpStatusCode);
   }
 
   logger.debug("Data from company profile SDK call " + JSON.stringify(sdkResponse, null, 2));
