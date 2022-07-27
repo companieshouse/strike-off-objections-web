@@ -33,7 +33,7 @@ const getCompanyFilingHistory = async (companyNumber: string, category: string, 
       await api.companyFilingHistory.getCompanyFilingHistory(companyNumber.toUpperCase(), category);
 
   if (sdkResponse.httpStatusCode >= 400) {
-  throw new Error("Status: " + sdkResponse.httpStatusCode);
+  throw new Error("status: " + sdkResponse.httpStatusCode);
   }
 
   logger.debug("Data from company filing history SDK call " + JSON.stringify(sdkResponse, null, 2));
