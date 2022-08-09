@@ -1,3 +1,4 @@
+import { ACCOUNT_URL } from "../utils/properties";
 import { Templates } from "./template.paths";
 
 /**
@@ -31,6 +32,8 @@ export const OBJECTOR_ORGANISATION: string = SEPARATOR + Templates.OBJECTOR_ORGA
 /**
  * URLs for redirects will need to start with the application name
  */
+export const ACCOUNTS_SIGNOUT_PATH = `${ACCOUNT_URL}/signout`;
+export const SIGNOUT_PATH = "/signout";
 export const OBJECTIONS_OBJECTING_ENTITY_NAME: string = STRIKE_OFF_OBJECTIONS + OBJECTING_ENTITY_NAME;
 export const OBJECTIONS_COMPANY_NUMBER: string = STRIKE_OFF_OBJECTIONS + COMPANY_NUMBER;
 export const OBJECTIONS_CONFIRM_COMPANY: string = STRIKE_OFF_OBJECTIONS + CONFIRM_COMPANY;
