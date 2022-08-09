@@ -8,6 +8,7 @@ import { authenticationMiddleware } from "./middleware/authentication.middleware
 import { objectionSessionMiddleware } from "./middleware/objection.session.middleware";
 import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
 import { sessionMiddleware } from "./middleware/session.middleware";
+import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { ErrorMessages } from "./model/error.messages";
 import * as pageURLs from "./model/page.urls";
 import { router } from "./routes/routes";
@@ -44,6 +45,7 @@ app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*(?<!download)$`, objectionSessionMiddleware);
+app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 app.use(...errorHandlers);
