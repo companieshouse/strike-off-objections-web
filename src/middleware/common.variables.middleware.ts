@@ -1,4 +1,3 @@
-import { Session } from "@companieshouse/node-session-handler";
 import { Handler } from "express";
 
  /**
