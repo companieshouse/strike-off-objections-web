@@ -11,7 +11,7 @@ import { Handler } from "express";
   * @param next the next handler in the chain
   */
  export const commonTemplateVariablesMiddleware: Handler = (req, res, next) => {
-     const session = req.session as Session | undefined
+     const session = req.session
 
      // Populate user email for use in signout bar.
      const email = session?.data?.signin_info?.user_profile?.email
