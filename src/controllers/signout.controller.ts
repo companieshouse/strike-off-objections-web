@@ -4,10 +4,8 @@ import { Handler, NextFunction, Request, Response } from "express";
 import { ACCOUNTS_SIGNOUT_PATH } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
 import logger from "../utils/logger";
-import { ACCOUNT_URL } from "../utils/properties";
 
 export const get: Handler = async (req, res) => {
-    console.log(`Account url: ${ACCOUNT_URL}`)
     const returnPage = saveReturnPageInSession(req)
 
     res.render(Templates.SIGNOUT, {
@@ -15,23 +13,31 @@ export const get: Handler = async (req, res) => {
     });
 }
 
-export const post: Handler = async (req, res, next: NextFunction) => {
+export const post = handleError(async (req, res) => {
     const returnPage = getReturnPageFromSession(req.session as Session)
-    console.log(`Return page: ${returnPage}`)
-    try {
-        switch (req.body.signout) {
-            case "yes": 
-                console.log("Yes option"); 
-                return res.redirect(ACCOUNTS_SIGNOUT_PATH);
-            case "no": 
-                console.log("No option"); 
-                return res.redirect(returnPage);
-            default: 
-                console.log("No input selected"); 
-                return showMustSelectButtonError(res, returnPage);
+
+    switch (req.body.signout) {
+    case "yes":
+        return res.redirect(ACCOUNTS_SIGNOUT_PATH);
+    case "no":
+        return res.redirect(returnPage);
+    default:
+        return showMustSelectButtonError(res, returnPage);
+    }
+})
+
+// Async version of express handler so that static analysers don't complain that an await statement 
+// isn't needed when it is.
+type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+
+// Wraps a handler function to catch any exceptions and pass them to the next handler in the chain.
+function handleError(handler: AsyncHandler): AsyncHandler {
+    return async (req, res, next) => {
+        try {
+            await handler(req, res, next)
+        } catch (e) {
+            next(e);
         }
-    } catch (e) {
-        next(e);
     }
 }
 
