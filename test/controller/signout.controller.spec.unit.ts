@@ -17,7 +17,6 @@ const SIGNOUT_LOCATION = `${STRIKE_OFF_OBJECTIONS}${SIGNOUT_PATH}`;
 const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   req.session = session;
-  req.session.data.extra_data["payment-nonce"] = "123456";
   next();
 });
 
@@ -102,8 +101,16 @@ describe("Signout controller tests", () => {
   })
 
   describe('no session tests', () => {
-    it('should show the error page when peforming post', async () => {
-        // Don't populate session
+    it('should land on error screen if no session is available when performing get', async () => {
+      mockSessionMiddleware.mockImplementation((req, res, next) => next());
+
+      const response = await request(app)
+        .get(SIGNOUT_LOCATION)
+
+      expect(response.status).toBe(500)
+    })
+
+    it('should land on error screen if no session is available when performing post', async () => {
         mockSessionMiddleware.mockImplementation((req, res, next) => next());
 
         const response = await request(app)
