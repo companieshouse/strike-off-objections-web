@@ -136,10 +136,7 @@ describe("company number lookup tests", () => {
 
   it("should create an error message when company is not found", async () => {
     mockCompanyProfile.mockImplementation(() => {
-      throw {
-        message: COMPANY_NOT_FOUND,
-        status: 404,
-      };
+      throw new Error("status: 404");
     });
 
     const response = await request(app)
