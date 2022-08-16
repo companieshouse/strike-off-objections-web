@@ -89,7 +89,7 @@ const post = async (req: Request, res: Response, next: NextFunction): Promise<vo
   } catch (e) {
     logger.error(`Error fetching company profile for company number ${companyNumber}`);
 
-    if (e.status === 404) {
+    if (e.message.includes("404")) {
       buildError(res, CompanySearchErrorMessages.COMPANY_NOT_FOUND);
     } else {
       return next(e);
