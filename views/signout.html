@@ -31,7 +31,7 @@
             errorList: [
                 {
                 text: "Select yes if you want to sign out",
-                href: "#yes"
+                href: "#signout"
                 }
             ]
         }) }}
@@ -42,12 +42,13 @@
     <form action="/strike-off-objections/signout" method="POST">
         {{ govukRadios({
             classes: "govuk-radios--inline",
-            idPrefix: "aignout",
+            idPrefix: "signout",
             name: "signout",
             errorMessage: detailsErrorMsg,
             fieldset: {
                 legend: {
-                    html: "Are you sure you want to sign out?",
+                    text: "Are you sure you want to sign out?",
+                    isPageHeading: true,
                     classes: "govuk-fieldset__legend--l"
                 }
             },
