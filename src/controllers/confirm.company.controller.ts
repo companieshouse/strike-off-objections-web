@@ -1,15 +1,16 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import ObjectionCompanyProfile from "model/objection.company.profile";
-import { SESSION_OBJECTION_ID } from "../constants";
+import { PREVIOUSLY_SELECTED_COMPANY, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_ID } from "../constants";
 import { OBJECTIONS_ENTER_INFORMATION, OBJECTIONS_NO_STRIKE_OFF, OBJECTIONS_NOTICE_EXPIRED } from "../model/page.urls";
 import { Templates } from "../model/template.paths";
-import { EligibilityStatus, ObjectionCreate, ObjectionStatus } from "../modules/sdk/objections";
-import { createNewObjection, getCompanyEligibility } from "../services/objection.service";
+import { EligibilityStatus, Objection, ObjectionCreate, ObjectionStatus, patchObjection } from "../modules/sdk/objections";
+import { createNewObjection, getCompanyEligibility, getObjection } from "../services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
+  retrieveFromObjectionSession,
   retrieveObjectionCreateFromObjectionSession
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
@@ -71,7 +72,21 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const token: string = retrieveAccessTokenFromSession(session);
     const { companyNumber }: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
-    const { objectionId, objectionStatus } = await createNewObjection(companyNumber, token, objectionCreate);
+    
+    let objectionId: string;
+    let objectionStatus: ObjectionStatus;
+
+    const previouslySelectedCompany: string = retrieveFromObjectionSession(session, PREVIOUSLY_SELECTED_COMPANY);
+    const companyProfileInSession: ObjectionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
+    if (previouslySelectedCompany === companyProfileInSession.companyNumber) {
+      const objectionIdInSession = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
+      await patchObjection(companyNumber, objectionIdInSession, token, objectionCreate);
+      const retrievedObjection: Objection = await getObjection(session);
+      objectionId = retrievedObjection.id;
+      objectionStatus = retrievedObjection.status;
+    } else {
+      ({ objectionId, objectionStatus } = await createNewObjection(companyNumber, token, objectionCreate));
+    }
 
     const ineligiblePage = getIneligiblePage(objectionStatus);
     if (ineligiblePage) {
