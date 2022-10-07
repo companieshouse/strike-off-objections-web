@@ -87,7 +87,7 @@ const post = async (req: Request, res: Response, next: NextFunction): Promise<vo
 
     const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
-    const sessionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
+    const sessionCompanyProfile: ObjectionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
     if (sessionCompanyProfile) {
       addToObjectionSession(session, PREVIOUSLY_SELECTED_COMPANY, sessionCompanyProfile.companyNumber);
     }
