@@ -78,7 +78,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const previouslySelectedCompany: string = retrieveFromObjectionSession(session, PREVIOUSLY_SELECTED_COMPANY);
     const companyProfileInSession: ObjectionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
-    if (previouslySelectedCompany === companyProfileInSession.companyNumber) {
+  
+    if (previouslySelectedCompany !== undefined && previouslySelectedCompany === companyProfileInSession.companyNumber ) {
       const objectionIdInSession: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
       await patchObjection(companyNumber, objectionIdInSession, token, objectionCreate);
       const retrievedObjection: Objection = await getObjection(session);
@@ -96,6 +97,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
+    logger.error("add to objections")
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
     return next(e);
