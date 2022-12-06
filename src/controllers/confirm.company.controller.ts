@@ -97,7 +97,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     addToObjectionSession(session, SESSION_OBJECTION_ID, objectionId);
-    logger.error("add to objections")
     return res.redirect(OBJECTIONS_ENTER_INFORMATION);
   } catch (e) {
     return next(e);

@@ -443,4 +443,4 @@ const dummyCompanyEligibilityIneligibleStruckOff: CompanyEligibility = {
   is_eligible: false,
   eligibility_status: EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
 };
-
+});
