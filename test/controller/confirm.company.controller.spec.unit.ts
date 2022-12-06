@@ -12,7 +12,7 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID, PREVIOUSLY_SELECTED_COMPANY, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
@@ -31,8 +31,6 @@ import {
   ObjectionCreate,
   ObjectionCreatedResponse,
   ObjectionStatus,
-  patchObjection,
-  Objection
 } from "../../src/modules/sdk/objections";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
 import { createNewObjection, getCompanyEligibility, getObjection } from "../../src/services/objection.service";
@@ -46,7 +44,6 @@ import {
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const OBJECTION_ID = "123456";
-const PREVIOUS_OBJECTION_ID = "54321";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const SESSION: Session = {
   data: {},
