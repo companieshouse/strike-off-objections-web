@@ -1,4 +1,5 @@
 jest.mock("ioredis");
+jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/middleware/authentication.middleware");
 jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
@@ -11,10 +12,11 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
+import * as objectionsSdk from "../../src/modules/sdk/objections";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CONFIRM_COMPANY,
@@ -28,15 +30,16 @@ import {
   EligibilityStatus,
   ObjectionCreate,
   ObjectionCreatedResponse,
-  ObjectionStatus
+  ObjectionStatus,
 } from "../../src/modules/sdk/objections";
 import { getLatestGaz1FilingHistoryItem } from "../../src/services/company.filing.history.service";
-import { createNewObjection, getCompanyEligibility } from "../../src/services/objection.service";
+import { createNewObjection, getCompanyEligibility, getObjection } from "../../src/services/objection.service";
 import {
   addToObjectionSession,
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
-  retrieveObjectionCreateFromObjectionSession
+  retrieveObjectionCreateFromObjectionSession,
+  retrieveFromObjectionSession
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -48,7 +51,12 @@ const SESSION: Session = {
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockGetObjectCreate = retrieveObjectionCreateFromObjectionSession as jest.Mock;
-
+const mockGetObjection = getObjection as jest.Mock;
+const mockRetrieveProfileFromSession = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockPatchObjection = objectionsSdk.patchObjection as jest.Mock;
+const mockRetrieveObjectionCreateFromSession = retrieveObjectionCreateFromObjectionSession as jest.Mock;
+const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
+const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
@@ -106,6 +114,7 @@ describe("confirm company tests", () => {
     expect(response.text).toContain("No notice in The Gazette");
   });
 
+
   it("should call the API to create a new objection then render the enter information page", async () => {
 
     mockGetObjectionSessionValue.mockReset();
@@ -130,6 +139,36 @@ describe("confirm company tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual(OBJECTIONS_ENTER_INFORMATION);
   });
+
+
+    
+  it("should call the API to update an objection then render the enter information page", async () => {
+
+    mockGetObjectionSessionValue.mockReset();
+    mockRetrieveProfileFromSession.mockImplementation(() => dummyCompanyProfile2);
+    mockRetrieveObjectionCreateFromSession.mockImplementationOnce(() => dummyObjectionCreate);
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2.companyNumber);
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2);
+    mockRetrieveFromObjectionSession.mockImplementationOnce(() => 'OBJ123');
+    
+    mockGetObjection.mockReturnValueOnce(dummyGaz2RequestedObjectionCreatedResponse);
+    mockRetrieveAccessToken.mockImplementationOnce(()=>  ACCESS_TOKEN);
+  
+    SESSION.data[OBJECTIONS_SESSION_NAME] = {
+      [SESSION_COMPANY_PROFILE]: dummyCompanyProfile2,
+      [SESSION_OBJECTION_CREATE]: dummyObjectionCreate,
+      [SESSION_OBJECTION_ID]: 'OBJ123',
+    };
+
+    const response = await request(app).post(OBJECTIONS_CONFIRM_COMPANY)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+
+    expect(mockPatchObjection).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual(OBJECTIONS_ENTER_INFORMATION);
+  });
+
 
   it("should render the notice expired page when an objection is created with the status INELIGIBLE_COMPANY_STRUCK_OFF", async () => {
     mockGetObjectionSessionValue.mockReset();
@@ -307,7 +346,8 @@ describe("confirm company tests", () => {
     expect(response.header.location).toEqual(OBJECTIONS_NOTICE_EXPIRED);
   });
 
-});
+
+
 
 const dummyCompanyProfile: ObjectionCompanyProfile = {
   address: {
@@ -322,6 +362,21 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   incorporationDate: "26 June 1872",
 };
 
+
+const dummyCompanyProfile2: ObjectionCompanyProfile = {
+  address: {
+    line_1: "line1",
+    line_2: "line2",
+    postCode: "post code",
+  },
+  companyName: "Bear retail",
+  companyNumber: "05916434",
+  companyStatus: "Active",
+  companyType: "limited",
+  incorporationDate: "26 June 1872",
+};
+
+
 const dummyFilingHistoryItem: FilingHistoryItem = {
   category: "",
   date: "2015-04-14",
@@ -335,10 +390,26 @@ const dummyObjectionCreate: ObjectionCreate = {
   share_identity: false,
 };
 
+
 const dummyOpenObjectionCreatedResponse: ObjectionCreatedResponse = {
   objectionId: OBJECTION_ID,
   objectionStatus: ObjectionStatus.OPEN,
 };
+
+const mockObjection = {
+  attachments: [
+    { id: "ATT001",
+      name: "attachment.jpg",
+    },
+    {
+      id: "ATT002",
+      name: "document.pdf",
+    }],
+  id: "OBJ123",
+  reason: "Owed some money",
+};
+
+
 
 const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
   objectionId: OBJECTION_ID,
@@ -369,3 +440,4 @@ const dummyCompanyEligibilityIneligibleStruckOff: CompanyEligibility = {
   is_eligible: false,
   eligibility_status: EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
 };
+});
