@@ -89,7 +89,7 @@ const getObjectionFromSession = async (req: Request) => {
   const objection: Objection = await getObjection(req.session);
   const companyProfileInSession: ObjectionCompanyProfile = retrieveFromObjectionSession(req.session, SESSION_COMPANY_PROFILE);
   if (companyProfileInSession) {
-  addToObjectionSession(req.session, PREVIOUSLY_SELECTED_COMPANY, companyProfileInSession.companyNumber);
+    addToObjectionSession(req.session, PREVIOUSLY_SELECTED_COMPANY, companyProfileInSession.companyNumber);
   }
   if (!objection) {
   }
