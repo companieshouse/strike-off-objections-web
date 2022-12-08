@@ -34,7 +34,6 @@ const postEnterInformation = async (req: Request, res: Response, next: NextFunct
 
     if (!errors.isEmpty()) {
       const informationError: GovUkErrorData = createErrorData(errors, ENTER_INFORMATION);
- 
       return res.render(Templates.ENTER_INFORMATION, {
         errorList: [informationError],
         informationError,
