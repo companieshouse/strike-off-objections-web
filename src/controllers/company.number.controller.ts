@@ -5,7 +5,9 @@ import { OBJECTIONS_CONFIRM_COMPANY } from "../model/page.urls";
 import { getCompanyProfile } from "../services/company.profile.service";
 import {
   addCompanyProfileToObjectionSession,
+  addToObjectionSession,
   retrieveAccessTokenFromSession,
+  retrieveFromObjectionSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 import { check, validationResult } from "express-validator";
@@ -13,6 +15,7 @@ import { CompanySearchErrorMessages } from "../model/error.messages";
 import { createGovUkErrorData, GovUkErrorData } from "../model/govuk.error.data";
 import { Templates } from "../model/template.paths";
 import { ValidationError } from "../model/validation.error";
+import { PREVIOUSLY_SELECTED_COMPANY, SESSION_COMPANY_PROFILE } from "../constants";
 
 const companyNumberFieldName: string = "companyNumber";
 
@@ -84,12 +87,17 @@ const post = async (req: Request, res: Response, next: NextFunction): Promise<vo
 
     const company: ObjectionCompanyProfile = await getCompanyProfile(companyNumber, token);
 
+    const sessionCompanyProfile: ObjectionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
+    if (sessionCompanyProfile) {
+      addToObjectionSession(session, PREVIOUSLY_SELECTED_COMPANY, sessionCompanyProfile.companyNumber);
+    }
+
     addCompanyProfileToObjectionSession(session, company);
     return res.redirect(OBJECTIONS_CONFIRM_COMPANY);
   } catch (e) {
     logger.error(`Error fetching company profile for company number ${companyNumber}`);
 
-    if (e.status === 404) {
+    if (e.message.includes("404")) {
       buildError(res, CompanySearchErrorMessages.COMPANY_NOT_FOUND);
     } else {
       return next(e);

@@ -19,6 +19,7 @@
   <!--[if !IE 8]><!-->
   <link href="{{assetPath}}/stylesheets/govuk-frontend/v3.11.0/govuk-frontend-3.11.0.min.css" rel="stylesheet" />
   <link href="{{assetPath}}/stylesheets/services/strike-off-objections/application.css" rel="stylesheet" />
+  <link href="{{assetPath}}/stylesheets/session-timeout.css" rel="stylesheet" />
   <!--<![endif]-->
 
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
@@ -62,6 +63,20 @@
     },
     html: 'This is a new service - Help us improve it by providing <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/applytoobject-feedback/" target="_blank" rel="noopener noreferrer">feedback <span class="govuk-visually-hidden">(This link opens in a new window)</span></a>'
   }) }}
+
+  {% block signoutBar %}
+  {% if userEmail %}
+  {% set email = userEmail | default("Not signed in") %}
+  <ul class="js-signout" id="navigation">
+    <li class="content-email" id="signed-in-user">{{email}}</li>
+    <li class="content">
+      <a href="/strike-off-objections/signout" data-event-id="sign-out-button-selected" id="user-signout">Sign out</a>
+    </li>
+  </ul>
+  <script src="{{assetPath}}/javascripts/app/session-timeout.js"></script>
+  {% endif %}
+  {% endblock %}
+
   {% block backLink %}
   {% endblock %}
 {% endblock %}
