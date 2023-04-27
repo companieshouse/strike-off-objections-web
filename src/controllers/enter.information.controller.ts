@@ -2,7 +2,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import ObjectionCompanyProfile from "model/objection.company.profile";
-import { CHANGE_ANSWER_KEY, ENTER_INFORMATION, SESSION_OBJECTION_ID } from "../constants";
+import { CHANGE_ANSWER_KEY, ENTER_INFORMATION, SESSION_OBJECTION_ID, PREVIOUSLY_SELECTED_COMPANY, SESSION_COMPANY_PROFILE } from "../constants";
 import { GovUkErrorData } from "model/govuk.error.data";
 import { createErrorData, validators } from "../validation";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_DOCUMENT_UPLOAD } from "../model/page.urls";
@@ -13,6 +13,7 @@ import {
   retrieveAccessTokenFromSession,
   retrieveCompanyProfileFromObjectionSession,
   retrieveFromObjectionSession,
+  addToObjectionSession,
 } from "../services/objection.session.service";
 import logger from "../utils/logger";
 import { removeNonPrintableChars } from "../utils/string.formatter";
@@ -33,7 +34,6 @@ const postEnterInformation = async (req: Request, res: Response, next: NextFunct
 
     if (!errors.isEmpty()) {
       const informationError: GovUkErrorData = createErrorData(errors, ENTER_INFORMATION);
-
       return res.render(Templates.ENTER_INFORMATION, {
         errorList: [informationError],
         informationError,
@@ -86,8 +86,11 @@ const getObjectionFromSession = async (req: Request) => {
     throw new Error("No session present");
   }
   const objection: Objection = await getObjection(req.session);
+  const companyProfileInSession: ObjectionCompanyProfile = retrieveFromObjectionSession(req.session, SESSION_COMPANY_PROFILE);
+  if (companyProfileInSession) {
+    addToObjectionSession(req.session, PREVIOUSLY_SELECTED_COMPANY, companyProfileInSession.companyNumber);
+  }
   if (!objection) {
-    throw new Error("No objection found in session");
   }
   return objection;
 };
