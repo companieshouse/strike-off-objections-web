@@ -9,7 +9,7 @@ import { Session } from "@companieshouse/node-session-handler/lib/session/model/
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
-import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
+import { OBJECTIONS_SESSION_NAME, PREVIOUSLY_SELECTED_COMPANY } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
@@ -18,7 +18,8 @@ import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
   OBJECTIONS_DOCUMENT_UPLOAD,
-  OBJECTIONS_ENTER_INFORMATION
+  OBJECTIONS_ENTER_INFORMATION,
+  OBJECTIONS_COMPANY_NUMBER
 } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionReason } from "../../src/services/objection.service";
@@ -26,6 +27,7 @@ import {
   retrieveCompanyProfileFromObjectionSession,
   retrieveFromObjectionSession,
   retrieveObjectionSessionFromSession,
+  addToObjectionSession,
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
@@ -38,6 +40,7 @@ const SESSION: Session = {
 } as Session;
 
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
+const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 
 const mockUpdateObjectionReason = updateObjectionReason as jest.Mock;
@@ -246,6 +249,19 @@ describe("enter information tests", () => {
 
     expect(response.status).toEqual(500);
     expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+
+  it("should save the selected company as previously selected company in session", async () => {
+    const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
+    mockRetrieveFromObjectionSession.mockReturnValueOnce(dummyCompanyProfile);
+
+    const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
+      .set("Referer", "/")
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
+    
+      expect(response.status).toEqual(200);
+      expect(mockGetObjection).toHaveBeenCalledTimes(1);
+      expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
   });
 });
 

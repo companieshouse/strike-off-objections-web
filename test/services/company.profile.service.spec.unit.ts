@@ -33,7 +33,7 @@ describe("company profile service unit tests", () => {
     try {
       await getCompanyProfile("", ACCESS_TOKEN);
     } catch (e) {
-      expect(e.status).toEqual(400);
+      expect(e.message).toEqual("status: 400");
     }
     expect.assertions(1);
   });
