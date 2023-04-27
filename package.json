@@ -28,7 +28,7 @@
     "govuk-frontend": "^3.11.0",
     "ioredis": "^4.17.3",
     "js-yaml": "^3.14.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "nunjucks": "^3.2.4",
     "utf-8-validate": "^5.0.2",
     "yargs": "^15.3.1"
