@@ -16,6 +16,7 @@ import * as removeDocumentRoute from "../controllers/remove.document.controller"
 import * as objectorOrganisation from "../controllers/objector.organisation.controller";
 import * as pageURLs from "../model/page.urls";
 import { Templates } from "../model/template.paths";
+import * as signoutRoute from "../controllers/signout.controller";
 
 export const router: Router = Router();
 
@@ -71,3 +72,6 @@ router.get(pageURLs.ACCESSIBILITY_STATEMENT, renderTemplate(Templates.ACCESSIBIL
 
 router.get(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.get);
 router.post(pageURLs.OBJECTOR_ORGANISATION, objectorOrganisation.post);
+
+router.get(pageURLs.SIGNOUT_PATH, signoutRoute.get);
+router.post(pageURLs.SIGNOUT_PATH, signoutRoute.post);

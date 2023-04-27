@@ -58,7 +58,7 @@ describe("document download landing page tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(response.text).toContain("<meta http-equiv=\"refresh\" content=\"5;URL='" + DOWNLOAD_FILE_URL + "'\"/>");
+    expect(response.text).toContain("<body onload=\"javascript:setTimeout(function(){ window.location = '" + DOWNLOAD_FILE_URL + "';},5000);\">");
   });
 
   it("should have a download link on the page", async () => {

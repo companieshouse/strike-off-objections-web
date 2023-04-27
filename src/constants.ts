@@ -7,7 +7,8 @@ export const SESSION_OBJECTION_CREATE = "objection_create";
 export const SESSION_OBJECTION_ID = "objection_id";
 export const SESSION_OBJECTOR = "objector";
 export const CHANGE_ANSWER_KEY = "change";
-
+export const SIGNOUT_RETURN_URL_SESSION_KEY = "signout-return-to-url";
+export const PREVIOUSLY_SELECTED_COMPANY = "previously_selected_company";
 
 export const FULL_NAME_FIELD = "fullName";
 export const SHARE_IDENTITY_FIELD = "shareIdentity";

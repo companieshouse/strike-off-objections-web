@@ -25,7 +25,7 @@ describe("company filing history service unit tests", () => {
     try {
       await getLatestGaz1FilingHistoryItem("", ACCESS_TOKEN);
     } catch (e) {
-      expect(e.status).toEqual(404);
+      expect(e.message).toEqual("status: 404");
     }
     expect.assertions(1);
   });
