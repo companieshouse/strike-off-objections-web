@@ -80,11 +80,13 @@ export interface Attachment {
  * @interface
  */
 export interface Objection {
+  id: string,
   attachments: Array<{
     name: string;
   }>,
   created_by: CreatedBy,
   reason?: string;
+  status: ObjectionStatus;
 }
 
 export interface CreatedBy {
