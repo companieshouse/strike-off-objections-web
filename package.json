@@ -30,8 +30,8 @@
     "js-yaml": "^3.14.1",
     "moment": "^2.29.4",
     "nunjucks": "^3.2.4",
-    "utf-8-validate": "^5.0.10",
-    "yargs": "^15.3.1"
+    "utf-8-validate": "^6.0.3",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/busboy": "^0.2.4",
