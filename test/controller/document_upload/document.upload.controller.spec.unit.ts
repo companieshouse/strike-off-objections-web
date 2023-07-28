@@ -45,6 +45,8 @@ const dummySession: Session = {
   data: {},
 } as Session;
 
+const fileData = {"encoding": "7bit", "filename": "text.txt", "mimeType": "text/plain"};
+
 const dummyAttachments = [
   {
     id: ATTACHMENT_ID,
@@ -323,7 +325,7 @@ describe ("document.document_upload.controller tests", () => {
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
     expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
-                                             TEXT_FILE_NAME);
+                                             fileData);
   });
 
   it ("should return divs html when file uploaded successfully - AJAX", async () => {
@@ -353,7 +355,7 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(mockAddAttachment).toBeCalledWith(dummySession,
                                              buffer,
-                                             TEXT_FILE_NAME);
+                                             fileData);
   });
 
   it ("should render error message on 415 error", async (done) => {

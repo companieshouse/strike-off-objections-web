@@ -1,4 +1,3 @@
-import Busboy from "busboy";
 import { Request } from "express";
 import { Socket } from "net";
 import logger from "../../utils/logger";
@@ -43,9 +42,10 @@ export const uploadFile = (req: Request,
                            maxFileSizeBytes: number,
                            callbacks: UploadFileCallbacks) => {
 
+  const Busboy = require('busboy');
   const chunkArray: Buffer[] = [];
 
-  const busboy: busboy.Busboy = new Busboy(
+  const busboy = Busboy(
     {
       headers: req.headers,
       limits: {
