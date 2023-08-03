@@ -42,6 +42,7 @@ export interface UploadFileCallbacks {
 export const uploadFile = (req: Request,
                            maxFileSizeBytes: number,
                            callbacks: UploadFileCallbacks) => {
+
   const chunkArray: Buffer[] = [];
 
   const busboy: busboy.Busboy = new Busboy(
