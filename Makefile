@@ -55,6 +55,10 @@ endif
 	cd $(tmpdir) && zip -r ../$(artifact_name)-$(version).zip .
 	rm -rf $(tmpdir)
 
+.PHONY: security-check
+security-check:
+	npm audit
+
 .PHONY: dist
 dist: lint test-unit clean package
 

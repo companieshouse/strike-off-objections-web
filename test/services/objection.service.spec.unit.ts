@@ -106,7 +106,7 @@ describe("objections API service unit tests", () => {
   it("should return boolean when getting company eligibility", async () => {
     mockGetEligibility.mockResolvedValueOnce(true);
 
-    const returnedEligibility: boolean = await objectionsService.getCompanyEligibility(
+    const returnedEligibility = await objectionsService.getCompanyEligibility(
       COMPANY_NUMBER, ACCESS_TOKEN);
 
     expect(returnedEligibility).toBeDefined();
@@ -117,7 +117,7 @@ describe("objections API service unit tests", () => {
   it("returns an id when a new objection is created", async () => {
     mockCreateNewObjection.mockResolvedValueOnce(NEW_OBJECTION_ID);
 
-    const objectionId: string = await objectionsService.createNewObjection(
+    const objectionId = await objectionsService.createNewObjection(
       COMPANY_NUMBER, ACCESS_TOKEN, dummyObjectionCreate);
 
     expect(objectionId).toBeDefined();
