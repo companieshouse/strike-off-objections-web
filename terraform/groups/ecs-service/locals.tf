@@ -49,7 +49,7 @@ locals {
 
   task_environment = [
     { "name": "NODE_PORT", "value": "${local.container_port}" },
-    { "name": "LOGLEVEL", "value": "${var.log_level}" },
+    { "name": "LOG_LEVEL", "value": "${var.log_level}" },
     { "name": "CHS_URL", "value": "${var.chs_url}" },
     { "name": "PIWIK_URL", "value": "${var.piwik_url}" },
     { "name": "PIWIK_SITE_ID", "value": "${var.piwik_site_id}" },
