@@ -84,9 +84,6 @@ variable "chs_url" {
 variable "cdn_host" {
   type        = string
 }
-variable "account_local_url" {
-  type        = string
-}
 variable "strike_off_objections_web_version" {
   type        = string
   description = "The version of the overseas entities web container to run."
@@ -131,9 +128,6 @@ variable "api_url" {
   type        = string
 }
 variable "max_file_size_bytes" {
-  type        = string
-}
-variable "piwik_landing_page_start_goal_id" {
   type        = string
 }
 variable "human_log" {
