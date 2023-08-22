@@ -64,7 +64,11 @@ variable "required_memory" {
   description = "The required memory for this service"
   default = 256 # defaulted low for node service in dev environments, override for production
 }
-
+variable "use_fargate" {
+  type        = bool
+  description = "If true, sets the required capabilities for all containers in the task definition to use FARGATE, false uses EC2"
+  default     = false
+}
 # ------------------------------------------------------------------------------
 # Service environment variable configs
 # ------------------------------------------------------------------------------
@@ -72,11 +76,6 @@ variable "log_level" {
   default     = "info"
   type        = string
   description = "The log level for services to use: trace, debug, info or error"
-}
-
-variable "confirmation_statement_web_version" {
-  type        = string
-  description = "The version of the confirmation statement web container to run."
 }
 
 variable "chs_url" {
@@ -88,7 +87,10 @@ variable "cdn_host" {
 variable "account_local_url" {
   type        = string
 }
-
+variable "strike_off_objections_web_version" {
+  type        = string
+  description = "The version of the overseas entities web container to run."
+}
 variable "piwik_url" {
   type        = string
 }
@@ -103,7 +105,6 @@ variable "cache_pool_size" {
   type        = string
   default     = "8"
 }
-
 variable "cookie_domain" {
   type        = string
 }
@@ -115,41 +116,29 @@ variable "cookie_secure_only" {
   type        = string
   default     = "0"
 }
+variable "cookie_expiration_in_seconds" {
+  type        = string
+  default     = "3600"
+}
 variable "default_session_expiration" {
   type        = string
   default     = "3600"
 }
-
-variable "radio_button_value_log_length" {
-  type        = string
-}
-variable "show_service_offline_page" {
-  type        = string
-}
-variable "url_log_max_length" {
-  type        = string
-}
-variable "url_param_max_length" {
-  type        = string
-}
-variable "feature_flag_private_sdk_12052021" {
-  type        = string
-}
-variable "feature_flag_active_officers_01072021" {
-  type        = string
-}
-variable "feature_flag_five_or_less_officers_journey_21102021" {
-  type        = string
-}
-variable "psc_statements_api_page_size" {
-  type        = string
-}
-variable "ewf_url" {
+variable "download_filename_prefix" {
   type        = string
 }
 variable "api_url" {
   type        = string
 }
-variable "piwik_start_goal_id" {
+variable "max_file_size_bytes" {
+  type        = string
+}
+variable "piwik_landing_page_start_goal_id" {
+  type        = string
+}
+variable "human_log" {
+  type        = string
+}
+variable "show_service_offline_page" {
   type        = string
 }

@@ -11,6 +11,19 @@ kms_alias = "alias/development-eu-west-2/environment-services-kms"
 # cache_server 
 # oauth2_redirect_uri 
 # oauth2_auth_uri 
-# account_test_url 
 # account_url 
-TODO
+log_level = "debug"
+chs_url = "https://cidev.aws.chdev.org"
+piwik_url = "https://matomo.platform.aws.chdev.org/"
+piwik_site_id = "20"
+cdn_host = "d3uvya5a8a1ncx.cloudfront.net"
+chips_presenter_auth_url = "http://enablement-presenter-api:8080/presenterauth"
+chs_company_profile_api_local_url = "https://api.cidev.aws.chdev.org"
+human_log = "1"
+cookie_domain = "cidev.aws.chdev.org"
+cookie_expiration_in_seconds = "3600"
+download_filename_prefix = "CH_SO_OBJ_"
+max_file_size_bytes = "4194304"
+pay_by_account_feature_enabled = "1"
+piwik_confirmation_page_pdf_goal_id = "998"
+api_url = "https://api.cidev.aws.chdev.org"
