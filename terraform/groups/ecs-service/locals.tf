@@ -10,6 +10,7 @@ locals {
   healthcheck_path          = "/strike-off-objections" #healthcheck path for strike-off-objections web
   healthcheck_matcher       = "200-302"
 
+  kms_alias                 = "alias/${var.aws_profile}/environment-services-kms"
   service_secrets           = jsondecode(data.vault_generic_secret.service_secrets.data_json)
 
   parameter_store_secrets    = {
