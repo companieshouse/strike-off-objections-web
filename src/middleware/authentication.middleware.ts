@@ -19,6 +19,7 @@ export const authenticationMiddleware = (req: Request, res: Response, next: Next
 const getAuthMiddlewareConfig = () => {
   return {
     accountWebUrl: "",
+    chsWebUrl: process.env.CHS_URL || "",
     returnUrl: pageURLs.OBJECTIONS_OBJECTOR_ORGANISATION,
   };
 };

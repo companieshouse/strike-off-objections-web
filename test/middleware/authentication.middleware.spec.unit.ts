@@ -38,6 +38,7 @@ describe("authentication middleware tests", () => {
 
     const expectedConfig = {
       accountWebUrl: "",
+      chsWebUrl: "",
       returnUrl: DOWNLOAD_LANDING_PAGE_URL,
     };
 
@@ -50,6 +51,7 @@ describe("authentication middleware tests", () => {
 
     const expectedConfig = {
       accountWebUrl: "",
+      chsWebUrl: "",
       returnUrl: DOWNLOAD_FILE_URL,
     };
 
@@ -62,6 +64,7 @@ describe("authentication middleware tests", () => {
 
     const expectedConfig = {
       accountWebUrl: "",
+      chsWebUrl: "",
       returnUrl: OBJECTIONS_OBJECTOR_ORGANISATION,
     };
 
