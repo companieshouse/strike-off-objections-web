@@ -18,7 +18,7 @@
     "@companieshouse/node-session-handler": "^5.0.1",
     "@companieshouse/structured-logging-node": "^2.0.1",
     "@companieshouse/web-security-node": "^2.0.5",
-    "axios": "^0.21.4",
+    "axios": "^1.6.0",
     "bufferutil": "^4.0.7",
     "busboy": "^0.3.1",
     "cookie-parser": "~1.4.6",
