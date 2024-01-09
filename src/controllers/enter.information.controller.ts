@@ -90,7 +90,5 @@ const getObjectionFromSession = async (req: Request) => {
   if (companyProfileInSession) {
     addToObjectionSession(req.session, PREVIOUSLY_SELECTED_COMPANY, companyProfileInSession.companyNumber);
   }
-  if (!objection) {
-  }
   return objection;
 };

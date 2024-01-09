@@ -54,11 +54,10 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
     logger.error(`ERROR calling API ${config.url} - ${apiErr}`);
     const axiosError = apiErr as AxiosError;
     const { response, message } = axiosError;
-     const thrownError: ApiError = {
-        data: response ? response.data : [],
-        message: message,
-        status: response ? response.status : STATUS_NO_RESPONSE,
+    throw {
+      data: response ? response.data : [],
+      message: message,
+      status: response ? response.status : STATUS_NO_RESPONSE,
     };
-    throw thrownError
   }
 };

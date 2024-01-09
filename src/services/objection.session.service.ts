@@ -78,7 +78,6 @@ export const deleteObjectionCreateFromObjectionSession = (session: Session): voi
   const objectionsExtraData: ObjectionSessionExtraData = retrieveObjectionSessionFromSession(session);
   if (objectionsExtraData) {
     delete objectionsExtraData[SESSION_OBJECTION_CREATE];
-    return;
   }
 };
 
