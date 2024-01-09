@@ -111,10 +111,8 @@ export const addAttachment = async (companyNumber: string,
   axiosConfig.data = data;
 
   axiosConfig.headers = {
-    post: {
       ...{ Authorization: "Bearer " + token },
       ...data.getHeaders(),
-    },
   };
 
   return (await makeAPICall(axiosConfig)).data.id as string;
