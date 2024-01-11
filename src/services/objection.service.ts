@@ -2,14 +2,6 @@ import { Session } from "@companieshouse/node-session-handler";
 import { SESSION_OBJECTION_ID } from "../constants";
 import ObjectionCompanyProfile from "../model/objection.company.profile";
 import * as objectionsSdk from "../modules/sdk/objections";
-import {
-  Attachment, CompanyEligibility,
-  Download,
-  Objection,
-  ObjectionCreate, ObjectionCreatedResponse,
-  ObjectionPatch,
-  ObjectionStatus
-} from "../modules/sdk/objections";
 import logger from "../utils/logger";
 import {
   retrieveAccessTokenFromSession,
@@ -26,9 +18,9 @@ import {
  * @returns {boolean} the eligibility for the given company
  * @throws {ApiError}
  */
-export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<CompanyEligibility> => {
+export const getCompanyEligibility = async (companyNumber: string, token: string): Promise<objectionsSdk.CompanyEligibility> => {
   logger.info(`getting eligibility for company number ${companyNumber}`);
-  return await objectionsSdk.getCompanyEligibility(companyNumber, token);
+  return objectionsSdk.getCompanyEligibility(companyNumber, token);
 };
 
 /**
@@ -41,19 +33,19 @@ export const getCompanyEligibility = async (companyNumber: string, token: string
  * @returns {string} the id of the newly created objection
  * @throws {ApiError}
  */
-export const createNewObjection = async (companyNumber: string, token: string, createWithData: ObjectionCreate): Promise<ObjectionCreatedResponse> => {
+export const createNewObjection = async (companyNumber: string, token: string, createWithData: objectionsSdk.ObjectionCreate): Promise<objectionsSdk.ObjectionCreatedResponse> => {
   logger.info(`Creating objection for company number ${companyNumber}`);
 
-  const response: ObjectionCreatedResponse = await objectionsSdk.createNewObjection(companyNumber, token, createWithData);
+  const response: objectionsSdk.ObjectionCreatedResponse = await objectionsSdk.createNewObjection(companyNumber, token, createWithData);
 
   logger.info(`Id of newly created objection is ${response.objectionId}`);
   return response;
 };
 
 export const updateObjectionUserDetails = async (companyNumber: string, objectionId: string,
-                                                 token: string, userData: ObjectionCreate) => {
+                                                 token: string, userData: objectionsSdk.ObjectionCreate) => {
   logger.info(`Updating objection user details for company number ${companyNumber}`);
-  const patch: ObjectionPatch = { full_name: userData.full_name, share_identity: userData.share_identity  };
+  const patch: objectionsSdk.ObjectionPatch = { full_name: userData.full_name, share_identity: userData.share_identity  };
   await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
 };
 
@@ -70,7 +62,7 @@ export const updateObjectionReason = async (
 
   logger.info(`Updating objection reason for objectionId ${objectionId}`);
 
-  const patch: ObjectionPatch = { reason: objectionReason };
+  const patch: objectionsSdk.ObjectionPatch = { reason: objectionReason };
 
   await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
 };
@@ -86,7 +78,7 @@ export const submitObjection = async (session: Session) => {
 
   logger.info(`Updating objection status to submitted for objectionId ${objectionId}`);
 
-  const patch: ObjectionPatch = { status: ObjectionStatus.SUBMITTED };
+  const patch: objectionsSdk.ObjectionPatch = { status: objectionsSdk.ObjectionStatus.SUBMITTED };
 
   await objectionsSdk.patchObjection(companyNumber, objectionId, token, patch);
 };
@@ -97,28 +89,28 @@ export const addAttachment = async (session: Session,
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Adding a new attachment to objectionId ${objectionId}`);
-  return await objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
+  return objectionsSdk.addAttachment(companyNumber, token, objectionId, attachment, fileName);
 };
 
-export const getAttachments = async (session: Session): Promise<Attachment[]> => {
+export const getAttachments = async (session: Session): Promise<objectionsSdk.Attachment[]> => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Getting attachments for objectionId ${objectionId}`);
-  return await objectionsSdk.getAttachments(companyNumber, token, objectionId);
+  return objectionsSdk.getAttachments(companyNumber, token, objectionId);
 };
 
-export const getAttachment = async (session: Session, attachmentId: string): Promise<Attachment> => {
+export const getAttachment = async (session: Session, attachmentId: string): Promise<objectionsSdk.Attachment> => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Getting attachment ${attachmentId} for objectionId ${objectionId}`);
-  return await objectionsSdk.getAttachment(companyNumber, token, objectionId, attachmentId);
+  return objectionsSdk.getAttachment(companyNumber, token, objectionId, attachmentId);
 };
 
 export const deleteAttachment = async (session: Session, attachmentId: string) => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Deleting attachment ${attachmentId} for objectionId ${objectionId}`);
-  return await objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
+  return objectionsSdk.deleteAttachment(companyNumber, token, objectionId, attachmentId);
 };
 
 /**
@@ -129,12 +121,12 @@ export const deleteAttachment = async (session: Session, attachmentId: string) =
  * @returns {Download} wrapper object containing the file data and file header info
  * @throws {ApiError} if the download failed
  */
-export const downloadAttachment = async (downloadUrl: string, session: Session): Promise<Download> => {
+export const downloadAttachment = async (downloadUrl: string, session: Session): Promise<objectionsSdk.Download> => {
   const token: string = retrieveAccessTokenFromSession(session);
 
   logger.info(`Downloading objection attachment from ${downloadUrl}`);
 
-  return await objectionsSdk.downloadAttachment(downloadUrl, token);
+  return objectionsSdk.downloadAttachment(downloadUrl, token);
 };
 
 /**
@@ -144,12 +136,12 @@ export const downloadAttachment = async (downloadUrl: string, session: Session):
  *
  * @returns {Objection} details of the existing objection
  */
-export const getObjection = async (session: Session): Promise<Objection> => {
+export const getObjection = async (session: Session): Promise<objectionsSdk.Objection> => {
   const { objectionId, companyNumber, token } = getValuesForApiCall(session);
 
   logger.info(`Getting objectionId ${objectionId}`);
 
-  return await objectionsSdk.getObjection(companyNumber, token, objectionId);
+  return objectionsSdk.getObjection(companyNumber, token, objectionId);
 };
 
 /**
