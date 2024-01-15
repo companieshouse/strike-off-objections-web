@@ -1,4 +1,4 @@
-import Busboy from "busboy";
+const Busboy = require('busboy');
 import { Request } from "express";
 import { Socket } from "net";
 import logger from "../../utils/logger";
@@ -45,8 +45,7 @@ export const uploadFile = (req: Request,
 
   const chunkArray: Buffer[] = [];
 
-  const busboy: busboy.Busboy = new Busboy(
-    {
+  const busboy = Busboy({
       headers: req.headers,
       limits: {
         fileSize: maxFileSizeBytes,
@@ -58,9 +57,11 @@ export const uploadFile = (req: Request,
   busboy.on("file",
             (_fieldName: string,
              fileStream: Socket,
-             filename: string,
-             _encoding: string,
-             mimeType: string) => {
+             fileInfo: { encoding: string, filename: string, mimeType: string }
+              ) => {
+                const filename = fileInfo.filename;
+                const mimeType = fileInfo.mimeType;
+              
 
               // File on data event - fired when a new chunk of data arrives into busboy
               fileStream.on("data", (chunk: Buffer) => {
