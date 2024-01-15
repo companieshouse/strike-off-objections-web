@@ -84,11 +84,11 @@ export const postContinueButton = async (req: Request, res: Response, next: Next
     attachments = await objectionService.getAttachments(req.session as Session);
   } catch (e) {
     logger.errorRequest(req, `Error thrown calling objection.service.getAttachments - ${e}`);
-    return await uploadResponderStrategy.handleGenericError(res, e, next);
+    return uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
   if (attachments && attachments.length === 0) {
-    return await displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
+    return displayError(res, UploadErrorMessages.NO_DOCUMENTS_ADDED, uploadResponderStrategy, attachments);
   }
 
   res.redirect(OBJECTIONS_CHECK_YOUR_ANSWERS);
@@ -111,7 +111,7 @@ const getFileSizeLimitExceededCallback = (req: Request,
     const maxInMB: number = getMaxFileSizeInMB(maxInBytes);
     logger.debug("File limit " + maxInMB + "MB reached for file " + filename);
     const errorMsg: string = `${UploadErrorMessages.FILE_TOO_LARGE} ${maxInMB} MB`;
-    return await displayError(res, errorMsg, uploadResponderStrategy, attachments);
+    return displayError(res, errorMsg, uploadResponderStrategy, attachments);
   };
 };
 
@@ -128,7 +128,7 @@ const getNoFileDataReceivedCallback = (req: Request,
                                        uploadResponderStrategy: UploadResponderStrategy,
                                        attachments: Attachment[]): (filename: string) => Promise<void> => {
   return async (_filename: string) => {
-    return await displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
+    return displayError(res, UploadErrorMessages.NO_FILE_CHOSEN, uploadResponderStrategy, attachments);
   };
 };
 
@@ -158,11 +158,11 @@ const getUploadFinishedCallback = (req: Request,
                      `of size ${fileData.length} bytes. The api has returned the error: ${e.message}`);
 
       if (e.status === HttpStatusCodes.UNSUPPORTED_MEDIA_TYPE) {
-        return await displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
+        return displayError(res, UploadErrorMessages.INVALID_MIME_TYPES, uploadResponderStrategy, attachments);
       }
-      return await uploadResponderStrategy.handleGenericError(res, e, next);
+      return uploadResponderStrategy.handleGenericError(res, e, next);
     }
-    return await uploadResponderStrategy.handleSuccess(req, res);
+    return uploadResponderStrategy.handleSuccess(req, res);
   };
 };
 
@@ -179,7 +179,7 @@ const displayError = async (res: Response,
                             attachments: Attachment[]) => {
   const documentUploadErrorData: GovUkErrorData =
     createGovUkErrorData(errorMessage, "#file-upload", true, "");
-  return await uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
+  return uploadResponderStrategy.handleGovUKError(res, documentUploadErrorData, attachments);
 };
 
 /**

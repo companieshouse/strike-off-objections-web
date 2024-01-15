@@ -41,7 +41,7 @@ export const post = [...validators, async (req: Request, res: Response, next: Ne
   logger.debugRequest(req, "POST remove document received");
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return await showErrorsOnScreen(errors, req, res);
+    return showErrorsOnScreen(errors, req, res);
   }
 
   if (req.body[REMOVE_DOCUMENT_FORM_FIELD] === "yes") {

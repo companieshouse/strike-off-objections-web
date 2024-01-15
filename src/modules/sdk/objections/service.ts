@@ -159,7 +159,6 @@ export const deleteAttachment = async (companyNumber: string,
     OBJECTIONS_API_SINGLE_ATTACHMENT_URL(companyNumber, objectionId, attachmentId),
     token);
   await makeAPICall(axiosConfig);
-  return;
 };
 
 /**

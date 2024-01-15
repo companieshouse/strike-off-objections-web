@@ -72,7 +72,7 @@ export const uploadFile = (req: Request,
               // File on limit event - fired when file size limit is reached
               fileStream.on("limit", async () => {
                 fileStream.destroy();
-                return await callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
+                return callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
               });
 
               // File on end event - fired when file has finished - could be if file completed fully or ended
@@ -85,10 +85,10 @@ export const uploadFile = (req: Request,
                 const fileData: Buffer = Buffer.concat(chunkArray);
                 logger.debug("Total bytes received for file = " + fileData.length);
                 if (fileData.length === 0) {
-                  return await callbacks.noFileDataReceivedCallback(filename);
+                  return callbacks.noFileDataReceivedCallback(filename);
                 }
 
-                return await callbacks.uploadFinishedCallback(filename, fileData, mimeType);
+                return callbacks.uploadFinishedCallback(filename, fileData, mimeType);
               }); // end fileStream.on("end") event
             }); // end busboy.on("file") event
 
