@@ -1,4 +1,4 @@
-const Busboy = require('busboy');
+import Busboy from "busboy";
 import { Request } from "express";
 import { Socket } from "net";
 import logger from "../../utils/logger";
