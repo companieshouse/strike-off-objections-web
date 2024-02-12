@@ -11,12 +11,12 @@ custom_build(
   live_update = [
     sync(
       local_path = './src',
-      remote_path = '/app/src'
+      remote_path = '/opt/src'
     ),
     restart_container()
   ],
   deps = [
     './dist',
-    './opt'
+    './src'
   ]
 )
