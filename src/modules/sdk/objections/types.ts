@@ -76,6 +76,16 @@ export interface Attachment {
 }
 
 /**
+ * List of info for busboy
+ * @interface
+ */
+export interface FileInfoObj {
+  filename: string, 
+  encoding: string, 
+  mimeType: string
+}
+
+/**
  * Data structure representing an Objection
  * @interface
  */
