@@ -1,5 +1,6 @@
-import Busboy from "busboy";
+
 import { Request } from "express";
+import { FileInfoObj } from "modules/sdk/objections";
 import { Socket } from "net";
 import logger from "../../utils/logger";
 
@@ -45,7 +46,9 @@ export const uploadFile = (req: Request,
 
   const chunkArray: Buffer[] = [];
 
-  const busboy: busboy.Busboy = new Busboy(
+  const Busboy = require('busboy');
+
+  const busboy = Busboy(
     {
       headers: req.headers,
       limits: {
@@ -56,29 +59,28 @@ export const uploadFile = (req: Request,
 
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",
-            (_fieldName: string,
-             fileStream: Socket,
-             filename: string,
-             _encoding: string,
-             mimeType: string) => {
+            (name:string, file:Socket, info:FileInfoObj) => {
+
+              const { filename, encoding, mimeType } = info;
+
 
               // File on data event - fired when a new chunk of data arrives into busboy
-              fileStream.on("data", (chunk: Buffer) => {
+              file.on("data", (chunk: Buffer) => {
                 chunkArray.push(chunk);
                 logger.trace("Received " + chunk.length + " bytes for file " + filename);
               });
 
               // File on limit event - fired when file size limit is reached
-              fileStream.on("limit", async () => {
-                fileStream.destroy();
+              file.on("limit", async () => {
+                file.destroy();
                 return callbacks.fileSizeLimitExceededCallback(filename, maxFileSizeBytes);
               });
 
               // File on end event - fired when file has finished - could be if file completed fully or ended
               // prematurely (destroyed / cancelled)
-              fileStream.on("end", async () => {
+              file.on("end", async () => {
                 // if file ended prematurely - do nothing
-                if (fileStream.destroyed) {
+                if (file.destroyed) {
                   return;
                 }
                 const fileData: Buffer = Buffer.concat(chunkArray);
