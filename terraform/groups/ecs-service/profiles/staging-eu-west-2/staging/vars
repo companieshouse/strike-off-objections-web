@@ -1,15 +1,14 @@
 environment = "staging"
 aws_profile = "staging-eu-west-2"
 
-log_level = "info"
-chs_url = "https://staging.company-information.service.gov.uk"
-piwik_url = "https://matomo.platform.aws.chdev.org/"
-piwik_site_id = "15"
-cdn_host = "d6nh3dxv55e16.cloudfront.net"
-human_log = "1"
-cookie_domain = "company-information.service.gov.uk"
-cookie_expiration_in_seconds = "3600"
-download_filename_prefix = "CH_SO_OBJ_"
-max_file_size_bytes = "4194304"
-show_service_offline_page = "false"
-api_url = "https://private-api-staging.company-information.service.gov.uk"
+# service configs
+use_set_environment_files = true
+
+# Scaling configs
+desired_task_count = 2 # use multi instance in live
+
+# Scheduled scaling of tasks
+service_autoscale_enabled  = true
+service_scaledown_schedule = "55 19 * * ? *"
+service_scaleup_schedule   = "5 6 * * ? *"
+
