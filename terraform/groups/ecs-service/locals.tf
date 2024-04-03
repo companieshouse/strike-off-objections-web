@@ -5,12 +5,13 @@ locals {
   global_prefix = "global-${var.environment}"
 
   service_name              = "strike-off-objections-web"
+  service_short_name        = "strk-off-objctns-web"
   container_port            = "3000" # default node port required here until prod docker container is built allowing port change via env var
   docker_repo               = "strike-off-objections-web"
   lb_listener_rule_priority = 29
   lb_listener_paths         = ["/strike-off-objections*"]
   healthcheck_path          = "/strike-off-objections" #healthcheck path for strike-off-objections web
-  healthcheck_matcher       = "302"
+  healthcheck_matcher       = "200"
 
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
   vpc_name                   = local.service_secrets["vpc_name"]
