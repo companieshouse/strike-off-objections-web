@@ -22,7 +22,7 @@
     "bufferutil": "^4.0.7",
     "busboy": "^1.6.0",
     "cookie-parser": "~1.4.6",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "express-validator": "^6.15.0",
     "form-data": "^2.3.3",
     "govuk-frontend": "^3.14.0",
