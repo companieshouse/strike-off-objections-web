@@ -1,9 +1,12 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
+
+import "../mocks/multipart.middleware";
+import { sessionMock } from "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
 
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -12,7 +15,6 @@ import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME, PREVIOUSLY_SELECTED_COMPANY } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { ErrorMessages } from "../../src/model/error.messages";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
@@ -35,10 +37,6 @@ const COMPANY_NUMBER = "00006400";
 const OBJECTION_ID = "123456";
 const REASON = "Owed Money";
 
-const SESSION: Session = {
-  data: {},
-} as Session;
-
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
@@ -47,12 +45,6 @@ const mockUpdateObjectionReason = updateObjectionReason as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = SESSION;
-  return next();
-});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -67,6 +59,14 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 const mockRetrieveObjectionSessionFromSession = retrieveObjectionSessionFromSession as jest.Mock;
 
 const mockGetObjection = getObjection as jest.Mock;
+
+const SESSION: Session = {
+  data: {},
+} as Session;
+
+beforeEach(() => {
+  sessionMock.session = SESSION;
+});
 
 describe("enter information tests", () => {
 
@@ -148,10 +148,7 @@ describe("enter information tests", () => {
   it("should throw an error when no session is present", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockGetObjection.mockReset().mockResolvedValueOnce(mockObjection);
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-      req.session = undefined;
-      return next();
-    });
+    sessionMock.session = undefined;
 
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
@@ -164,11 +161,6 @@ describe("enter information tests", () => {
   it("should throw an error when no objection is present", async () => {
     mockRetrieveFromObjectionSession.mockReset();
     mockGetObjection.mockReset().mockResolvedValueOnce(undefined);
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-      req.session = SESSION;
-      return next();
-    });
-
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -178,10 +170,6 @@ describe("enter information tests", () => {
   });
 
   it("should redirect to the check-your-answers page on post with change key set to true", async () => {
-    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
-      req.session = SESSION;
-      return next();
-    });
     mockGetObjectionSessionValue.mockReset();
     mockRetrieveObjectionSessionFromSession.mockReset();
     mockRetrieveFromObjectionSession.mockReset().mockReturnValueOnce("objectionId");
@@ -201,10 +189,6 @@ describe("enter information tests", () => {
   });
 
   it("should call the API to update the objection with the reason", async () => {
-    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
-      req.session = SESSION;
-      return next();
-    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
@@ -225,10 +209,6 @@ describe("enter information tests", () => {
   });
 
   it("should render error page if updating objection reason produces error", async () => {
-    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
-      req.session = SESSION;
-      return next();
-    });
     mockGetObjectionSessionValue.mockReset();
     mockGetObjectionSessionValue.mockImplementationOnce(() => dummyCompanyProfile);
 
@@ -258,10 +238,10 @@ describe("enter information tests", () => {
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-    
+
       expect(response.status).toEqual(200);
       expect(mockGetObjection).toHaveBeenCalledTimes(1);
-      expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
+      expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(sessionMock.session, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
   });
 });
 

@@ -1,18 +1,18 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.service");
 
-import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
+import { sessionMock } from "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
+
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
@@ -23,20 +23,10 @@ import {
 } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
-const dummySession: Session = {
-  data: {},
-} as Session;
-
 const mockGetObjectionSessionValue = retrieveCompanyProfileFromObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = dummySession;
-  return next();
-});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -72,7 +62,7 @@ describe("check company tests", () => {
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
-    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(dummySession, CHANGE_ANSWER_KEY);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(sessionMock.session, CHANGE_ANSWER_KEY);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
@@ -95,7 +85,7 @@ describe("check company tests", () => {
 
     expect(mockGetObjectionSessionValue).toHaveBeenCalledTimes(1);
     expect(mockDeleteFromObjectionsSession).toHaveBeenCalledTimes(1);
-    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(dummySession, CHANGE_ANSWER_KEY);
+    expect(mockDeleteFromObjectionsSession).toHaveBeenCalledWith(sessionMock.session, CHANGE_ANSWER_KEY);
     expect(response.status).toEqual(200);
     expect(response.text).toContain("Girls school trust");
     expect(response.text).toContain("00006400");
@@ -112,7 +102,7 @@ describe("check company tests", () => {
       .set("referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockSubmitObjection).toBeCalledWith(dummySession);
+    expect(mockSubmitObjection).toBeCalledWith(sessionMock.session);
 
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_CONFIRMATION);
@@ -143,7 +133,7 @@ describe("check company tests", () => {
       .set("referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(mockSubmitObjection).toBeCalledWith(dummySession);
+    expect(mockSubmitObjection).toBeCalledWith(sessionMock.session);
 
     expect(res.status).toEqual(500);
     expect(res).not.toBeUndefined();
@@ -174,6 +164,7 @@ const dummyObjectionShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
+    objector: "",
     full_name: "Joe Bloggs",
     share_identity: true
   },
@@ -189,6 +180,7 @@ const dummyObjectionDoNotShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
+    objector: "",
     full_name: "No Bloggs",
     share_identity: false
   },

@@ -1,11 +1,13 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/modules/sdk/objections");
 jest.mock("@companieshouse/node-session-handler/lib/session/model/Session");
+
+import { sessionMock } from "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
 
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
@@ -13,26 +15,11 @@ import request from "supertest";
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
 
 const testEmail = "testEmail";
 const mockDeleteExtraData = Session.prototype.deleteExtraData as jest.Mock;
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  const session: Session = new Session();
-  session.data = {
-    signin_info: {
-      user_profile: {
-        email: testEmail,
-      },
-    },
-  };
-  req.session = session;
-  return next();
-});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -48,10 +35,21 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
   return next(new Error("No session on request"));
 });
 
+const SESSION: Session = {
+      data: {
+        signin_info: {
+          user_profile: {
+            email: testEmail
+          },
+        }
+      },
+      deleteExtraData: mockDeleteExtraData
+    } as unknown as Session;
+
 describe("Index page Tests", () => {
   beforeEach(() => {
-    mockSessionMiddleware.mockClear();
     mockDeleteExtraData.mockClear();
+    sessionMock.session = SESSION;
   });
 
   describe('GET', () => {
@@ -83,7 +81,7 @@ describe("Index page Tests", () => {
     });
 
     it("shouldn't call deleteExtraData when posting index page with no session data", async () => {
-      mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
+      sessionMock.session = undefined;
       mockObjectionSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => next());
 
       const response = await request(app)

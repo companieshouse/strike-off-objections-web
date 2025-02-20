@@ -1,7 +1,9 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.service");
+
+import "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
 
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
@@ -9,7 +11,6 @@ import { Readable } from "stream";
 import request from "supertest";
 import app from "../../src/app";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { STRIKE_OFF_OBJECTIONS } from "../../src/model/page.urls";
 import {
   ApiError,
@@ -25,14 +26,6 @@ const mockDownloadAttachment = downloadAttachment as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = {
-    data: {},
-  } as Session;
-  return next();
-});
 
 const PREFIXED_CONTENT_DISPOSITION_VALUE = "attachment; filename=\"CH_SO_OBJ_test.pdf\"";
 const CONTENT_DISPOSITION_VALUE = "attachment; filename=\"test.pdf\"";

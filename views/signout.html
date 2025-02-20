@@ -40,6 +40,7 @@
     {% endif %}
 
     <form action="/strike-off-objections/signout" method="POST">
+        {% include "includes/csrf-token.njk" %}
         {{ govukRadios({
             classes: "govuk-radios--inline",
             idPrefix: "signout",
@@ -71,8 +72,8 @@
                     }
                 }
             ]
-            }) 
-        }} 
+            })
+        }}
     {% include "includes/continue-button.html" %}
     </form>
 {% endblock %}
