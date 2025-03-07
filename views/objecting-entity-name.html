@@ -23,6 +23,7 @@
         }) }}
       {% endif %}
       <form method="post">
+        {% include "includes/csrf-token.njk" %}
         {{ govukInput({
           label: {
             text: objectingEntityNamePageText,

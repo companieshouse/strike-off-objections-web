@@ -5,10 +5,12 @@ import {
 
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.service");
+
+import { sessionMock } from "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
 
 import request from "supertest";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -16,7 +18,6 @@ import { OBJECTIONS_CHANGE_ANSWERS } from "../../src/model/page.urls";
 import app from "../../src/app";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { NextFunction, Request, Response } from "express";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { CHANGE_ANSWER_KEY, OBJECTIONS_SESSION_NAME } from "../../src/constants";
@@ -37,12 +38,6 @@ const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = SESSION;
-  return next();
-});
-
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
   if (req.session) {
@@ -54,6 +49,10 @@ mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, 
 });
 
 describe("change answers tests", () => {
+  beforeEach(() => {
+    sessionMock.session = SESSION;
+  });
+
   it("should redirect to objecting-entity-name when query is passed and update session", async () => {
 
     const queryId: string = "?changePage=objecting-entity-name";
@@ -110,11 +109,8 @@ describe("change answers tests", () => {
 
   it("should redirect to error page when session is missng", async () => {
 
+    sessionMock.session = undefined;
     const queryId: string = "?changePage=objecting-entity-name";
-    mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-      return next();
-    });
 
     const res = await request(app)
       .get(OBJECTIONS_CHANGE_ANSWERS + queryId)

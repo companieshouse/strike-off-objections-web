@@ -18,6 +18,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form method="post" action="document-upload" enctype="multipart/form-data" id="file-upload-form">
+        {% include "includes/csrf-token.njk" %}
 
         <div id="errorSummaryDiv">
           {% include "includes/document-upload-error-summary.html" %}
@@ -60,6 +61,7 @@
       </form>
 
       <form method="post" action="document-upload-continue" id="continue">
+        {% include "includes/csrf-token.njk" %}
         {{ govukButton({
           text: "Continue",
           attributes: {

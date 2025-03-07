@@ -7,12 +7,22 @@ import  errorHandlers from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "./middleware/objection.session.middleware";
 import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
-import { sessionMiddleware } from "./middleware/session.middleware";
+import { createSessionMiddleware } from "./middleware/session.middleware";
+import { MultipartMiddleware } from "./middleware/multipart.middleware";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { ErrorMessages } from "./model/error.messages";
 import * as pageURLs from "./model/page.urls";
 import { router } from "./routes/routes";
 import logger from "./utils/logger";
+import Redis from 'ioredis';
+import { CACHE_SERVER } from "./utils/properties";
+import { SessionStore } from '@companieshouse/node-session-handler';
+import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
+
+const redis = new Redis(CACHE_SERVER);
+const sessionStore = new SessionStore(redis);
+const sessionMiddleware = createSessionMiddleware(sessionStore);
+const csrfProtectionMiddleware = createCsrfProtectionMiddleware(sessionStore);
 
 const app = express();
 
@@ -21,6 +31,7 @@ const env = nunjucks.configure([
   "views",
   "node_modules/govuk-frontend/",
   "node_modules/govuk-frontend/components/",
+  "node_modules/@companieshouse/",
 ], {
   autoescape: true,
   express: app,
@@ -43,11 +54,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, MultipartMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, csrfProtectionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*(?<!download)$`, objectionSessionMiddleware);
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
+app.use(csrfErrorHandler);
 app.use(...errorHandlers);
 
 logger.info(`************** ${APP_NAME} has started **************`);

@@ -17,7 +17,7 @@
     "@companieshouse/api-sdk-node": "^2.0.147",
     "@companieshouse/node-session-handler": "^5.0.1",
     "@companieshouse/structured-logging-node": "^2.0.1",
-    "@companieshouse/web-security-node": "^2.0.5",
+    "@companieshouse/web-security-node": "^4.1.1",
     "axios": "^1.6.0",
     "bufferutil": "^4.0.7",
     "busboy": "^1.6.0",

@@ -1,18 +1,18 @@
 jest.mock("ioredis");
 jest.mock("../../../src/middleware/authentication.middleware");
-jest.mock("../../../src/middleware/session.middleware");
 jest.mock("../../../src/middleware/objection.session.middleware");
 jest.mock("../../../src/services/objection.session.service");
 jest.mock("../../../src/services/objection.service");
 
-import { Session } from "@companieshouse/node-session-handler";
+import { sessionMock } from "../../mocks/session.middleware";
+import "../../mocks/csrf.middleware";
+
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import app from "../../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../../src/constants";
 import { authenticationMiddleware } from "../../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../../src/middleware/session.middleware";
 import { UploadErrorMessages } from "../../../src/model/error.messages";
 import * as pageURLs from "../../../src/model/page.urls";
 import {
@@ -41,10 +41,6 @@ const INVALID_MIME_TYPE = "The selected file must be a JPG, JPEG, ZIP, GIF, PNG,
 
 /* Dummy Objects */
 
-const dummySession: Session = {
-  data: {},
-} as Session;
-
 const dummyAttachments = [
   {
     id: ATTACHMENT_ID,
@@ -53,12 +49,6 @@ const dummyAttachments = [
 ];
 
 /* Mocks */
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = dummySession;
-  return next();
-});
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
@@ -321,7 +311,7 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(res.status).toEqual(302);
     expect(res.header.location).toEqual(OBJECTIONS_DOCUMENT_UPLOAD);
-    expect(mockAddAttachment).toBeCalledWith(dummySession,
+    expect(mockAddAttachment).toBeCalledWith(sessionMock.session,
                                              buffer,
                                              TEXT_FILE_NAME);
   });
@@ -351,7 +341,7 @@ describe ("document.document_upload.controller tests", () => {
     expect(responseObj.divs[1].divHtml).toContain(CLASS_FILE_UPLOAD);
     expect(responseObj.divs[1].divHtml).toContain("Upload another document");
 
-    expect(mockAddAttachment).toBeCalledWith(dummySession,
+    expect(mockAddAttachment).toBeCalledWith(sessionMock.session,
                                              buffer,
                                              TEXT_FILE_NAME);
   });
