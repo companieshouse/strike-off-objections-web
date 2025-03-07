@@ -1,15 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { Socket } from "net";
 import logger from "../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../utils/properties";
 import { FileUploadRequest } from "../types";
 
 /**
- * Upload File
- * Uses Busboy to upload a file from the client.
- * Looks for the file in a field type "file" in a multipart/form-data form
- * @param {Request} req the http request
- * @param {UploadFileCallbacks} callbacks the functions you provide to be executed on file upload events
+ * Upload file and extract CSRF token
  */
 export const MultipartMiddleware = async (req: FileUploadRequest, res: Response, next: NextFunction) => {
 
