@@ -18,35 +18,37 @@
     <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-xl">
-        Apply to object to a company being struck off
+        Make an objection
       </h1>
 
-      <p class="govuk-body-l">Use this service to tell us why a company should not be removed from the Companies House register.</p>
+      <p>To object online you need:</p>
 
-      <p>You can only object to a company being struck off after the notice has been published in The Gazette.</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>the limited company number of the company that is being struck off</li>
+        <li>your supporting documents in a digital format (these must be images, Microsoft Excel, Microsoft Word or PDF files)</li>
+      </ul>
 
-      {{ govukDetails({
-        attributes: {
-            "data-event-id": "what is the gazette dropdown"
-        },
-        summaryText: "What is The Gazette?",
-        html: '<p>Official notices about insolvency or companies being struck off are published in
-          <a href="https://www.thegazette.co.uk/" data-event-id="the gazette link">The London, Edinburgh and Belfast Gazettes</a>.
-          You can search The Gazettes online, and get help using their
-          <a href="https://www.thegazette.co.uk/all-notices/content/116" data-event-id="guide to searching link">guide to searching The Gazettes</a>.</p>'
-      }) }}
+      <p>Your supporting documents must:</p>
 
-      <p>We must receive the objection within 2 months of the publish date.</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>be less than 6 months old</li>
+        <li>clearly show the full name of the company, including the correct name ending - for example ‘limited’ or ‘ltd’</li>
+        <li>support your reason for objecting, for example invoices proving the company owes you money</li>
+        <li>be less than 4MB in size</li>
+      </ul>
 
-      <p>We cannot register your objection if the company has already been dissolved and struck off. If you have a legal claim to pursue, the company must be restored first.
-        <a href="https://www.gov.uk/guidance/company-restoration-guide#who-makes-the-application" data-event-id="restoration guidance link">Read the company restoration guidance</a>
-        for more information.
+      <p>You must object before the company is struck off the register. The Gazette notice will say when the company will be struck off. It will be either:</p>
 
-      <p>This service takes around 15 minutes. The service will time out after 60 minutes. Your answers will not be saved.</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>2 months from the date in the notice</li>
+        <li>28 days from the date in the notice</li>
+      </ul>
+
+      <p>You must have a Companies House account to make an objection online. You can create an account before you start if you do not have one.</p>
       <form method="post">
         {% include "includes/csrf-token.njk" %}
         {{ govukButton({
-          text: "Start now",
+          text: "Make an objection",
           isStartButton: true,
           attributes: {
             id: "start-now",
@@ -56,22 +58,11 @@
         }) }}
       </form>
 
-      <h2 class="govuk-heading-m">Before you start</h2>
+      <h2 class="govuk-heading-m">Other ways to object</h2>
 
-      <p>You'll need:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>to sign in to or create a Companies House account</li>
-        <li>the company details</li>
-        <li>to upload evidence to support the objection, for example invoices showing the company is still trading or owes a debt</li>
-      </ul>
-
-      <p>Documents must:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>show the full name of the company being struck off</li>
-        <li>show how the company is being pursued</li>
-        <li>be no more than 6 months older than today's date</li>
-        <li>show evidence that supports your objection, such as invoices or court documents</li>
-      </ul>
+      <p>Contact Companies House if you cannot object online or need support because of a disability or health condition.</p>
+    
+      <p>You might get support to use the service, or be able to object by email or post. If you object by email or post, your objection will need to arrive at least 2 weeks before the company will be struck off.</p>
 
     </div>
   </div>
