@@ -47,8 +47,8 @@ describe("Basic URL Tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
-    expect(response.text).toMatch(/What is The Gazette?/);
+    expect(response.text).toMatch(/To object online you need:/);
+    expect(response.text).toMatch(/the limited company number of the company that is being struck off/);
   });
 
   it("should find start page without cookie", async () => {
@@ -56,8 +56,8 @@ describe("Basic URL Tests", () => {
       .get("/strike-off-objections");
 
     expect(response.status).toEqual(200);
-    expect(response.text).toMatch(/Use this service to tell us why a company should not be removed from the Companies House register./);
-    expect(response.text).toMatch(/What is The Gazette?/);
+    expect(response.text).toMatch(/To object online you need:/);
+    expect(response.text).toMatch(/the limited company number of the company that is being struck off/);
   });
 
   it("should find the objector-organisation page", async () => {
