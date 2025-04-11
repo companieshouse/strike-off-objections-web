@@ -30,7 +30,6 @@ describe("authentication middleware tests", () => {
   beforeEach(() => {
     mockWebSecurityNodeAuthMiddleware.mockClear();
     dummyReq.originalUrl = "";
-    process.env.CHS_URL = "";
   });
 
   it("should set return url to download landing page", () => {

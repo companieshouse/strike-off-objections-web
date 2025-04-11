@@ -1,13 +1,11 @@
 jest.mock("ioredis");
 jest.mock("../../src/modules/sdk/objections");
 jest.mock("../../src/middleware/authentication.middleware");
+jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/company.filing.history.service");
-
-import { sessionMock } from "../mocks/session.middleware";
-import "../mocks/csrf.middleware";
 
 import { FilingHistoryItem } from "@companieshouse/api-sdk-node/dist/services/company-filing-history";
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
@@ -17,6 +15,7 @@ import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME, SESSION_OBJECTION_ID, SESSION_COMPANY_PROFILE, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import * as objectionsSdk from "../../src/modules/sdk/objections";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
@@ -61,6 +60,12 @@ const mockRetrieveAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
+const mockSessionMiddleware = sessionMiddleware as jest.Mock;
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+  req.session = SESSION;
+  return next();
+});
+
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
@@ -82,7 +87,6 @@ describe("confirm company tests", () => {
 
   beforeEach(() => {
     mockLatestGaz1FilingHistoryItem.mockReset();
-    sessionMock.session = SESSION;
   });
 
   it("should render the page with company data from the session", async () => {
@@ -137,7 +141,7 @@ describe("confirm company tests", () => {
   });
 
 
-
+    
   it("should call the API to update an objection then render the enter information page", async () => {
 
     mockGetObjectionSessionValue.mockReset();
@@ -146,10 +150,10 @@ describe("confirm company tests", () => {
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2.companyNumber);
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2);
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => 'OBJ123');
-
+    
     mockGetObjection.mockReturnValueOnce(dummyGaz2RequestedObjectionCreatedResponse);
     mockRetrieveAccessToken.mockImplementationOnce(()=>  ACCESS_TOKEN);
-
+  
     SESSION.data[OBJECTIONS_SESSION_NAME] = {
       [SESSION_COMPANY_PROFILE]: dummyCompanyProfile2,
       [SESSION_OBJECTION_CREATE]: dummyObjectionCreate,
@@ -382,7 +386,6 @@ const dummyFilingHistoryItem: FilingHistoryItem = {
 };
 
 const dummyObjectionCreate: ObjectionCreate = {
-  objector: "",
   full_name: "Joe Bloggs",
   share_identity: false,
 };

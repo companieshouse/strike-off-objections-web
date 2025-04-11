@@ -23,7 +23,6 @@
       {% endset %}
 
       <form method="post">
-        {% include "includes/csrf-token.njk" %}
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({

@@ -1,11 +1,9 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
+jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
-
-import "../mocks/session.middleware";
-import "../mocks/csrf.middleware";
 
 import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 import { NextFunction, Request, Response } from "express";
@@ -14,6 +12,7 @@ import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME, PREVIOUSLY_SELECTED_COMPANY } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import ObjectionSessionExtraData from "../../src/model/objection.session.extra.data";
 import { OBJECTIONS_COMPANY_NUMBER, OBJECTIONS_CONFIRM_COMPANY } from "../../src/model/page.urls";
@@ -37,6 +36,14 @@ const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
+
+const mockSessionMiddleware = sessionMiddleware as jest.Mock;
+mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+  req.session = {
+    data: {},
+  } as Session;
+  return next();
+});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -71,13 +78,13 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({ companyNumber: COMPANY_NUMBER
+      .send({ companyNumber: COMPANY_NUMBER 
       });
-
+    
     expect(response.status).toBe(302);
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
   });
-
+  
   it("should create an error message when no company number is supplied (empty string)", async () => {
     const response = await request(app)
       .post(OBJECTIONS_COMPANY_NUMBER)
@@ -175,7 +182,7 @@ describe("company number lookup tests", () => {
 
 
 
-
+ 
 
   it("should return the error page when company search fails", async () => {
     mockCompanyProfile.mockImplementation(() => {
@@ -377,4 +384,4 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
-};
+}};
