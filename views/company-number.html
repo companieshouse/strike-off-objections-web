@@ -21,7 +21,6 @@
       {% endif %}
 
       <form method="post">
-        {% include "includes/csrf-token.njk" %}
 
         {% if companyNumberErr.flag %}
           {% set companyNumberErrorMessage = {

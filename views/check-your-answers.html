@@ -142,7 +142,6 @@
         By submitting this objection you are confirming that, to the best of your knowledge, the details you are providing are true.
       </p>
       <form method="post">
-        {% include "includes/csrf-token.njk" %}
         {{ govukButton({
           text: "Confirm and submit objection",
           preventDoubleClick: true,

@@ -1,11 +1,9 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
+jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/services/objection.service");
-
-import { sessionMock } from "../mocks/session.middleware";
-import "../mocks/csrf.middleware";
 
 import {
   retrieveAccessTokenFromSession, retrieveCompanyProfileFromObjectionSession,
@@ -18,6 +16,7 @@ import app from "../../src/app";
 import { CLIENT, MYSELF_OR_COMPANY, OBJECTIONS_SESSION_NAME, OBJECTOR_FIELDS, SESSION_OBJECTION_CREATE } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
+import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
   OBJECTIONS_COMPANY_NUMBER,
@@ -27,9 +26,9 @@ import { COOKIE_NAME } from "../../src/utils/properties";
 import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionUserDetails } from "../../src/services/objection.service";
 import { ErrorMessages } from "../../src/model/error.messages";
-import { ObjectionStatus } from "../../src/modules/sdk/objections";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
+const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 const mockRetrieveObjectionSessionFromSession = retrieveObjectionSessionFromSession as jest.Mock;
@@ -43,16 +42,19 @@ const ERROR_500 = "Sorry, there is a problem with the service";
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
 const COMPANY_NUMBER = "00006400";
 const ERROR_SCREEN_MESSAGE = "Sorry, there is a problem with the service";
-const SESSION: Session = {
-    data: {},
-} as Session;
 
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
 describe("objecting entity name tests", () => {
 
   beforeEach(() => {
-    sessionMock.session = SESSION;
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
+      req.session = {
+        data: {},
+      } as Session;
+      return next();
+    });
     mockObjectionSessionMiddleware.mockReset();
     mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
       if (req.session) {
@@ -173,7 +175,10 @@ describe("objecting entity name tests", () => {
   });
 
   it("should reroute to error page if session is not present", async() => {
-    sessionMock.session = undefined;
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      return next();
+    });
     const response = await request(app).get(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
@@ -500,7 +505,10 @@ describe("objecting entity name tests", () => {
   });
 
   it("should render error page if session is not present", async () => {
-    sessionMock.session = undefined;
+    mockSessionMiddleware.mockReset();
+    mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      return next();
+    });
     const response = await request(app).post(OBJECTIONS_OBJECTING_ENTITY_NAME)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
@@ -612,7 +620,6 @@ describe("objecting entity name tests", () => {
 });
 
 const mockObjection: Objection = {
-  id: "",
   attachments: [
     {
       name: "attachment.jpg",
@@ -626,7 +633,6 @@ const mockObjection: Objection = {
     objector: ""
   },
   reason: "Owed some money",
-  status: ObjectionStatus.OPEN,
 };
 
 const mockObjectionCreate: ObjectionCreate = {

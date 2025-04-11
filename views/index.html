@@ -46,7 +46,6 @@
 
       <p>You must have a Companies House account to make an objection online. You can create an account before you start if you do not have one.</p>
       <form method="post">
-        {% include "includes/csrf-token.njk" %}
         {{ govukButton({
           text: "Make an objection",
           isStartButton: true,
