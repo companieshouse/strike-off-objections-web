@@ -14,13 +14,13 @@ In order to run the service locally you will need the following:
 ### Getting started
 
 To checkout and build the service:
+
 1. Clone [Docker CHS Development](https://github.com/companieshouse/docker-chs-development) and follow the steps in the README. 
 2. Run ./bin/chs-dev modules enable strike-off-objections
 3. Run ./bin/chs-dev development enable strike-off-objections-web (this will allow you to make changes).
 4. Once the service and Dev mode is enabled it is good to do a build (make clean build) on the service locally by getting into ./repositories/strike-off-objection-web
-5. Run docker using "tilt up" in the docker-chs-development directory.
-6. Use spacebar in the command line to open tilt window - wait for strike-off-objections-web to become green.
-7. Open your browser and go to page http://chs.local/strike-off-objections
+5. Run docker using "chs-dev up" in the docker-chs-development directory.
+6. Open your browser and go to page http://chs.local/strike-off-objections
 
 These instructions are for a local docker environment.
 
@@ -45,4 +45,5 @@ These instructions are for a local docker environment.
 | SHOW_SERVICE_OFFLINE_PAGE    | false              | Feature Flag                                   |
 
 ### Further Information
+
 For further information on running building and testing ch node js apps see the [Node Web Starter](https://github.com/companieshouse/node-web-starter/blob/master/README.md) page.
