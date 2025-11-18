@@ -141,7 +141,7 @@ describe("confirm company tests", () => {
   });
 
 
-    
+
   it("should call the API to update an objection then render the enter information page", async () => {
 
     mockGetObjectionSessionValue.mockReset();
@@ -150,10 +150,10 @@ describe("confirm company tests", () => {
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2.companyNumber);
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => dummyCompanyProfile2);
     mockRetrieveFromObjectionSession.mockImplementationOnce(() => 'OBJ123');
-    
+
     mockGetObjection.mockReturnValueOnce(dummyGaz2RequestedObjectionCreatedResponse);
-    mockRetrieveAccessToken.mockImplementationOnce(()=>  ACCESS_TOKEN);
-  
+    mockRetrieveAccessToken.mockImplementationOnce(() =>  ACCESS_TOKEN);
+
     SESSION.data[OBJECTIONS_SESSION_NAME] = {
       [SESSION_COMPANY_PROFILE]: dummyCompanyProfile2,
       [SESSION_OBJECTION_CREATE]: dummyObjectionCreate,
@@ -349,95 +349,95 @@ describe("confirm company tests", () => {
 
 
 
-const dummyCompanyProfile: ObjectionCompanyProfile = {
-  address: {
-    line_1: "line1",
-    line_2: "line2",
-    postCode: "post code",
-  },
-  companyName: "Girls school trust",
-  companyNumber: "00006400",
-  companyStatus: "Active",
-  companyType: "limited",
-  incorporationDate: "26 June 1872",
-};
-
-
-const dummyCompanyProfile2: ObjectionCompanyProfile = {
-  address: {
-    line_1: "line1",
-    line_2: "line2",
-    postCode: "post code",
-  },
-  companyName: "Bear retail",
-  companyNumber: "05916434",
-  companyStatus: "Active",
-  companyType: "limited",
-  incorporationDate: "26 June 1872",
-};
-
-
-const dummyFilingHistoryItem: FilingHistoryItem = {
-  category: "",
-  date: "2015-04-14",
-  description: "",
-  transactionId: "",
-  type: "GAZ1",
-};
-
-const dummyObjectionCreate: ObjectionCreate = {
-  full_name: "Joe Bloggs",
-  share_identity: false,
-};
-
-
-const dummyOpenObjectionCreatedResponse: ObjectionCreatedResponse = {
-  objectionId: OBJECTION_ID,
-  objectionStatus: ObjectionStatus.OPEN,
-};
-
-const mockObjection = {
-  attachments: [
-    { id: "ATT001",
-      name: "attachment.jpg",
+  const dummyCompanyProfile: ObjectionCompanyProfile = {
+    address: {
+      line_1: "line1",
+      line_2: "line2",
+      postCode: "post code",
     },
-    {
-      id: "ATT002",
-      name: "document.pdf",
-    }],
-  id: "OBJ123",
-  reason: "Owed some money",
-};
+    companyName: "Girls school trust",
+    companyNumber: "00006400",
+    companyStatus: "Active",
+    companyType: "limited",
+    incorporationDate: "26 June 1872",
+  };
+
+
+  const dummyCompanyProfile2: ObjectionCompanyProfile = {
+    address: {
+      line_1: "line1",
+      line_2: "line2",
+      postCode: "post code",
+    },
+    companyName: "Bear retail",
+    companyNumber: "05916434",
+    companyStatus: "Active",
+    companyType: "limited",
+    incorporationDate: "26 June 1872",
+  };
+
+
+  const dummyFilingHistoryItem: FilingHistoryItem = {
+    category: "",
+    date: "2015-04-14",
+    description: "",
+    transactionId: "",
+    type: "GAZ1",
+  };
+
+  const dummyObjectionCreate: ObjectionCreate = {
+    full_name: "Joe Bloggs",
+    share_identity: false,
+  };
+
+
+  const dummyOpenObjectionCreatedResponse: ObjectionCreatedResponse = {
+    objectionId: OBJECTION_ID,
+    objectionStatus: ObjectionStatus.OPEN,
+  };
+
+  const mockObjection = {
+    attachments: [
+      { id: "ATT001",
+        name: "attachment.jpg",
+      },
+      {
+        id: "ATT002",
+        name: "document.pdf",
+      }],
+    id: "OBJ123",
+    reason: "Owed some money",
+  };
 
 
 
-const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
-  objectionId: OBJECTION_ID,
-  objectionStatus: ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION,
-};
+  const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
+    objectionId: OBJECTION_ID,
+    objectionStatus: ObjectionStatus.INELIGIBLE_NO_DISSOLUTION_ACTION,
+  };
 
-const dummyGaz2RequestedObjectionCreatedResponse: ObjectionCreatedResponse = {
-  objectionId: OBJECTION_ID,
-  objectionStatus: ObjectionStatus.INELIGIBLE_GAZ2_REQUESTED,
-};
+  const dummyGaz2RequestedObjectionCreatedResponse: ObjectionCreatedResponse = {
+    objectionId: OBJECTION_ID,
+    objectionStatus: ObjectionStatus.INELIGIBLE_GAZ2_REQUESTED,
+  };
 
-const dummyStruckOffObjectionCreatedResponse: ObjectionCreatedResponse = {
-  objectionId: OBJECTION_ID,
-  objectionStatus: ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
-};
+  const dummyStruckOffObjectionCreatedResponse: ObjectionCreatedResponse = {
+    objectionId: OBJECTION_ID,
+    objectionStatus: ObjectionStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
+  };
 
-const dummyCompanyEligibility: CompanyEligibility = {
-  is_eligible: true,
-  eligibility_status: EligibilityStatus.ELIGIBLE,
-};
+  const dummyCompanyEligibility: CompanyEligibility = {
+    is_eligible: true,
+    eligibility_status: EligibilityStatus.ELIGIBLE,
+  };
 
-const dummyCompanyEligibilityIneligibleGaz2Requested: CompanyEligibility = {
-  is_eligible: false,
-  eligibility_status: EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED,
-};
+  const dummyCompanyEligibilityIneligibleGaz2Requested: CompanyEligibility = {
+    is_eligible: false,
+    eligibility_status: EligibilityStatus.INELIGIBLE_GAZ2_REQUESTED,
+  };
 
-const dummyCompanyEligibilityIneligibleStruckOff: CompanyEligibility = {
-  is_eligible: false,
-  eligibility_status: EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
-};
+  const dummyCompanyEligibilityIneligibleStruckOff: CompanyEligibility = {
+    is_eligible: false,
+    eligibility_status: EligibilityStatus.INELIGIBLE_COMPANY_STRUCK_OFF,
+  };
 });
