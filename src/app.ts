@@ -45,7 +45,7 @@ app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*(?<!download)$`, objectionSessionMiddleware);
-app.use(commonTemplateVariablesMiddleware)
+app.use(commonTemplateVariablesMiddleware);
 // apply our default router to /
 app.use(pageURLs.STRIKE_OFF_OBJECTIONS, router);
 app.use(...errorHandlers);

@@ -80,8 +80,8 @@ export interface Attachment {
  * @interface
  */
 export interface FileInfoObj {
-  filename: string, 
-  encoding: string, 
+  filename: string,
+  encoding: string,
   mimeType: string
 }
 

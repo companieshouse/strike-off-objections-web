@@ -39,7 +39,7 @@ describe("Signout controller tests", () => {
     });
 
     it('should store the previous page in the session from the referer header', async () => {
-        const referer = 'return url'
+        const referer = 'return url';
         const response = await request(app)
           .get(SIGNOUT_LOCATION)
           .set('Referer', 'return url');
@@ -49,54 +49,54 @@ describe("Signout controller tests", () => {
     })
 
     it('should populate the back link url from the referer header', async () => {
-        const referer = 'return url'
+        const referer = 'return url';
         const response = await request(app)
           .get(SIGNOUT_LOCATION)
           .set('Referer', referer);
 
-        expect(response.status).toBe(200);
-        expect(response.text).toContain(`href="${referer}"`)
+        expect(response.status).toBe(200);;
+        expect(response.text).toContain(`href="${referer}"`);
     })
   })
 
   describe('post tests', () => {
     it('should show an error if no radio buttons are selected', async () => {
         const response = await request(app)
-          .post(SIGNOUT_LOCATION)
+          .post(SIGNOUT_LOCATION);
 
-        expect(response.status).toBe(400)
-        expect(response.text).toContain('Select yes if you want to sign out')
+        expect(response.status).toBe(400);
+        expect(response.text).toContain('Select yes if you want to sign out');
     })
 
     it('should show the error page if there is no return page in session', async () => {
-        const previousLocation = undefined
-        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
+        const previousLocation = undefined;
+        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
         const response = await request(app)
-          .post(SIGNOUT_LOCATION)
+          .post(SIGNOUT_LOCATION);
         
-        expect(response.status).toBe(500)
+        expect(response.status).toBe(500);
     })
 
     it('should return the user to their previous location is they select "no"', async () => {
         const previousLocation = 'http://example.com'
-        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
+        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
         const response = await request(app)
           .post(SIGNOUT_LOCATION)
-          .send({signout: 'no'})
+          .send({signout: 'no'});
         
-          expect(response.status).toBe(302)
-          expect(response.get('Location')).toBe(previousLocation)
+          expect(response.status).toBe(302);
+          expect(response.get('Location')).toBe(previousLocation);
     })
 
     it('should return the user to their previous location is they select "yes"', async () => {
         const response = await request(app)
           .post(SIGNOUT_LOCATION)
-          .send({signout: 'yes'})
+          .send({signout: 'yes'});
         
-          expect(response.status).toBe(302)
-          expect(response.get('Location')).toBe(ACCOUNTS_SIGNOUT_PATH)
+          expect(response.status).toBe(302);
+          expect(response.get('Location')).toBe(ACCOUNTS_SIGNOUT_PATH);
     })
   })
 
@@ -105,18 +105,18 @@ describe("Signout controller tests", () => {
       mockSessionMiddleware.mockImplementation((req, res, next) => next());
 
       const response = await request(app)
-        .get(SIGNOUT_LOCATION)
+        .get(SIGNOUT_LOCATION);
 
-      expect(response.status).toBe(500)
+      expect(response.status).toBe(500);
     })
 
     it('should land on error screen if no session is available when performing post', async () => {
         mockSessionMiddleware.mockImplementation((req, res, next) => next());
 
         const response = await request(app)
-          .post(SIGNOUT_LOCATION)
+          .post(SIGNOUT_LOCATION);
 
-        expect(response.status).toBe(500)
-    })
-  })
+        expect(response.status).toBe(500);
+    });
+  });
 });

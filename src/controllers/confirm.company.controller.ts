@@ -72,13 +72,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const token: string = retrieveAccessTokenFromSession(session);
     const { companyNumber }: ObjectionCompanyProfile = retrieveCompanyProfileFromObjectionSession(session);
     const objectionCreate: ObjectionCreate = retrieveObjectionCreateFromObjectionSession(session);
-    
+
     let objectionId: string;
     let objectionStatus: ObjectionStatus;
 
     const previouslySelectedCompany: string = retrieveFromObjectionSession(session, PREVIOUSLY_SELECTED_COMPANY);
     const companyProfileInSession: ObjectionCompanyProfile = retrieveFromObjectionSession(session, SESSION_COMPANY_PROFILE);
-  
+
     if (previouslySelectedCompany !== undefined && previouslySelectedCompany === companyProfileInSession.companyNumber ) {
       const objectionIdInSession: string = retrieveFromObjectionSession(session, SESSION_OBJECTION_ID);
       await patchObjection(companyNumber, objectionIdInSession, token, objectionCreate);

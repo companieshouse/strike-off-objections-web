@@ -18,8 +18,7 @@ import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import {
   OBJECTIONS_CHECK_YOUR_ANSWERS,
   OBJECTIONS_DOCUMENT_UPLOAD,
-  OBJECTIONS_ENTER_INFORMATION,
-  OBJECTIONS_COMPANY_NUMBER
+  OBJECTIONS_ENTER_INFORMATION
 } from "../../src/model/page.urls";
 import { Objection } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionReason } from "../../src/services/objection.service";
@@ -258,10 +257,10 @@ describe("enter information tests", () => {
     const response = await request(app).get(OBJECTIONS_ENTER_INFORMATION)
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
-    
-      expect(response.status).toEqual(200);
-      expect(mockGetObjection).toHaveBeenCalledTimes(1);
-      expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
+
+    expect(response.status).toEqual(200);
+    expect(mockGetObjection).toHaveBeenCalledTimes(1);
+    expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
   });
 });
 

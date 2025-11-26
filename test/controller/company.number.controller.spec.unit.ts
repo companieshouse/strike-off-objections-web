@@ -78,13 +78,13 @@ describe("company number lookup tests", () => {
       .set("Accept", "application/json")
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`])
-      .send({ companyNumber: COMPANY_NUMBER 
+      .send({ companyNumber: COMPANY_NUMBER
       });
-    
+
     expect(response.status).toBe(302);
     expect(mockSetObjectionSessionValue).toHaveBeenCalledWith(SESSION, PREVIOUSLY_SELECTED_COMPANY, dummyCompanyProfile.companyNumber);
   });
-  
+
   it("should create an error message when no company number is supplied (empty string)", async () => {
     const response = await request(app)
       .post(OBJECTIONS_COMPANY_NUMBER)
@@ -182,7 +182,7 @@ describe("company number lookup tests", () => {
 
 
 
- 
+
 
   it("should return the error page when company search fails", async () => {
     mockCompanyProfile.mockImplementation(() => {
@@ -384,4 +384,4 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
   companyStatus: "Active",
   companyType: "limited",
   incorporationDate: "26 June 1872",
-}};
+};

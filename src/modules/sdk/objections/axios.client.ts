@@ -58,7 +58,7 @@ export const makeAPICall = async (config: AxiosRequestConfig): Promise<AxiosResp
       data: response ? response.data : [],
       message: message,
       status: response ? response.status : STATUS_NO_RESPONSE,
-  };
-  throw thrownError
+    };
+    throw thrownError;
   }
 };

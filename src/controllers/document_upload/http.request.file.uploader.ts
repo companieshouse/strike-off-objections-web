@@ -59,7 +59,7 @@ export const uploadFile = (req: Request,
 
   // Busboy on file received event - start of file upload process when start of a file is initially received
   busboy.on("file",
-            (name:string, file:Socket, info:FileInfoObj) => {
+            (name: string, file: Socket, info: FileInfoObj) => {
 
               const { filename, encoding, mimeType } = info;
 
