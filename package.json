@@ -59,7 +59,7 @@
   },
   "overrides": {
     "micromatch": "4.0.8",
-    "node-fetch": "2.6.7"
+    "node-fetch": "2.6.9"
   },
   "license": "MIT",
   "repository": {
