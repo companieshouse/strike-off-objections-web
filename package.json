@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Web frontend for submitting objections to a company being struck off the register.",
   "main": "app.ts",
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": "^10"
+  },
   "scripts": {
     "start": "node dist/bin/www.js",
     "build": "tsc && cp -r views dist/",
