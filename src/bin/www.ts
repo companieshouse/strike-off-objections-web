@@ -5,14 +5,15 @@
  */
 
 import * as http from "http";
-import * as yargs from "yargs";
+import yargs from "yargs";
 import app from "../app";
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(yargs.argv.PORT  || yargs.argv._[0]);
+const argv = yargs(process.argv.slice(2)).parse();
+const port = normalizePort(argv.PORT  || argv._[0]);
 app.set("port", port);
 
 /**
