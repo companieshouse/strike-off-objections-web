@@ -1,0 +1,17 @@
+{
+    "type": "Service",
+    "name": "strike-off-objections-web",
+    "description": "Web frontend for submitting objections to a company being struck off the register.",
+    "owned_by": "Titans",
+    "git_repo": "https://github.com/companieshouse/strike-off-objections-web",
+    "public": "true",
+    "users": "public",
+    "code_analysis_link": "http://code-analysis.platform.aws.chdev.org:9000/dashboard?id=uk.gov.companieshouse%3Astrike-off-objections-web#",    
+    "service_area": "Intelligence and Enforcement",
+    "service_component": "Objections",
+    "language": "NodeJS",
+    "integration_outgoing": [      
+      "strike-off-objections-api,CALLS_API",
+      "company-profile-api,CALLS_API"
+    ]
+  }
