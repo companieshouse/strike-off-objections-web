@@ -36,6 +36,10 @@ test:
 test-unit:
 	npm run test
 
+.PHONY: dependency-check
+dependency-check:
+	npm audit
+
 .PHONY: package
 package: build
 ifndef version
