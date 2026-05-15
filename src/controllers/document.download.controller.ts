@@ -7,12 +7,13 @@ import {
   HEADER_CONTENT_DISPOSITION,
   HEADER_CONTENT_LENGTH,
   HEADER_CONTENT_TYPE,
+  CONTENT_DISPOSITION_INLINE,
+  INLINE_TYPES_ALLOWED,
 } from "../modules/sdk/objections";
 import { downloadAttachment } from "../services/objection.service";
 import logger from "../utils/logger";
 import { DOWNLOAD_FILENAME_PREFIX } from "../utils/properties";
 import { inspect } from "util";
-
 /**
  * Handle GET request - do the download
  * @param {Request} req the http request object
@@ -51,8 +52,15 @@ export const get = async (req: Request, res: Response) => {
  * @param {Download} download the download data returned from API
  */
 const setResponseHeaders = (res: Response, download: Download) => {
-  res.setHeader(HEADER_CONTENT_DISPOSITION, prefixFilename(download.headers[HEADER_CONTENT_DISPOSITION]));
-  res.setHeader(HEADER_CONTENT_TYPE, download.headers[HEADER_CONTENT_TYPE]);
+  const contentType = download.headers[HEADER_CONTENT_TYPE];
+  const contentDisposition = download.headers[HEADER_CONTENT_DISPOSITION];
+
+  if (INLINE_TYPES_ALLOWED.includes(contentType)) {
+    res.setHeader(HEADER_CONTENT_DISPOSITION, CONTENT_DISPOSITION_INLINE);
+  } else {
+    res.setHeader(HEADER_CONTENT_DISPOSITION, prefixFilename(contentDisposition));
+  }
+  res.setHeader(HEADER_CONTENT_TYPE, contentType);
   res.setHeader(HEADER_CONTENT_LENGTH, download.headers[HEADER_CONTENT_LENGTH]);
 
   logger.debug("Returning response with headers " + JSON.stringify(res.getHeaders()));

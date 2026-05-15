@@ -109,7 +109,7 @@ export interface CreatedBy {
 export const HEADER_CONTENT_DISPOSITION = "content-disposition";
 export const HEADER_CONTENT_LENGTH = "content-length";
 export const HEADER_CONTENT_TYPE = "content-type";
-
+export const CONTENT_DISPOSITION_INLINE = 'inline';
 /**
  * Data structure containing the download
  * @interface
@@ -131,3 +131,14 @@ export interface ObjectionCreatedResponse {
   objectionId: string;
   objectionStatus: ObjectionStatus;
 }
+
+/**
+ * List of MIME types that browsers can display inline
+ */
+export const INLINE_TYPES_ALLOWED = [
+    'application/pdf',
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif'
+];
