@@ -386,6 +386,7 @@ describe("confirm company tests", () => {
   };
 
   const dummyObjectionCreate: ObjectionCreate = {
+    objector: "INDIVIDUAL",
     full_name: "Joe Bloggs",
     share_identity: false,
   };
@@ -395,21 +396,6 @@ describe("confirm company tests", () => {
     objectionId: OBJECTION_ID,
     objectionStatus: ObjectionStatus.OPEN,
   };
-
-  const mockObjection = {
-    attachments: [
-      { id: "ATT001",
-        name: "attachment.jpg",
-      },
-      {
-        id: "ATT002",
-        name: "document.pdf",
-      }],
-    id: "OBJ123",
-    reason: "Owed some money",
-  };
-
-
 
   const dummyNoDissolutionActionObjectionCreatedResponse: ObjectionCreatedResponse = {
     objectionId: OBJECTION_ID,

@@ -1,3 +1,13 @@
+import { performance } from "perf_hooks";
+
+// Needed by @opentelemetry/core in Node test runtime
+if (!globalThis.performance) {
+  Object.defineProperty(globalThis, "performance", {
+    value: performance,
+    writable: true,
+    configurable: true
+  });
+}
 export default () => {
   process.env.ACCOUNT_URL = "http://chs.local";
   process.env.COOKIE_NAME = "cookie_name";
