@@ -15,7 +15,7 @@ import { authenticationMiddleware } from "../../src/middleware/authentication.mi
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
-import { CompanyEligibility, EligibilityStatus, Objection } from "../../src/modules/sdk/objections";
+import { CompanyEligibility, EligibilityStatus, Objection, ObjectionStatus } from "../../src/modules/sdk/objections";
 import { getCompanyEligibility, getObjection } from "../../src/services/objection.service";
 import { retrieveCompanyProfileFromObjectionSession, retrieveFromObjectionSession } from "../../src/services/objection.session.service";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -201,6 +201,8 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const mockObjection: Objection = {
+  id: "objection-id-123",
+  status: ObjectionStatus.OPEN,
   attachments: [
     {
       name: "attachment.jpg",

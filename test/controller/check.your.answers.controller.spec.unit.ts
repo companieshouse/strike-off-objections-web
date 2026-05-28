@@ -15,7 +15,7 @@ import { objectionSessionMiddleware } from "../../src/middleware/objection.sessi
 import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import ObjectionCompanyProfile from "../../src/model/objection.company.profile";
 import { OBJECTIONS_CHECK_YOUR_ANSWERS, OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
-import { Objection } from "../../src/modules/sdk/objections";
+import { Objection, ObjectionStatus } from "../../src/modules/sdk/objections";
 import { getObjection, submitObjection } from "../../src/services/objection.service";
 import {
   deleteFromObjectionSession,
@@ -166,6 +166,8 @@ const dummyCompanyProfile: ObjectionCompanyProfile = {
 };
 
 const dummyObjectionShare: Objection = {
+  id: "objection-id-123",
+  status: ObjectionStatus.OPEN,
   attachments: [
     {
       name: "attachment.jpg",
@@ -174,6 +176,7 @@ const dummyObjectionShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
+    objector: "INDIVIDUAL",
     full_name: "Joe Bloggs",
     share_identity: true
   },
@@ -181,6 +184,8 @@ const dummyObjectionShare: Objection = {
 };
 
 const dummyObjectionDoNotShare: Objection = {
+  id: "objection-id-123",
+  status: ObjectionStatus.OPEN,
   attachments: [
     {
       name: "attachment.jpg",
@@ -189,6 +194,7 @@ const dummyObjectionDoNotShare: Objection = {
       name: "document.pdf",
     }],
   created_by: {
+    objector: "INDIVIDUAL",
     full_name: "No Bloggs",
     share_identity: false
   },
