@@ -58,7 +58,8 @@ describe("document download landing page tests", () => {
       .set("Referer", "/")
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
-    expect(response.text).toContain("<body onload=\"javascript:setTimeout(function(){ window.location = '" + DOWNLOAD_FILE_URL + "';},5000);\">");
+    expect(response.text).toContain("<meta http-equiv=\"refresh\" content=\"5;url=" + DOWNLOAD_FILE_URL + "\">");
+    expect(response.text).not.toContain("onload=");
   });
 
   it("should have a download link on the page", async () => {
@@ -68,5 +69,15 @@ describe("document download landing page tests", () => {
 
     expect(response.text).toContain("<a href=\"" + DOWNLOAD_FILE_URL + "\"");
     expect(response.text).not.toContain("download=\"");
+  });
+
+  it("should reject unsafe path segments", async () => {
+    const maliciousUrl = "/strike-off-objections/download/company/CO/strike-off-objections/TESTREQ';confirm(1);a='/attachments/TESTATT/download";
+    const response: request.Response = await request(app).get(maliciousUrl)
+      .set("Referer", "/")
+      .set("Cookie", [COOKIE_NAME + "=123"]);
+
+    expect(response.status).toBe(400);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
   });
 });
