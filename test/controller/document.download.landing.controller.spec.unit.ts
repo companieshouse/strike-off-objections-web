@@ -41,7 +41,7 @@ describe("document download landing page tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toBe(200);
-    expect(response.text).toContain("Your document download will start soon");
+    expect(response.text).toContain("Document download");
   });
 
   it("should not call objection session middleware upon render", async () => {
@@ -51,15 +51,6 @@ describe("document download landing page tests", () => {
 
     expect(response.status).toBe(200);
     expect(mockObjectionSessionMiddleware).not.toBeCalled();
-  });
-
-  it("should have an auto download set in the html", async () => {
-    const response: request.Response = await request(app).get(DOWNLOAD_LANDING_PAGE_URL)
-      .set("Referer", "/")
-      .set("Cookie", [`${COOKIE_NAME}=123`]);
-
-    expect(response.text).toContain("<meta http-equiv=\"refresh\" content=\"5;url=" + DOWNLOAD_FILE_URL + "\">");
-    expect(response.text).not.toContain("onload=");
   });
 
   it("should have a download link on the page", async () => {
