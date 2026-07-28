@@ -88,6 +88,7 @@
       }) }}
 
       <form method="post">
+        {% include "includes/csrf-token.njk" %}
         {{ govukButton({
           text: "Confirm and continue",
           attributes: {

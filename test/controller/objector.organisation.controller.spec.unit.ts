@@ -1,19 +1,18 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/middleware/objection.session.middleware");
 jest.mock("../../src/services/objection.session.service");
 
+import "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
+
 import { NextFunction, Request, Response } from "express";
 import request from "supertest";
-
-import { Session } from "@companieshouse/node-session-handler/lib/session/model/Session";
 
 import app from "../../src/app";
 import { OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { ErrorMessages } from "../../src/model/error.messages";
 import { OBJECTIONS_OBJECTING_ENTITY_NAME, OBJECTIONS_OBJECTOR_ORGANISATION } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
@@ -22,20 +21,12 @@ import * as objectorOrganisation from "../../src/validation";
 import { addToObjectionSession, retrieveFromObjectionSession } from "../../src/services/objection.session.service";
 
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 const mockSetObjectionSessionValue = addToObjectionSession as jest.Mock;
 const mockRetrieveFromObjectionSession = retrieveFromObjectionSession as jest.Mock;
 
 describe('objector organisation controller tests', () => {
   beforeEach(() => {
-    mockSessionMiddleware.mockReset();
-    mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-      req.session = { data: {}, } as Session;
-
-      return next();
-    });
-
     mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next());
 
     mockObjectionSessionMiddleware.mockReset();

@@ -18,13 +18,14 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form method="post">
+        {% include "includes/csrf-token.njk" %}
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
             titleText: ERROR_SUMMARY_TITLE,
             errorList: errorList
           }) }}
         {% endif %}
-        
+
         {{ govukRadios({
           idPrefix: "objector-organisation",
           name: "objector-organisation",

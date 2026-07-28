@@ -24,6 +24,42 @@ To checkout and build the service:
 
 These instructions are for a local docker environment.
 
+### Endpoints
+
+Method | Path                                                                                                                     | Description
+------ | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------
+GET    | `/strike-off-objections`                                                                                                 | Returns the landing page for strike off objections
+POST   | `/strike-off-objections`                                                                                                 | and redirect to objector organisation choice
+GET    | `/strike-off-objections/objector-organisation`                                                                           | Returns the objector organisation choice
+POST   | `/strike-off-objections/objector-organisation`                                                                           | Saves choice and redirects to objecting entity name
+GET    | `/strike-off-objections/objecting-entity-name`                                                                           | Returns form to enter objecting entity name
+POST   | `/strike-off-objections/objecting-entity-name`                                                                           | Saves name and redirects to company number
+GET    | `/strike-off-objections/company-number`                                                                                  | Returns form to enter company number
+POST   | `/strike-off-objections/company-number`                                                                                  | Saves company number and redirects to
+GET    | `/strike-off-objections/confirm-company`                                                                                 |
+POST   | `/strike-off-objections/confirm-company`                                                                                 |
+GET    | `/strike-off-objections/notice-expired`                                                                                  | Returns the notice expired / too late to object page
+GET    | `/strike-off-objections/no-strike-off`                                                                                   | Returns the no strike offnotice page
+GET    | `/strike-off-objections/enter-information`                                                                               |
+POST   | `/strike-off-objections/enter-information`                                                                               |
+GET    | `/strike-off-objections/document-upload`                                                                                 |
+POST   | `/strike-off-objections/document-upload`                                                                                 |
+POST   | `/strike-off-objections/document-upload-continue`                                                                        |
+GET    | `/strike-off-objections/remove-document`                                                                                 |
+POST   | `/strike-off-objections/remove-document`                                                                                 |
+GET    | `/strike-off-objections/company/:companyId/strike-off-objections/:requestId/attachments/:attachmentId/download`          |
+GET    | `/strike-off-objections/download/company/:companyId/strike-off-objections/:requestId/attachments/:attachmentId/download` |
+GET    | `/strike-off-objections/check-your-answers`                                                                              |
+POST   | `/strike-off-objections/check-your-answers`                                                                              |
+GET    | `/strike-off-objections/confirmation`                                                                                    |
+GET    | `/strike-off-objections/error`                                                                                           | Returns the error page
+GET    | `/strike-off-objections/change-answers`                                                                                  |
+GET    | `/strike-off-objections/accessibility-statement`                                                                         | Returns the accessibility statement
+GET    | `/strike-off-objections/objector-organisation`                                                                           |
+POST   | `/strike-off-objections/objector-organisation`                                                                           |
+GET    | `/strike-off-objections/signout`                                                                                         | Returns the signout options page
+POST   | `/strike-off-objections/signout`                                                                                         | Sign user out or continue
+
 ### Config variables
 
 | Key                          | Example Value      | Description                                    |

@@ -11,6 +11,7 @@ import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
 import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
 import { UploadResponderStrategy } from "./upload.responder.strategy";
 import { createUploadResponderStrategy } from "./upload.responder.strategy.factory";
+import { FileUploadRequest } from "../../types";
 
 /**
  * Document upload controller
@@ -47,7 +48,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
  * @param {Response} res the http response
  * @param {NextFunction} next the next function in the middleware chain
  */
-export const postFile = async (req: Request, res: Response, next: NextFunction) => {
+export const postFile = async (req: FileUploadRequest, res: Response, next: NextFunction) => {
   logger.debugRequest(req, "Upload document http request type is " + (isAjaxRequest(req) ? "" : "NOT ") + "AJAX / XmlHttpRequest");
 
   const uploadResponderStrategy: UploadResponderStrategy = createUploadResponderStrategy(isAjaxRequest(req));
@@ -60,14 +61,24 @@ export const postFile = async (req: Request, res: Response, next: NextFunction) 
     return uploadResponderStrategy.handleGenericError(res, e, next);
   }
 
-  const uploadCallbacks: UploadFileCallbacks = {
-    fileSizeLimitExceededCallback: getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments),
-    noFileDataReceivedCallback: getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments),
-    uploadFinishedCallback: getUploadFinishedCallback(req, res, next, uploadResponderStrategy, attachments),
-  };
-  const maxFileSizeBytes: number = parseInt(MAX_FILE_SIZE_BYTES, 10);
+  // Handle oversized files
+  if (req.body.fileSizeLimitExceeded) {
+    logger.errorRequest(req, `File size exceeded for ${req.body.filename}`);
+    return getFileSizeLimitExceededCallback(req, res, uploadResponderStrategy, attachments)(req.body.filename, parseInt(MAX_FILE_SIZE_BYTES, 10));
+  }
 
-  return uploadFile(req, maxFileSizeBytes, uploadCallbacks);
+  // Ensure files exist before proceeding
+  if (!req.files || req.files.length === 0) {
+    logger.errorRequest(req, "No files uploaded");
+    return getNoFileDataReceivedCallback(req, res, uploadResponderStrategy, attachments)("Unknown file");
+  }
+
+  // Process the uploaded file
+  const uploadedFile = req.files[0]; // Assuming a single file upload
+  const { filename, mimeType, data } = uploadedFile;
+
+  // Call the upload finished callback
+  return getUploadFinishedCallback(req, res, next, uploadResponderStrategy, attachments)(filename, data, mimeType);
 };
 
 /**
