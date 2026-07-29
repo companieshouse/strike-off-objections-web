@@ -30,6 +30,8 @@ export const MultipartMiddleware = async (req: FileUploadRequest, res: Response,
         },
     );
 
+    busboy.on("error", (err: Error) => next(err));
+
     // Extract _csrf from the form fields
     busboy.on("field", (name: string, value: string) => {
         if (name === "_csrf") {
@@ -44,6 +46,8 @@ export const MultipartMiddleware = async (req: FileUploadRequest, res: Response,
                   const { filename, mimeType } = info;
 
                   const chunkArray: Buffer[] = [];
+
+                  file.on("error", (err: Error) => next(err));
 
                   // File on data event - fired when a new chunk of data arrives into busboy
                   file.on("data", (chunk: Buffer) => {

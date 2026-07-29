@@ -8,7 +8,6 @@ import { Attachment } from "../../modules/sdk/objections";
 import * as objectionService from "../../services/objection.service";
 import logger from "../../utils/logger";
 import { MAX_FILE_SIZE_BYTES } from "../../utils/properties";
-import { uploadFile, UploadFileCallbacks } from "./http.request.file.uploader";
 import { UploadResponderStrategy } from "./upload.responder.strategy";
 import { createUploadResponderStrategy } from "./upload.responder.strategy.factory";
 import { FileUploadRequest } from "../../types";

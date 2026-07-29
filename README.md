@@ -39,7 +39,7 @@ POST   | `/strike-off-objections/company-number`                                
 GET    | `/strike-off-objections/confirm-company`                                                                                 |
 POST   | `/strike-off-objections/confirm-company`                                                                                 |
 GET    | `/strike-off-objections/notice-expired`                                                                                  | Returns the notice expired / too late to object page
-GET    | `/strike-off-objections/no-strike-off`                                                                                   | Returns the no strike offnotice page
+GET    | `/strike-off-objections/no-strike-off`                                                                                   | Returns the no strike off notice page
 GET    | `/strike-off-objections/enter-information`                                                                               |
 POST   | `/strike-off-objections/enter-information`                                                                               |
 GET    | `/strike-off-objections/document-upload`                                                                                 |
@@ -55,8 +55,6 @@ GET    | `/strike-off-objections/confirmation`                                  
 GET    | `/strike-off-objections/error`                                                                                           | Returns the error page
 GET    | `/strike-off-objections/change-answers`                                                                                  |
 GET    | `/strike-off-objections/accessibility-statement`                                                                         | Returns the accessibility statement
-GET    | `/strike-off-objections/objector-organisation`                                                                           |
-POST   | `/strike-off-objections/objector-organisation`                                                                           |
 GET    | `/strike-off-objections/signout`                                                                                         | Returns the signout options page
 POST   | `/strike-off-objections/signout`                                                                                         | Sign user out or continue
 

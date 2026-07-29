@@ -14,9 +14,9 @@ import { ErrorMessages } from "./model/error.messages";
 import * as pageURLs from "./model/page.urls";
 import { router } from "./routes/routes";
 import logger from "./utils/logger";
-import Redis from 'ioredis';
+import Redis from "ioredis";
 import { CACHE_SERVER } from "./utils/properties";
-import { SessionStore } from '@companieshouse/node-session-handler';
+import { SessionStore } from "@companieshouse/node-session-handler";
 import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
 
 const redis = new Redis(CACHE_SERVER);
