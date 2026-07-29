@@ -67,7 +67,7 @@ describe("Signout controller tests", () => {
 
     it('should show the error page if there is no return page in session', async () => {
         const previousLocation = undefined;
-        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
+        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
         const response = await request(app)
           .post(SIGNOUT_LOCATION);
@@ -77,7 +77,7 @@ describe("Signout controller tests", () => {
 
     it('should return the user to their previous location if they select "no"', async () => {
         const previousLocation = 'http://example.com'
-        session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
+        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
         const response = await request(app)
           .post(SIGNOUT_LOCATION)
