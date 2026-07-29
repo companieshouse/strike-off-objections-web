@@ -35,7 +35,8 @@ export const get = (req: Request, res: Response) => {
     logger.debug("Download landing page with download url = " + downloadUrl);
     return res.render(Templates.DOCUMENT_DOWNLOAD_LANDING_PAGE, { downloadUrl });
   } catch (err) {
-    logger.errorRequest(req, "Rejected unsafe download landing URL");
+    const message = err instanceof Error ? err.message : String(err);
+    logger.errorRequest(req, `Rejected unsafe download landing URL - ${message}`);
     return res.status(400).render(Templates.ERROR);
   }
 };
