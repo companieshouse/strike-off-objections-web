@@ -1,9 +1,5 @@
 {% extends "layout.html" %}
 
-{% block download %}
-<body onload="javascript:setTimeout(function(){ window.location = '{{downloadUrl}}';},5000);">
-{% endblock %}
-
 {% block pageTitle %}
   Your download should start shortly - GOV.UK
 {% endblock %}
@@ -20,7 +16,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">Your document download will start soon</h1>
       <p class="govuk-body-l">
-        <a href="{{downloadUrl}}" class="govuk-link">Click here to download your document</a>
+        <a href="{{downloadUrl}}" class="govuk-link" id="download-link">Click here to download your document</a>
         if the download does not start in 10 seconds.</p>
     </div>
   </div>
@@ -29,5 +25,13 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
   <script src="{{assetPath}}/javascripts/govuk-frontend/v3.11.0/govuk-frontend-3.11.0.min.js"></script>
-  <script>window.GOVUKFrontend.initAll()</script>
+  <script>
+    window.GOVUKFrontend.initAll()
+    var downloadLink = document.getElementById('download-link');
+    if (downloadLink) {
+      setTimeout(function() {
+        window.location = downloadLink.getAttribute('href');
+      }, 5000);
+    }
+  </script>
 {% endblock %}
