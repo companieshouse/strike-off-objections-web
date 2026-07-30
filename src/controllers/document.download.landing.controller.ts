@@ -5,17 +5,17 @@ import logger from "../utils/logger";
 
 const SAFE_PATH_SEGMENT = /^[A-Za-z0-9_-]+$/;
 
-const requireSafeSegment = (value: string | undefined, paramName: string): string => {
-  if (!value || !SAFE_PATH_SEGMENT.test(value)) {
+const requireSafeSegment = (value: string | undefined, paramName: string, minLen: number, maxLen: number): string => {
+  if (!value || !SAFE_PATH_SEGMENT.test(value) || value.length < minLen || value.length > maxLen) {
     throw new Error("Invalid download path parameter: " + paramName);
   }
   return value;
 };
 
 const buildDownloadUrl = (req: Request): string => {
-  const companyId = encodeURIComponent(requireSafeSegment(req.params.companyId, "companyId"));
-  const requestId = encodeURIComponent(requireSafeSegment(req.params.requestId, "requestId"));
-  const attachmentId = encodeURIComponent(requireSafeSegment(req.params.attachmentId, "attachmentId"));
+  const companyId = encodeURIComponent(requireSafeSegment(req.params.companyId, "companyId", 8, 8));
+  const requestId = encodeURIComponent(requireSafeSegment(req.params.requestId, "requestId", 18, 18));
+  const attachmentId = encodeURIComponent(requireSafeSegment(req.params.attachmentId, "attachmentId", 36, 36));
 
   return STRIKE_OFF_OBJECTIONS
   + "/company/" + companyId

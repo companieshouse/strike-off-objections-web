@@ -26,8 +26,15 @@ mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: Nex
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 
-const DOWNLOAD_LANDING_PAGE_URL = "/strike-off-objections/download/company/1234/strike-off-objections/5678/attachments/8888/download";
-const DOWNLOAD_FILE_URL = "/strike-off-objections/company/1234/strike-off-objections/5678/attachments/8888/download";
+const VALID_COMPANY_ID = "12345678";
+const VALID_REQUEST_ID = "OBJ-1F3C-A2E4-5D6B";
+const VALID_ATTACHMENT_ID = "550e8400-e29b-41d4-a716-446655440000";
+
+const DOWNLOAD_LANDING_PAGE_URL = `/strike-off-objections/download/company/${VALID_COMPANY_ID}/strike-off-objections/${VALID_REQUEST_ID}/attachments/${VALID_ATTACHMENT_ID}/download`;
+const DOWNLOAD_FILE_URL = `/strike-off-objections/company/${VALID_COMPANY_ID}/strike-off-objections/${VALID_REQUEST_ID}/attachments/${VALID_ATTACHMENT_ID}/download`;
+
+const landingUrl = (companyId: string, requestId: string, attachmentId: string) =>
+  `/strike-off-objections/download/company/${companyId}/strike-off-objections/${requestId}/attachments/${attachmentId}/download`;
 
 describe("document download landing page tests", () => {
 
@@ -70,5 +77,35 @@ describe("document download landing page tests", () => {
 
     expect(response.status).toBe(400);
     expect(response.text).toContain("Sorry, there is a problem with the service");
+  });
+});
+
+describe("document download landing page — path parameter length validation", () => {
+
+  const cookie = [`${COOKIE_NAME}=123`];
+
+  it.each([
+    ["companyId too short",    "1234567",                           VALID_REQUEST_ID,    VALID_ATTACHMENT_ID],
+    ["companyId too long",     "123456789",                         VALID_REQUEST_ID,    VALID_ATTACHMENT_ID],
+    ["requestId too short",    VALID_COMPANY_ID, "ABC12345678",                          VALID_ATTACHMENT_ID],
+    ["requestId too long",     VALID_COMPANY_ID, "ABC1234567890",                        VALID_ATTACHMENT_ID],
+    ["attachmentId too short", VALID_COMPANY_ID, VALID_REQUEST_ID, "550e8400-e29b-41d4-a716-44665544000"],
+    ["attachmentId too long",  VALID_COMPANY_ID, VALID_REQUEST_ID, "550e8400-e29b-41d4-a716-4466554400000"],
+  ])("should return 400 when %s", async (_label: string, companyId: string, requestId: string, attachmentId: string) => {
+    const response = await request(app)
+      .get(landingUrl(companyId, requestId, attachmentId))
+      .set("Referer", "/")
+      .set("Cookie", cookie);
+
+    expect(response.status).toBe(400);
+  });
+
+  it("should return 200 for all params at exact valid lengths", async () => {
+    const response = await request(app)
+      .get(DOWNLOAD_LANDING_PAGE_URL)
+      .set("Referer", "/")
+      .set("Cookie", cookie);
+
+    expect(response.status).toBe(200);
   });
 });
