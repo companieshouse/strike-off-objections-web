@@ -48,7 +48,7 @@ describe("document download landing page tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toBe(200);
-    expect(response.text).toContain("Document download");
+    expect(response.text).toContain("Your document download will start soon");
   });
 
   it("should not call objection session middleware upon render", async () => {
