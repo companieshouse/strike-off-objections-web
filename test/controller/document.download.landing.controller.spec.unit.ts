@@ -73,7 +73,7 @@ describe("document download landing page tests", () => {
     const maliciousUrl = "/strike-off-objections/download/company/CO/strike-off-objections/TESTREQ';confirm(1);a='/attachments/TESTATT/download";
     const response: request.Response = await request(app).get(maliciousUrl)
       .set("Referer", "/")
-      .set("Cookie", [COOKIE_NAME + "=123"]);
+      .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(response.status).toBe(400);
     expect(response.text).toContain("Sorry, there is a problem with the service");
