@@ -20,11 +20,11 @@ const AXIOS_STATUS = 200;
 const ERROR_MSG_PREFIX = "ERROR calling API";
 
 const dummyAxiosResponse: AxiosResponse = {
-  config: {},
+  config: { headers: {} as any },
   data: {
     name: AXIOS_DATA_NAME,
   },
-  headers: "header",
+  headers: {} as any,
   status: AXIOS_STATUS,
   statusText: "OK",
 };

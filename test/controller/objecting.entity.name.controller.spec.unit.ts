@@ -23,7 +23,7 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
+import { Objection, ObjectionCreate, ObjectionStatus } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionUserDetails } from "../../src/services/objection.service";
 import { ErrorMessages } from "../../src/model/error.messages";
 
@@ -633,6 +633,8 @@ const mockObjection: Objection = {
     objector: ""
   },
   reason: "Owed some money",
+  id: "objection123",
+  status: ObjectionStatus.OPEN,
 };
 
 const mockObjectionCreate: ObjectionCreate = {

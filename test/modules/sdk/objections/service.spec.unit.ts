@@ -44,6 +44,8 @@ const dummyObjection: Objection = {
     objector: "client"
   },
   reason: "Owed some money",
+  id: "objection123",
+  status: ObjectionStatus.OPEN,
 };
 
 const ACCESS_TOKEN = "KGGGUYUYJHHVK1234";
@@ -259,7 +261,7 @@ describe("objections SDK service unit tests", () => {
       },
     };
 
-    mockMakeAPICall.mockResolvedValueOnce(fileDownload as AxiosResponse);
+    mockMakeAPICall.mockResolvedValueOnce(fileDownload as unknown as AxiosResponse);
 
     const response = await objectionsSdk.downloadAttachment("/download/something", ACCESS_TOKEN);
 
