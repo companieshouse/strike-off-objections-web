@@ -375,7 +375,6 @@ describe ("document.document_upload.controller tests", () => {
     expect(response).not.toBeUndefined();
     expect(response.text).toContain(INVALID_MIME_TYPE);
     expect(mockAddAttachment).toHaveBeenCalled();
-    // done();
   });
 
   it ("AJAX - should render error message on 415 error", async () => {
@@ -411,7 +410,6 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(response.text).toContain(INVALID_MIME_TYPE);
     expect(mockAddAttachment).toHaveBeenCalled();
-    // done();
   });
 
   it("should have correct form action fields on document upload page", async () => {
