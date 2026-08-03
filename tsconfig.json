@@ -11,7 +11,8 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowJs": true
   },
   "include": [
     "src/**/*"

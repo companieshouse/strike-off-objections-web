@@ -209,11 +209,6 @@ describe("company number lookup tests", () => {
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
     const mockGetObjectionsSession =  retrieveObjectionSessionFromSession as jest.Mock;
 
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-      mockGetObjectionsSession.mockReset();
-    });
-
     mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
     mockGetObjectionsSession.mockImplementation(() => ({} as ObjectionSessionExtraData) );
 
@@ -296,11 +291,6 @@ describe("company number lookup tests", () => {
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
     const mockGetObjectionsSession =  retrieveObjectionSessionFromSession as jest.Mock;
 
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-      mockGetObjectionsSession.mockReset();
-    });
-
     mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
     mockGetObjectionsSession.mockImplementation(() => ({} as ObjectionSessionExtraData) );
 
@@ -323,11 +313,6 @@ describe("company number lookup tests", () => {
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
     const mockGetObjectionsSession =  retrieveObjectionSessionFromSession as jest.Mock;
 
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-      mockGetObjectionsSession.mockReset();
-    });
-
     mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
     mockGetObjectionsSession.mockImplementation(() => ({} as ObjectionSessionExtraData) );
 
@@ -349,11 +334,6 @@ describe("company number lookup tests", () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
     const mockGetObjectionsSession =  retrieveObjectionSessionFromSession as jest.Mock;
-
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-      mockGetObjectionsSession.mockReset();
-    });
 
     mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
     mockGetObjectionsSession.mockImplementation(() => ({} as ObjectionSessionExtraData) );
