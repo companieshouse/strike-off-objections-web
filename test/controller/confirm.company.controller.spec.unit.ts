@@ -238,10 +238,6 @@ describe("confirm company tests", () => {
 
     const mockValidAccessToken = retrieveAccessTokenFromSession as jest.Mock;
 
-    beforeEach(() => {
-      mockValidAccessToken.mockReset();
-    });
-
     mockValidAccessToken.mockImplementation(() => ACCESS_TOKEN );
 
     mockGetObjectionSessionValue.mockReset();

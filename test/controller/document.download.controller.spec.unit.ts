@@ -126,123 +126,123 @@ const testErrorScreen = async (status: number, heading: string, message: string)
 };
 
 describe("INLINE_TYPES_ALLOWED constant", () => {
-    it("should contain only allowed inline MIME types", () => {
-        expect(INLINE_TYPES_ALLOWED).toEqual([
-            'application/pdf',
-            'image/jpeg',
-            'image/jpg',
-            'image/png',
-            'image/gif'
-        ]);
-    });
+  it("should contain only allowed inline MIME types", () => {
+    expect(INLINE_TYPES_ALLOWED).toEqual([
+      'application/pdf',
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/gif'
+    ]);
+  });
 
-    it("should not contain disallowed types", () => {
-        expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_ZIP);
-        expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_DOCX);
-        expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_XLSX);
-    });
+  it("should not contain disallowed types", () => {
+    expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_ZIP);
+    expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_DOCX);
+    expect(INLINE_TYPES_ALLOWED).not.toContain(MIME_TYPE_XLSX);
+  });
 });
 it("should download a .zip file with attachment disposition", async () => {
-    const fileBytes = COMMON_FILE_BASED_SIGNATURE;
-    const readable = new Readable();
-    readable.push(fileBytes);
-    readable.push(null);
+  const fileBytes = COMMON_FILE_BASED_SIGNATURE;
+  const readable = new Readable();
+  readable.push(fileBytes);
+  readable.push(null);
 
-    const dummyDownload = {
-        data: readable,
-        headers: {
-            [HEADER_CONTENT_DISPOSITION]: ZIP_CONTENT_DISPOSITION_VALUE,
-            [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
-            [HEADER_CONTENT_TYPE]: MIME_TYPE_ZIP,
-        },
-    } as Download;
+  const dummyDownload = {
+    data: readable,
+    headers: {
+      [HEADER_CONTENT_DISPOSITION]: ZIP_CONTENT_DISPOSITION_VALUE,
+      [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
+      [HEADER_CONTENT_TYPE]: MIME_TYPE_ZIP,
+    },
+  } as Download;
 
-    mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
+  mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
 
-    const res = await request(app)
-        .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
-        .set("Referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`])
-        .buffer()
-        .parse((res, callback) => {
-            const data: Uint8Array[] = [];
-            res.on('data', (chunk) => data.push(chunk));
-            res.on('end', () => callback(null, Buffer.concat(data)));
-        });
+  const res = await request(app)
+    .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .buffer()
+    .parse((res, callback) => {
+      const data: Uint8Array[] = [];
+      res.on('data', (chunk) => data.push(chunk));
+      res.on('end', () => callback(null, Buffer.concat(data)));
+    });
 
-    expect(res.status).toEqual(200);
-    expect(Buffer.from(res.body)).toEqual(fileBytes);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
-    expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_ZIP);
+  expect(res.status).toEqual(200);
+  expect(Buffer.from(res.body)).toEqual(fileBytes);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
+  expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_ZIP);
 });
 
 it("should download a .xls file with attachment disposition", async () => {
-    const fileBytes = COMMON_FILE_BASED_SIGNATURE;
-    const readable = new Readable();
-    readable.push(fileBytes);
-    readable.push(null);
+  const fileBytes = COMMON_FILE_BASED_SIGNATURE;
+  const readable = new Readable();
+  readable.push(fileBytes);
+  readable.push(null);
 
-    const dummyDownload = {
-        data: readable,
-        headers: {
-            [HEADER_CONTENT_DISPOSITION]: XLSX_CONTENT_DISPOSITION_VALUE,
-            [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
-            [HEADER_CONTENT_TYPE]: MIME_TYPE_XLSX,
-        },
-    } as Download;
+  const dummyDownload = {
+    data: readable,
+    headers: {
+      [HEADER_CONTENT_DISPOSITION]: XLSX_CONTENT_DISPOSITION_VALUE,
+      [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
+      [HEADER_CONTENT_TYPE]: MIME_TYPE_XLSX,
+    },
+  } as Download;
 
-    mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
+  mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
 
-    const res = await request(app)
-        .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
-        .set("Referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`])
-        .buffer()
-        .parse((res, callback) => {
-            const data: Uint8Array[] = [];
-            res.on('data', (chunk) => data.push(chunk));
-            res.on('end', () => callback(null, Buffer.concat(data)));
-        });
+  const res = await request(app)
+    .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .buffer()
+    .parse((res, callback) => {
+      const data: Uint8Array[] = [];
+      res.on('data', (chunk) => data.push(chunk));
+      res.on('end', () => callback(null, Buffer.concat(data)));
+    });
 
-    expect(res.status).toEqual(200);
-    expect(res.body).toEqual(fileBytes);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
-    expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_XLSX);
+  expect(res.status).toEqual(200);
+  expect(res.body).toEqual(fileBytes);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
+  expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_XLSX);
 });
 
 it("should download a .docx file with attachment disposition", async () => {
-    const fileBytes = COMMON_FILE_BASED_SIGNATURE;
-    const readable = new Readable();
-    readable.push(fileBytes);
-    readable.push(null);
+  const fileBytes = COMMON_FILE_BASED_SIGNATURE;
+  const readable = new Readable();
+  readable.push(fileBytes);
+  readable.push(null);
 
-    const dummyDownload = {
-        data: readable,
-        headers: {
-            [HEADER_CONTENT_DISPOSITION]: DOCX_CONTENT_DISPOSITION_VALUE,
-            [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
-            [HEADER_CONTENT_TYPE]: MIME_TYPE_DOCX,
-        },
-    } as Download;
+  const dummyDownload = {
+    data: readable,
+    headers: {
+      [HEADER_CONTENT_DISPOSITION]: DOCX_CONTENT_DISPOSITION_VALUE,
+      [HEADER_CONTENT_LENGTH]: fileBytes.length.toString(),
+      [HEADER_CONTENT_TYPE]: MIME_TYPE_DOCX,
+    },
+  } as Download;
 
-    mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
+  mockDownloadAttachment.mockResolvedValueOnce(dummyDownload);
 
-    const res = await request(app)
-        .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
-        .set("Referer", "/")
-        .set("Cookie", [`${COOKIE_NAME}=123`])
-        .buffer()
-        .parse((res, callback) => {
-            const data: Uint8Array[] = [];
-            res.on('data', (chunk) => data.push(chunk));
-            res.on('end', () => callback(null, Buffer.concat(data)));
-        });
+  const res = await request(app)
+    .get(STRIKE_OFF_OBJECTIONS + TEST_DOWNLOAD_URL)
+    .set("Referer", "/")
+    .set("Cookie", [`${COOKIE_NAME}=123`])
+    .buffer()
+    .parse((res, callback) => {
+      const data: Uint8Array[] = [];
+      res.on('data', (chunk) => data.push(chunk));
+      res.on('end', () => callback(null, Buffer.concat(data)));
+    });
 
-    expect(res.status).toEqual(200);
-    expect(res.body).toEqual(fileBytes);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
-    expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
-    expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_DOCX);
+  expect(res.status).toEqual(200);
+  expect(res.body).toEqual(fileBytes);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).not.toEqual(CONTENT_DISPOSITION_INLINE);
+  expect(res.header[HEADER_CONTENT_DISPOSITION]).toContain('attachment');
+  expect(res.header[HEADER_CONTENT_TYPE]).toEqual(MIME_TYPE_DOCX);
 });

@@ -136,9 +136,9 @@ export interface ObjectionCreatedResponse {
  * List of MIME types that browsers can display inline
  */
 export const INLINE_TYPES_ALLOWED = [
-    'application/pdf',
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/gif'
+  'application/pdf',
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif'
 ];

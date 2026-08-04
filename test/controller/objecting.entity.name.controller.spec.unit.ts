@@ -23,7 +23,7 @@ import {
   OBJECTIONS_OBJECTING_ENTITY_NAME
 } from "../../src/model/page.urls";
 import { COOKIE_NAME } from "../../src/utils/properties";
-import { Objection, ObjectionCreate } from "../../src/modules/sdk/objections";
+import { Objection, ObjectionCreate, ObjectionStatus } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionUserDetails } from "../../src/services/objection.service";
 import { ErrorMessages } from "../../src/model/error.messages";
 
@@ -79,7 +79,7 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
-    expect(response.text).toContain([OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText]);
+    expect(response.text).toContain(OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText);
     expect(response.text).toContain(FULL_NAME);
   });
 
@@ -97,7 +97,7 @@ describe("objecting entity name tests", () => {
     expect(mockRetrieveObjectionSessionFromSession).not.toBeCalled();
     expect(mockGetObjection).not.toBeCalled();
     expect(response.status).toEqual(200);
-    expect(response.text).toContain([OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText]);
+    expect(response.text).toContain(OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText);
     expect(response.text).toContain(FULL_NAME);
   });
 
@@ -116,7 +116,7 @@ describe("objecting entity name tests", () => {
     expect(response.status).toEqual(200);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
-    expect(response.text).toContain([OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText]);
+    expect(response.text).toContain(OBJECTOR_FIELDS[CLIENT].objectingEntityNamePageText);
     expect(response.text).toContain(FULL_NAME);
   });
 
@@ -135,7 +135,7 @@ describe("objecting entity name tests", () => {
     expect(response.status).toEqual(200);
     expect(mockRetrieveFromObjectionSession).toHaveBeenCalledTimes(2);
     expect(mockGetObjection).toHaveBeenCalledTimes(1);
-    expect(response.text).toContain([OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText]);
+    expect(response.text).toContain(OBJECTOR_FIELDS[MYSELF_OR_COMPANY].objectingEntityNamePageText);
     expect(response.text).toContain(FULL_NAME);
   });
 
@@ -633,6 +633,8 @@ const mockObjection: Objection = {
     objector: ""
   },
   reason: "Owed some money",
+  id: "objection123",
+  status: ObjectionStatus.OPEN,
 };
 
 const mockObjectionCreate: ObjectionCreate = {

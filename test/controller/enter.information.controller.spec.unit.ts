@@ -20,7 +20,7 @@ import {
   OBJECTIONS_DOCUMENT_UPLOAD,
   OBJECTIONS_ENTER_INFORMATION
 } from "../../src/model/page.urls";
-import { Objection } from "../../src/modules/sdk/objections";
+import { Objection, ObjectionStatus } from "../../src/modules/sdk/objections";
 import { getObjection, updateObjectionReason } from "../../src/services/objection.service";
 import {
   retrieveCompanyProfileFromObjectionSession,
@@ -287,8 +287,11 @@ const mockObjection: Objection = {
     }],
   created_by: {
     full_name: "name",
-    share_identity: false
+    share_identity: false,
+    objector: "test"
   },
+  id: OBJECTION_ID,
+  status: ObjectionStatus.OPEN,
 };
 
 const mockObjectionWithReason: Objection = {
@@ -301,7 +304,10 @@ const mockObjectionWithReason: Objection = {
     }],
   created_by: {
     full_name: "name",
-    share_identity: false
+    share_identity: false,
+    objector: "test"
   },
   reason: REASON,
+  id: OBJECTION_ID,
+  status: ObjectionStatus.OPEN,
 };

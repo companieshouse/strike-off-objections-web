@@ -57,6 +57,7 @@ const dummySDKResponse: Resource<CompanyProfile> = {
     confirmationStatement: {
       nextDue: "2020-04-30",
       overdue: false,
+      nextMadeUpTo: "2021-01-01",
     },
     dateOfCreation: "1872-06-26",
     hasBeenLiquidated: false,
