@@ -16,11 +16,8 @@ module.exports = {
   testEnvironment: "node",
   verbose: true,
   testMatch: ["**/test/**/*.spec.unit.[jt]s"],
-  globals: {
-    "ts-jest": {
-      diagnostics: false,
-    }
-  },
+  transform: { "^.+\\.[tj]sx?$": ["ts-jest", { diagnostics: true }] },
+  transformIgnorePatterns: ["/node_modules/(?!(@companieshouse/web-security-node|uuid))"],
   globalSetup: "./test/global.setup.ts",
   setupFiles: ["<rootDir>/test/global.setup.ts"],
   moduleNameMapper: {

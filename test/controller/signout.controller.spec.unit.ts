@@ -40,56 +40,56 @@ describe("Signout controller tests", () => {
           .set('Referer', 'return url');
 
         expect(response.status).toBe(200);
-        expect(sessionMock.session.getExtraData(SIGNOUT_RETURN_URL_SESSION_KEY)).toBe(referer);
+        expect(sessionMock.session!.getExtraData(SIGNOUT_RETURN_URL_SESSION_KEY)).toBe(referer);
     })
 
     it('should populate the back link url from the referer header', async () => {
-        const referer = 'return url';
-        const response = await request(app)
-          .get(SIGNOUT_LOCATION)
-          .set('Referer', referer);
+      const referer = 'return url';
+      const response = await request(app)
+        .get(SIGNOUT_LOCATION)
+        .set('Referer', referer);
 
-        expect(response.status).toBe(200);;
-        expect(response.text).toContain(`href="${referer}"`);
-    })
-  })
+      expect(response.status).toBe(200);
+      expect(response.text).toContain(`href="${referer}"`);
+    });
+  });
 
   describe('post tests', () => {
     it('should show an error if no radio buttons are selected', async () => {
         const previousLocation = 'http://example.com'
-        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
+        sessionMock.session!.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
         const response = await request(app)
           .post(SIGNOUT_LOCATION);
 
-        expect(response.status).toBe(400);
-        expect(response.text).toContain('Select yes if you want to sign out');
-    })
+      expect(response.status).toBe(400);
+      expect(response.text).toContain('Select yes if you want to sign out');
+    });
 
     it('should show the error page if there is no return page in session', async () => {
         const previousLocation = undefined;
-        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
+        sessionMock.session!.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
-        const response = await request(app)
-          .post(SIGNOUT_LOCATION);
-        
-        expect(response.status).toBe(500);
-    })
+      const response = await request(app)
+        .post(SIGNOUT_LOCATION);
+
+      expect(response.status).toBe(500);
+    });
 
     it('should return the user to their previous location if they select "no"', async () => {
         const previousLocation = 'http://example.com'
-        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
+        sessionMock.session!.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
 
-        const response = await request(app)
-          .post(SIGNOUT_LOCATION)
-          .send({signout: 'no'});
-        
-          expect(response.status).toBe(302);
-          expect(response.get('Location')).toBe(previousLocation);
-    })
+      const response = await request(app)
+        .post(SIGNOUT_LOCATION)
+        .send({ signout: 'no' });
+
+      expect(response.status).toBe(302);
+      expect(response.get('Location')).toBe(previousLocation);
+    });
 
     it('should return the user to their previous location if they select "yes"', async () => {
         const previousLocation = 'http://example.com'
-        sessionMock.session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
+        sessionMock.session!.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation);
         const response = await request(app)
           .post(SIGNOUT_LOCATION)
           .send({signout: 'yes'});
@@ -107,15 +107,15 @@ describe("Signout controller tests", () => {
         .get(SIGNOUT_LOCATION);
 
       expect(response.status).toBe(500);
-    })
+    });
 
     it('should land on error screen if no session is available when performing post', async () => {
       sessionMock.session = undefined;
 
-        const response = await request(app)
-          .post(SIGNOUT_LOCATION);
+      const response = await request(app)
+        .post(SIGNOUT_LOCATION);
 
-        expect(response.status).toBe(500);
+      expect(response.status).toBe(500);
     });
   });
 });

@@ -346,7 +346,7 @@ describe ("document.document_upload.controller tests", () => {
                                              TEXT_FILE_NAME);
   });
 
-  it ("should render error message on 415 error", async (done) => {
+  it ("should render error message on 415 error", async () => {
     const buffer = Buffer.alloc(5);
     mockAddAttachment.prototype.constructor.mockImplementationOnce(() => {
       throw {
@@ -365,10 +365,9 @@ describe ("document.document_upload.controller tests", () => {
     expect(response).not.toBeUndefined();
     expect(response.text).toContain(INVALID_MIME_TYPE);
     expect(mockAddAttachment).toHaveBeenCalled();
-    done();
   });
 
-  it ("AJAX - should render error message on 415 error", async (done) => {
+  it ("AJAX - should render error message on 415 error", async () => {
     const buffer = Buffer.alloc(5);
     mockAddAttachment.prototype.constructor.mockImplementationOnce(() => {
       throw {
@@ -401,7 +400,6 @@ describe ("document.document_upload.controller tests", () => {
 
     expect(response.text).toContain(INVALID_MIME_TYPE);
     expect(mockAddAttachment).toHaveBeenCalled();
-    done();
   });
 
   it("should have correct form action fields on document upload page", async () => {
