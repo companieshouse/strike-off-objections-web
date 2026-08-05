@@ -1,8 +1,10 @@
 jest.mock("ioredis");
 jest.mock("../../src/middleware/authentication.middleware");
-jest.mock("../../src/middleware/session.middleware");
 jest.mock("../../src/services/objection.session.service");
 jest.mock("../../src/middleware/objection.session.middleware");
+
+import { sessionMock } from "../mocks/session.middleware";
+import "../mocks/csrf.middleware";
 
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
@@ -11,7 +13,6 @@ import app from "../../src/app";
 import { SESSION_OBJECTION_ID, OBJECTIONS_SESSION_NAME } from "../../src/constants";
 import { authenticationMiddleware } from "../../src/middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "../../src/middleware/objection.session.middleware";
-import { sessionMiddleware } from "../../src/middleware/session.middleware";
 import { OBJECTIONS_CONFIRMATION } from "../../src/model/page.urls";
 import {
   deleteFromObjectionSession,
@@ -27,15 +28,6 @@ const mockRetrieveFromObjectionSession = retrieveFromObjectionSession  as jest.M
 const mockAuthenticationMiddleware = authenticationMiddleware as jest.Mock;
 mockAuthenticationMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => next() );
 
-const SESSION: Session = {
-  data: {},
-} as Session;
-
-const mockSessionMiddleware = sessionMiddleware as jest.Mock;
-mockSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
-  req.session = SESSION;
-  return next();
-});
 
 const mockObjectionSessionMiddleware = objectionSessionMiddleware as jest.Mock;
 mockObjectionSessionMiddleware.mockImplementation((req: Request, res: Response, next: NextFunction) => {
@@ -57,7 +49,6 @@ describe("confirmation screen tests", () => {
   beforeEach(() => {
     mockDeleteObjectionSessionValue.mockClear();
     mockDeleteObjectionCreateFromObjectionSession.mockClear();
-    mockSessionMiddleware.mockClear();
   });
 
   it("should land on confirmation screen with submitted message and correct details", async () => {
@@ -82,7 +73,7 @@ describe("confirmation screen tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockDeleteObjectionSessionValue).toHaveBeenCalledTimes(1);
-    expect(mockDeleteObjectionSessionValue).toHaveBeenCalledWith(SESSION, SESSION_OBJECTION_ID);
+    expect(mockDeleteObjectionSessionValue).toHaveBeenCalledWith(sessionMock.session, SESSION_OBJECTION_ID);
 
     expect(response.status).toEqual(200);
     expect(response.text).toContain(OBJECTION_ID);
@@ -98,7 +89,7 @@ describe("confirmation screen tests", () => {
       .set("Cookie", [`${COOKIE_NAME}=123`]);
 
     expect(mockDeleteObjectionCreateFromObjectionSession).toHaveBeenCalledTimes(1);
-    expect(mockDeleteObjectionCreateFromObjectionSession).toHaveBeenCalledWith(SESSION);
+    expect(mockDeleteObjectionCreateFromObjectionSession).toHaveBeenCalledWith(sessionMock.session);
 
     expect(response.status).toEqual(200);
     expect(response.text).toContain(OBJECTION_ID);
@@ -109,9 +100,7 @@ describe("confirmation screen tests", () => {
     mockRetrieveUserEmailFromSession.mockReturnValueOnce(email);
     mockRetrieveFromObjectionSession.mockReturnValueOnce(OBJECTION_ID);
 
-    mockSessionMiddleware.mockImplementationOnce((next: NextFunction) => {
-      return next();
-    });
+    sessionMock.session = undefined;
 
     const response = await request(app).get(OBJECTIONS_CONFIRMATION)
       .set("Referer", "/")
