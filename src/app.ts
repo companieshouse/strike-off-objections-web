@@ -52,6 +52,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "html");
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get(`${pageURLs.STRIKE_OFF_OBJECTIONS}/healthcheck`, (_req, res) => {
+  res.set("Cache-Control", "no-store").sendStatus(200);
+});
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
