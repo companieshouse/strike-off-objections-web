@@ -25,6 +25,8 @@ export const COOKIE_SECRET = getEnvironmentVariable("COOKIE_SECRET");
 
 export const CACHE_SERVER = getEnvironmentVariable("CACHE_SERVER");
 
+export const COOKIE_SECURE_FLAG = getEnvironmentVariable("COOKIE_SECURE_FLAG", "1");
+
 export const SHOW_SERVICE_OFFLINE_PAGE = getEnvironmentVariable("SHOW_SERVICE_OFFLINE_PAGE");
 
 export const LOG_LEVEL = getEnvironmentVariable("LOG_LEVEL", "info");

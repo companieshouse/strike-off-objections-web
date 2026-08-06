@@ -7,7 +7,7 @@ import  errorHandlers from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { objectionSessionMiddleware } from "./middleware/objection.session.middleware";
 import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
-import { createSessionMiddleware } from "./middleware/session.middleware";
+import { createSessionMiddleware, createEnsureSessionCookiePresentMiddleware } from "./middleware/session.middleware";
 import { MultipartMiddleware } from "./middleware/multipart.middleware";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { ErrorMessages } from "./model/error.messages";
@@ -22,6 +22,7 @@ import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/c
 const redis = new Redis(CACHE_SERVER);
 const sessionStore = new SessionStore(redis);
 const sessionMiddleware = createSessionMiddleware(sessionStore);
+const ensureSessionCookiePresentMiddleware = createEnsureSessionCookiePresentMiddleware();
 const csrfProtectionMiddleware = createCsrfProtectionMiddleware(sessionStore);
 
 const app = express();
@@ -54,6 +55,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(serviceAvailabilityMiddleware);
 app.use(cookieParser());
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, sessionMiddleware);
+app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, ensureSessionCookiePresentMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, MultipartMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}*`, csrfProtectionMiddleware);
 app.use(`${pageURLs.STRIKE_OFF_OBJECTIONS}/*`, authenticationMiddleware);
