@@ -10,7 +10,7 @@ locals {
   docker_repo               = "strike-off-objections-web"
   lb_listener_rule_priority = 29
   lb_listener_paths         = ["/strike-off-objections*"]
-  healthcheck_path          = "/strike-off-objections" #healthcheck path for strike-off-objections web
+  healthcheck_path          = "/strike-off-objections/healthcheck" #healthcheck path for strike-off-objections web
   healthcheck_matcher       = "200"
 
   kms_alias                  = "alias/${var.aws_profile}/environment-services-kms"
