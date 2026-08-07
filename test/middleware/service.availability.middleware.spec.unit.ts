@@ -83,13 +83,16 @@ describe("Availability tests", () => {
     expect(response.text).toMatch(/Sorry, the service is unavailable/);
   });
 
-  it("should return 200 for healthcheck regardless of service availability flag", async () => {
+it("should return 200 for healthcheck regardless of service availability flag and never invoke availability middleware", async () => {
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "true";
 
   const response = await request(app)
     .get("/strike-off-objections/healthcheck");
 
   expect(response.status).toEqual(200);
+  expect(response.text).toEqual("OK");
+  expect(response.headers["cache-control"]).toEqual("no-store");
+  expect(response.text).not.toMatch(/Sorry, the service is unavailable/);
 });
 
 });
