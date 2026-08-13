@@ -1,5 +1,7 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import helmet from "helmet";
+import { randomBytes } from "crypto";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { APP_NAME } from "./constants";
@@ -18,6 +20,7 @@ import Redis from "ioredis";
 import { CACHE_SERVER } from "./utils/properties";
 import { SessionStore } from "@companieshouse/node-session-handler";
 import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
+import { prepareCSPConfig } from "./config/csp.config";
 
 const redis = new Redis(CACHE_SERVER);
 const sessionStore = new SessionStore(redis);
@@ -44,6 +47,15 @@ env.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 env.addGlobal("ERROR_SUMMARY_TITLE", ErrorMessages.ERROR_SUMMARY_TITLE);
 
 app.enable("trust proxy");
+
+// Generate a per-request nonce before helmet sets the CSP header
+app.use((_req, res, next) => {
+  res.locals.cspNonce = randomBytes(16).toString("base64");
+  next();
+});
+
+app.use((req, res, next) => helmet(prepareCSPConfig(res.locals.cspNonce))(req, res, next));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

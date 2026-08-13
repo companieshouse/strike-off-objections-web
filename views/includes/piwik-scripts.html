@@ -1,12 +1,12 @@
-<script src="{{assetPath}}/javascripts/app/piwik-enable.js"></script>
-<script type="application/javascript">
+<script src="{{assetPath}}/javascripts/app/piwik-enable.js" nonce="{{cspNonce}}"></script>
+<script type="application/javascript" nonce="{{cspNonce}}">
   window.SERVICE_NAME = 'strike-off-objections'
   window.PIWIK_URL = '{{ PIWIK_URL }}'
   window.PIWIK_SITE_ID = '{{ PIWIK_SITE_ID }}'
 </script>
 <div id="templateName" data-id='{{templateName}}' hidden></div>
-<script src="{{assetPath}}/javascripts/app/cookie-consent/cookie-consent-1.0.0.js"></script>
-<script src="{{assetPath}}/javascripts/app/cookie-consent/matomo-only-cookie-consent.js"></script>
+<script src="{{assetPath}}/javascripts/app/cookie-consent/cookie-consent-1.0.0.js" nonce="{{cspNonce}}"></script>
+<script src="{{assetPath}}/javascripts/app/cookie-consent/matomo-only-cookie-consent.js" nonce="{{cspNonce}}"></script>
 <noscript>
     <p>
         <img src="{{PIWIK_URL}}/piwik.php?idsite={{PIWIK_SITE_ID}}" style="border:0;" alt="" />

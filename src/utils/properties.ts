@@ -17,6 +17,12 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
 
 export const ACCOUNT_URL = getEnvironmentVariable("ACCOUNT_URL");
 
+export const CDN_HOST = getEnvironmentVariable("CDN_HOST");
+
+export const PIWIK_URL = getEnvironmentVariable("PIWIK_URL");
+
+export const CHS_URL = getEnvironmentVariable("CHS_URL");
+
 export const COOKIE_NAME = getEnvironmentVariable("COOKIE_NAME");
 
 export const COOKIE_DOMAIN = getEnvironmentVariable("COOKIE_DOMAIN");
