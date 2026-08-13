@@ -27,10 +27,11 @@ describe("prepareCSPConfig", () => {
     expect(directives.directives.scriptSrcAttr).toContain("'none'");
   });
 
-  it("should include CDN_HOST in styleSrc, fontSrc and imgSrc", () => {
+  it("should include CDN_HOST in scriptSrc, styleSrc, fontSrc and imgSrc", () => {
     const config = prepareCSPConfig(TEST_NONCE);
     const directives = config.contentSecurityPolicy as any;
     const cdn = process.env.CDN_HOST;
+    expect(directives.directives.scriptSrc).toContain(cdn);
     expect(directives.directives.styleSrc).toContain(cdn);
     expect(directives.directives.fontSrc).toContain(cdn);
     expect(directives.directives.imgSrc).toContain(cdn);

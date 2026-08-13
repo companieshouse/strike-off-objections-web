@@ -24,6 +24,7 @@ export const prepareCSPConfig = (nonce: string): HelmetOptions => {
                 scriptSrcAttr: [`'none'`],
                 scriptSrc: [
                     NONCE,
+                    CDN,
                     PIWIK
                 ],
                 objectSrc: [`'none'`]
