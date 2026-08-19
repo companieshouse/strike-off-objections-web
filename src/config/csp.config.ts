@@ -17,7 +17,7 @@ export const prepareCSPConfig = (nonce: string): HelmetOptions => {
                 defaultSrc: [SELF],
                 fontSrc: [CDN],
                 imgSrc: [SELF, CDN, PIWIK],
-                styleSrc: [`'unsafe-inline'`, CDN],
+                styleSrc: [CDN],
                 connectSrc: [SELF, PIWIK],
                 formAction: [SELF, CHS, ACCOUNT],
                 frameAncestors: [`'none'`],
