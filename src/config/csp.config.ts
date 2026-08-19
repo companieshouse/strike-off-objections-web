@@ -1,8 +1,8 @@
 import { HelmetOptions } from "helmet";
-import { CDN_HOST, PIWIK_URL, CHS_URL, ACCOUNT_URL } from "../utils/properties";
+import { CDN_URL, PIWIK_URL, CHS_URL, ACCOUNT_URL } from "../utils/properties";
 
 export const prepareCSPConfig = (nonce: string): HelmetOptions => {
-    const CDN = CDN_HOST;
+    const CDN = CDN_URL;
     const PIWIK = PIWIK_URL;
     const CHS = CHS_URL;
     const ACCOUNT = ACCOUNT_URL;
