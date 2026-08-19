@@ -64,7 +64,7 @@ POST   | `/strike-off-objections/signout`                                       
 |------------------------------|--------------------|------------------------------------------------|
 | API_UR                       | http://<host:port> | Required for accessing the backend application |
 | CACHE_SERVER                 | redis              | Required for storing values in memory          |
-| CDN_HOST                     | http://<cdn_host>  | Address of chs styling for the frontend        |
+| CDN_URL                     | http://<CDN_URL>  | Address of chs styling for the frontend        |
 | CHS_URL                      | http://chs.local   | Used when navigating to the webpage            |
 | COOKIE_DOMAIN                | chs.local          |                                                |
 | COOKIE_EXPIRATION_IN_SECONDS | 3600               |                                                |
